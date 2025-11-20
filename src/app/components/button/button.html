@@ -1,0 +1,11 @@
+<button
+  [type]="type()"
+  [class.disabled]="disabled()"
+  [class.borderOnHover]="borderOnHover()"
+  [class.blue]="color() === 'blue'"
+  [class.raisin]="color() === 'raisin'"
+>
+  @if (title()) { {{ title() }} } @else {
+  <img [src]="img()" />
+  }
+</button>

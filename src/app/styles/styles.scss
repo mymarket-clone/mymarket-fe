@@ -1,0 +1,59 @@
+@font-face {
+  font-family: 'TBCXRegular';
+  src: url('../../assets/fonts/TBCXRegular.woff2'), format('woff2');
+}
+
+.regular-font {
+  font-family: 'TBCXRegular', sans-serif;
+}
+
+*,
+::backdrop,
+:after,
+:before {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  border: 0 solid;
+  font-family: 'TBCXRegular', sans-serif;
+}
+
+html,
+body {
+  min-height: 100vh;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  opacity: 1;
+  background-color: transparent;
+  border-radius: 0;
+}
+
+a {
+  color: inherit;
+  -webkit-text-decoration: inherit;
+  text-decoration: inherit;
+}
+
+.container {
+  max-width: 1240px;
+  margin-inline: auto;
+}
+
+.wrapper {
+  padding-inline: 1rem;
+}
+
+.outline-none {
+  --tw-outline-style: none;
+  outline-style: none;
+}

@@ -1,0 +1,15 @@
+<div class="wrapper">
+  <div class="container">
+    <div class="header-left">
+      <a routerLink="/">
+        <img src="assets/logo.svg" alt="Logo" />
+      </a>
+      <div>
+        <pre>{{ userJson }}</pre>
+      </div>
+    </div>
+    <div>
+      <button routerLink="/user/login">{{ userStore.getUser() ? "Logout" : "Login" }}</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+<div class="wrapper">
+  <div class="auth-container">
+    <div class="auth-modal">
+      <div class="data-input">
+        <img class="logo-small" src="assets/logo-small.svg" alt="logo" />
+        <div class="form-wrapper">
+          <div class="inputs">
+            <form [formGroup]="loginForm" (submit)="onSubmit()">
+              <app-input
+                name="emailOrPhone"
+                label="Email / Phone number"
+                type="text"
+                [control]="getControl('emailOrPhone')"
+                [submitted]="submitted"
+              />
+              <app-input
+                name="password"
+                label="Password"
+                type="password"
+                [control]="getControl('password')"
+                [submitted]="submitted"
+              />
+              <div class="recover-password">
+                <a routerLink="/user/recover-password">Recover password</a>
+              </div>
+              <app-button
+                type="submit"
+                [title]="loginState?.loading() ? 'Loading...' : 'Sign Up'"
+                color="blue"
+              />
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="separator">
+        <hr />
+        <span>Or</span>
+        <hr />
+      </div>
+      <div class="socials">
+        <app-button color="raisin" img="assets/google.svg" [borderOnHover]="true" />
+        <app-button color="raisin" img="assets/facebook.svg" [borderOnHover]="true" />
+        <app-button color="raisin" img="assets/apple.svg" [borderOnHover]="true" />
+      </div>
+      <div class="signup">
+        <span
+          >Don't have an account?
+          <a> Sign up</a>
+        </span>
+      </div>
+      <div class="marginator">
+        <hr />
+      </div>
+      <div class="abbr">
+        <img src="assets/tnet.svg" />
+        <div class="abbr-wrap">
+          <p>Use one account across 9 TNET platforms</p>
+        </div>
+      </div>
+    </div>
+    <div class="abbr-out">
+      <img src="assets/tnet-white.svg" />
+      <div class="abbr-wrap">
+        <p>Use one account across 9 TNET platforms</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,110 @@
+@use '../../styles/vars.scss' as *;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border-radius: 8px;
+  background-color: transparent;
+  z-index: 10;
+
+  .input-wrapper {
+    display: flex;
+    align-items: center;
+    height: 56px;
+    background-color: $white;
+    color: $gray-800;
+    font-weight: normal;
+    border: 1px solid $raisin-10;
+    border-radius: 8px;
+
+    @media (max-width: 640px) {
+      height: 46px;
+    }
+
+    .input-container {
+      flex: 1;
+      height: 100%;
+      width: 100%;
+      position: relative;
+      padding-inline: 1rem;
+      padding-block: 10px;
+
+      input {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        border: none;
+        background: transparent;
+        font-size: 14px;
+        top: 6px;
+
+        @media (max-width: 640px) {
+          font-size: 12px;
+        }
+
+        &:focus {
+          outline: none;
+        }
+
+        &:focus + p,
+        &:not(:placeholder-shown) + p {
+          top: 7px;
+          font-size: 12px;
+          opacity: 0.5;
+
+          @media (max-width: 640px) {
+            top: 6px;
+            font-size: 10px;
+            opacity: 0.7;
+          }
+        }
+      }
+
+      p {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        pointer-events: none;
+        max-width: 100%;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        cursor: text;
+        transition: all 0.2s ease-in-out;
+        font-size: 14px;
+        color: $gray-800;
+
+        @media (max-width: 640px) {
+          top: 0.875rem;
+          font-size: 12px;
+        }
+      }
+    }
+
+    .trailing-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 100%;
+      transition: all 0.2s ease-in-out;
+      height: 24px;
+      width: 24px;
+    }
+
+    &.trailing {
+      padding-right: 12px;
+    }
+
+    &.hasError {
+      border-color: $red-500;
+    }
+  }
+
+  .error-message {
+    font-size: 12px;
+    margin-top: 4px;
+    padding-inline: 8px;
+    color: $red-500;
+  }
+}
