@@ -14,7 +14,7 @@
   </div>
   <!-- Trailing icon -->
   @if (type() === "password") {
-  <button class="trailing-icon" (click)="togglePasswordVisibility()">
+  <button type="button" class="trailing-icon" (click)="togglePasswordVisibility()">
     <img
       [src]="
             passwordHidden() ? 'assets/eye-open.svg' : 'assets/eye-closed.svg'
