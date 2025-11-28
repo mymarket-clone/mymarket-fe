@@ -4,38 +4,39 @@ import { Observable } from 'rxjs'
 import { HttpMethod } from '../../types/HttpMethod'
 import { HttpRequestOptions } from '../../types/HttpRequestOptions'
 import { IHttpService } from '../../interfaces/common/IHttpService'
+import { FormGroup } from '@angular/forms'
 
 export abstract class HttpService {
   private readonly httpClient = inject(HttpClient)
   private readonly API_URL = 'https://localhost:7289/api/'
 
-  protected request<DataType, BodyType = undefined>(
-    options: HttpRequestOptions<DataType, BodyType>
-  ): IHttpService<DataType> {
-    const { method, endpoint, body, onSuccess, onError } = options
+  protected request<Data, Body = undefined>(
+    options: HttpRequestOptions<Data, Body> & { form?: FormGroup }
+  ): IHttpService<Data> {
+    const { method, endpoint, body, onSuccess, onError, form } = options
 
     const loading = signal(false)
     const error = signal<string | null>(null)
-    const data = signal<DataType | null>(null)
+    const data = signal<Data | null>(null)
 
     const url = `${this.API_URL}${endpoint}`
-    let obs$: Observable<DataType>
+    let obs$: Observable<Data>
 
     switch (method) {
       case HttpMethod.GET:
-        obs$ = this.httpClient.get<DataType>(url)
+        obs$ = this.httpClient.get<Data>(url)
         break
       case HttpMethod.POST:
-        obs$ = this.httpClient.post<DataType>(url, body)
+        obs$ = this.httpClient.post<Data>(url, body)
         break
       case HttpMethod.PUT:
-        obs$ = this.httpClient.put<DataType>(url, body)
+        obs$ = this.httpClient.put<Data>(url, body)
         break
       case HttpMethod.PATCH:
-        obs$ = this.httpClient.patch<DataType>(url, body)
+        obs$ = this.httpClient.patch<Data>(url, body)
         break
       case HttpMethod.DELETE:
-        obs$ = this.httpClient.delete<DataType>(url)
+        obs$ = this.httpClient.delete<Data>(url)
         break
     }
 
@@ -47,10 +48,20 @@ export abstract class HttpService {
         loading.set(false)
         onSuccess?.(response)
       },
-      error: (err) => {
-        error.set(err?.message || 'Unknown error')
+      error: (errors) => {
+        const serverErrors = errors.error?.errors || null
+
+        error.set(serverErrors[0] || 'Unknown error')
         loading.set(false)
-        onError?.(err)
+        onError?.(serverErrors || 'Unknown error')
+
+        if (form) {
+          Object.entries(serverErrors).forEach(([field, messages]) => {
+            const normalizedField = field.charAt(0).toLowerCase() + field.slice(1)
+            console.log(normalizedField ?? '123')
+            form.get(normalizedField)?.setErrors({ server: messages })
+          })
+        }
       },
     })
 

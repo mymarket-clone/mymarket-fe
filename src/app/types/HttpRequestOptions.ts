@@ -5,5 +5,5 @@ export type HttpRequestOptions<DataType, BodyType> = {
   endpoint: string
   body?: BodyType
   onSuccess?: (data: DataType) => void
-  onError?: (error: unknown) => void
+  onError?: (errors: Record<string, string[]>) => void
 }

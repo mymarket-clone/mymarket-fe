@@ -28,12 +28,14 @@ export class Login {
 
   public onSubmit(): void {
     this.submitted = true
-
     if (this.loginForm.invalid) return
 
     this.loginState = this.authService.loginUser({
-      emailOrPhone: this.getControl('emailOrPhone').value!,
-      password: this.getControl('password').value!,
+      body: {
+        emailOrPhone: this.getControl('emailOrPhone').value!,
+        password: this.getControl('password').value!,
+      },
+      form: this.loginForm,
     })
   }
 }
