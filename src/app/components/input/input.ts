@@ -1,5 +1,6 @@
 import { Component, input, signal } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
+import { formErrorMessages } from '../../utils/formErrorMessages'
 
 @Component({
   selector: 'app-input',
@@ -33,16 +34,28 @@ export class Input {
   public hasError(): boolean {
     const control = this.control()
     const errors = control.errors
-
     if (!errors) return false
-    const hasServerError = !!errors['server']
 
-    return hasServerError || false
+    const isRequiredError = !!errors['required']
+
+    if (!this.required() && isRequiredError) {
+      return this.submitted()
+    }
+
+    return this.submitted() || control.touched || control.dirty
   }
 
   public getErrorMessage(): string | null {
     const control = this.control()
-    if (!control.errors || !control.errors['server']) return null
-    return control.errors['server']
+    const errors = control.errors
+
+    if (!errors) return null
+
+    if (errors['server']) return errors['server']
+
+    const errorKey = Object.keys(errors)[0]
+    const handler = formErrorMessages[errorKey]
+
+    return handler ? handler(errors[errorKey]) : 'Invalid value'
   }
 }

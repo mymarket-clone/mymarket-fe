@@ -58,7 +58,6 @@ export abstract class HttpService {
         if (form) {
           Object.entries(serverErrors).forEach(([field, messages]) => {
             const normalizedField = field.charAt(0).toLowerCase() + field.slice(1)
-            console.log(normalizedField ?? '123')
             form.get(normalizedField)?.setErrors({ server: messages })
           })
         }

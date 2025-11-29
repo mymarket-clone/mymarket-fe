@@ -10,10 +10,10 @@ import { RegisterCredentials } from '../interfaces/payload/RegisterCredentials'
 
 @Injectable({ providedIn: 'root' })
 export class AuthService extends HttpService {
-  public static loginUser(
+  public loginUser(
     options: ServiceRequest<LoginCredentials, ILoginUser>
   ): IHttpService<ILoginUser> {
-    return this.prototype.request({
+    return this.request({
       method: HttpMethod.POST,
       endpoint: loginUser,
       body: options.body,
@@ -23,10 +23,8 @@ export class AuthService extends HttpService {
     })
   }
 
-  public static registerUser(
-    options: ServiceRequest<RegisterCredentials, void>
-  ): IHttpService<void> {
-    return this.prototype.request({
+  public registerUser(options: ServiceRequest<RegisterCredentials, void>): IHttpService<void> {
+    return this.request({
       method: HttpMethod.POST,
       endpoint: registerUser,
       body: options.body,

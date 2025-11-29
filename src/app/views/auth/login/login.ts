@@ -16,9 +16,12 @@ import { LoginCredentials } from '../../../interfaces/payload/LoginCredentials'
   styleUrl: './login.scss',
 })
 export class Login {
-  public loginState?: ReturnType<typeof AuthService.loginUser>
+  public loginState?: ReturnType<AuthService['loginUser']>
 
-  public constructor(public readonly fs: FormService<LoginForm>) {
+  public constructor(
+    private readonly authService: AuthService,
+    public readonly fs: FormService<LoginForm>
+  ) {
     this.fs.setForm(
       new FormGroup({
         emailOrPhone: new FormControl('', [Validators.required]),
@@ -31,7 +34,7 @@ export class Login {
     this.fs.setSubmitted()
 
     if (this.fs.form.valid) {
-      this.loginState = AuthService.loginUser({
+      this.loginState = this.authService.loginUser({
         body: this.fs.form.getRawValue() as LoginCredentials,
         form: this.fs.form,
       })

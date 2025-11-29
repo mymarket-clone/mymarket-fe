@@ -16,13 +16,16 @@ import { RegisterCredentials } from '../../../interfaces/payload/RegisterCredent
   styleUrl: './register.scss',
 })
 export class Register {
-  public registerState?: ReturnType<typeof AuthService.registerUser>
+  public registerState?: ReturnType<AuthService['registerUser']>
 
-  public constructor(public readonly fs: FormService<RegisterForm>) {
+  public constructor(
+    private readonly authService: AuthService,
+    public readonly fs: FormService<RegisterForm>
+  ) {
     this.fs.setForm(
       new FormGroup({
-        name: new FormControl(''),
-        lastname: new FormControl(''),
+        name: new FormControl('', Validators.required),
+        lastname: new FormControl('', Validators.required),
         email: new FormControl('', [Validators.required, Validators.email]),
         password: new FormControl('', [Validators.required, Validators.minLength(8)]),
         passwordConfirm: new FormControl('', [Validators.required, Validators.minLength(8)]),
@@ -34,7 +37,7 @@ export class Register {
     this.fs.setSubmitted()
 
     if (this.fs.form.valid) {
-      this.registerState = AuthService.registerUser({
+      this.registerState = this.authService.registerUser({
         body: this.fs.form.getRawValue() as RegisterCredentials,
         form: this.fs.form,
       })
