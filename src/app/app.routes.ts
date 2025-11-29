@@ -3,6 +3,7 @@ import { Login } from './views/auth/login/login'
 import { Main } from './layouts/main/main'
 import { Auth } from './layouts/auth/auth'
 import { RecoverPassword } from './views/auth/recover-password/recover-password'
+import { Register } from './views/auth/register/register'
 
 export const routes: Routes = [
   {
@@ -14,6 +15,7 @@ export const routes: Routes = [
     component: Auth,
     children: [
       { path: 'login', component: Login },
+      { path: 'register', component: Register },
       { path: 'recover-password', component: RecoverPassword },
     ],
   },

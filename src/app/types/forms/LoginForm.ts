@@ -1,6 +1,6 @@
 import { FormControl } from '@angular/forms'
 
-export type LoginFormControls = {
+export type LoginForm = {
   emailOrPhone: FormControl<string | null>
   password: FormControl<string | null>
 }

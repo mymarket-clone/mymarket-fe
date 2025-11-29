@@ -10,7 +10,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms'
 export class Input {
   public name = input.required<string>()
   public label = input.required<string>()
-  public type = input.required<string>()
+  public type = input.required<'text' | 'password' | 'email'>()
   public control = input.required<FormControl<string | null>>()
   public submitted = input.required<boolean>()
   public required = input.required<boolean>()

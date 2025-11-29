@@ -1,41 +1,40 @@
-import { Component, inject } from '@angular/core'
+import { Component } from '@angular/core'
 import { Input } from '../../../components/input/input'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { RouterLink } from '@angular/router'
 import { Button } from '../../../components/button/button'
 import { AuthService } from '../../../services/auth.service'
-import { LoginFormControls } from '../../../types/LoginFormControls'
+import { LoginForm } from '../../../types/forms/LoginForm'
+import { FormService } from '../../../services/form.service'
+import { LoginCredentials } from '../../../interfaces/payload/LoginCredentials'
 
 @Component({
   selector: 'app-login',
   imports: [Input, ReactiveFormsModule, RouterLink, Button],
+  providers: [FormService],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
 export class Login {
-  public authService = inject(AuthService)
-  public loginState?: ReturnType<AuthService['loginUser']>
-  public submitted = false
+  public loginState?: ReturnType<typeof AuthService.loginUser>
 
-  public loginForm = new FormGroup<LoginFormControls>({
-    emailOrPhone: new FormControl('', [Validators.required]),
-    password: new FormControl('', [Validators.required, Validators.minLength(8)]),
-  })
-
-  public getControl<K extends keyof LoginFormControls>(key: K): LoginFormControls[K] {
-    return this.loginForm.controls[key]
+  public constructor(public readonly fs: FormService<LoginForm>) {
+    this.fs.setForm(
+      new FormGroup({
+        emailOrPhone: new FormControl('', [Validators.required]),
+        password: new FormControl('', [Validators.required, Validators.minLength(8)]),
+      })
+    )
   }
 
   public onSubmit(): void {
-    this.submitted = true
-    if (this.loginForm.invalid) return
+    this.fs.setSubmitted()
 
-    this.loginState = this.authService.loginUser({
-      body: {
-        emailOrPhone: this.getControl('emailOrPhone').value!,
-        password: this.getControl('password').value!,
-      },
-      form: this.loginForm,
-    })
+    if (this.fs.form.valid) {
+      this.loginState = AuthService.loginUser({
+        body: this.fs.form.getRawValue() as LoginCredentials,
+        form: this.fs.form,
+      })
+    }
   }
 }

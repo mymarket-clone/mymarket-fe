@@ -17,17 +17,10 @@
     height: 56px;
     color: $white;
     border: 1px solid transparent;
+    font-size: 14px;
 
     @media (max-width: 768px) {
       height: 48px;
-    }
-
-    img {
-      height: 24px;
-
-      @media (max-width: 640px) {
-        height: 20px;
-      }
     }
 
     &.disabled {

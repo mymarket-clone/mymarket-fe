@@ -3,8 +3,17 @@
   src: url('../../assets/fonts/TBCXRegular.woff2'), format('woff2');
 }
 
+@font-face {
+  font-family: 'TBCXBold';
+  src: url('../../assets/fonts/TBCXBold.woff2'), format('woff2');
+}
+
 .regular-font {
   font-family: 'TBCXRegular', sans-serif;
+}
+
+.bold-font {
+  font-family: 'TBCXBold', sans-serif;
 }
 
 *,
@@ -39,9 +48,28 @@ textarea {
 }
 
 a {
-  color: inherit;
-  -webkit-text-decoration: inherit;
-  text-decoration: inherit;
+  text-decoration: none;
+}
+
+input,
+textarea,
+select {
+  &:-webkit-autofill {
+    box-shadow: inset 0 0 0 30px white;
+    color: #1c1b1f;
+    background-color: white;
+  }
+}
+
+audio,
+canvas,
+embed,
+iframe,
+img,
+object,
+svg,
+video {
+  display: block;
 }
 
 .container {
@@ -56,4 +84,12 @@ a {
 .outline-none {
   --tw-outline-style: none;
   outline-style: none;
+}
+
+.btn-img {
+  height: 24px;
+
+  @media (max-width: 768px) {
+    height: 20px;
+  }
 }

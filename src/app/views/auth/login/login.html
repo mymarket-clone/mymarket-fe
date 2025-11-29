@@ -5,21 +5,21 @@
         <img class="logo-small" src="assets/logo-small.svg" alt="logo" />
         <div class="form-wrapper">
           <div class="inputs">
-            <form [formGroup]="loginForm" (submit)="onSubmit()">
+            <form [formGroup]="fs.form" (submit)="onSubmit()">
               <app-input
                 name="emailOrPhone"
                 label="Email / Phone number"
                 type="text"
-                [control]="getControl('emailOrPhone')"
-                [submitted]="submitted"
+                [control]="fs.getControl('emailOrPhone')"
+                [submitted]="fs.submitted"
                 [required]="true"
               />
               <app-input
                 name="password"
                 label="Password"
                 type="password"
-                [control]="getControl('password')"
-                [submitted]="submitted"
+                [control]="fs.getControl('password')"
+                [submitted]="fs.submitted"
                 [required]="true"
               />
               <div class="recover-password">
@@ -27,7 +27,7 @@
               </div>
               <app-button
                 type="submit"
-                [title]="loginState?.loading() ? 'Loading...' : 'Sign Up'"
+                [title]="loginState?.loading() ? 'Loading...' : 'Sign In'"
                 color="blue"
               />
             </form>
@@ -47,7 +47,7 @@
       <div class="signup">
         <span
           >Don't have an account?
-          <a> Sign up</a>
+          <a routerLink="/user/register"> Sign up</a>
         </span>
       </div>
       <div class="marginator">
