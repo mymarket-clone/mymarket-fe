@@ -6,6 +6,7 @@
   "scripts": {
     "ng": "ng",
     "dev": "ng serve",
+    "dev:server": "ng serve --host 0.0.0.0 --port 4200",
     "build": "ng build",
     "prepare": "husky"
   },
