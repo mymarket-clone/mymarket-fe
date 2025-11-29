@@ -12,6 +12,7 @@
                 type="text"
                 [control]="getControl('emailOrPhone')"
                 [submitted]="submitted"
+                [required]="true"
               />
               <app-input
                 name="password"
@@ -19,6 +20,7 @@
                 type="password"
                 [control]="getControl('password')"
                 [submitted]="submitted"
+                [required]="true"
               />
               <div class="recover-password">
                 <a routerLink="/user/recover-password">Recover password</a>

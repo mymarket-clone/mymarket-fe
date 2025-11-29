@@ -13,6 +13,7 @@ export class Input {
   public type = input.required<string>()
   public control = input.required<FormControl<string | null>>()
   public submitted = input.required<boolean>()
+  public required = input.required<boolean>()
 
   public passwordHidden = signal<boolean>(true)
 

@@ -9,7 +9,10 @@
       placeholder=" "
     />
     <p>
-      <span> {{ label() }} </span>
+      <span class="label">{{ label() }}</span>
+      @if (required()) {
+      <span class="required-star">*</span>
+      }
     </p>
   </div>
   <!-- Trailing icon -->
