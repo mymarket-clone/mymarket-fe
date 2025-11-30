@@ -1,3 +1,5 @@
+@use '../styles/vars.scss' as *;
+
 @font-face {
   font-family: 'TBCXRegular';
   src: url('../../assets/fonts/TBCXRegular.woff2'), format('woff2');
@@ -25,6 +27,7 @@
   box-sizing: border-box;
   border: 0 solid;
   font-family: 'TBCXRegular', sans-serif;
+  color: $raisin-130;
 }
 
 html,

@@ -34,6 +34,7 @@ module.exports = {
         'schema',
         'cleanup',
         'dev',
+        'wip',
       ],
     ],
     'subject-case': [2, 'always', 'lower-case'],

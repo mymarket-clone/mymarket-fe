@@ -3,7 +3,7 @@ import { IBaseResponse } from './IBaseResponse'
 export type ILoginUser = IBaseResponse<{
   accessToken: string
   refreshToken: string
-  expriesAt: string
+  expiresAt: string
   user: {
     id: number
     name: string

@@ -6,4 +6,9 @@ export type RegisterForm = {
   email: FormControl<string | null>
   password: FormControl<string | null>
   passwordConfirm: FormControl<string | null>
+  gender: FormControl<number | null>
+  birthYear: FormControl<number | null>
+  phoneNumber: FormControl<string | null>
+  termsAndConditions: FormControl<boolean | null>
+  privacyPolicy: FormControl<boolean | null>
 }

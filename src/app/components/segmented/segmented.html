@@ -1,0 +1,19 @@
+<div class="segmented">
+  <span>
+    <label class="label">{{ label() }}</label>
+    @if (true) {
+    <span class="required-star">*</span>
+    }
+  </span>
+  <div class="cont">
+    <div class="segment">
+      <span class="left" (click)="setFirst()" [class.active]="static() === false"
+        >{{ segments()[0]}}</span
+      >
+      <span class="right" (click)="setSecond()" [class.active]="static()">{{ segments()[1]}}</span>
+    </div>
+    @if (hasError()) {
+    <span class="error-message">Select Gender</span>
+    }
+  </div>
+</div>

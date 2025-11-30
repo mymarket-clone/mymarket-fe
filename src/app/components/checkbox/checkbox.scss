@@ -1,0 +1,68 @@
+@use '../../styles/vars.scss' as *;
+
+:host {
+  .checkbox {
+    display: flex;
+    flex-direction: column;
+
+    .cont {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      > input {
+        height: 20px;
+        width: 20px;
+        border-radius: 6px;
+        background-repeat: no-repeat;
+        background-position: center;
+        cursor: pointer;
+        min-width: 20px;
+        outline: none;
+        appearance: none;
+        border: 1px solid $raisin-40;
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+          box-shadow: 0 0 0 4px rgba(26, 186, 107, 0.2);
+          border-color: $green;
+        }
+
+        &:checked {
+          background-image: url('/assets/tick.svg');
+          background-color: $green;
+          border-color: $green;
+        }
+
+        &.error {
+          border-color: $red-500;
+        }
+      }
+
+      > div {
+        width: 100%;
+        display: flex;
+        align-items: center;
+
+        label {
+          font-size: 14px;
+
+          a {
+            color: $blue-100;
+          }
+        }
+
+        span {
+          color: $red-500;
+        }
+      }
+    }
+
+    .error-message {
+      font-size: 12px;
+      margin-top: 4px;
+      padding-inline: 8px;
+      color: $red-500;
+    }
+  }
+}

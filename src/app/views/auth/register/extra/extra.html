@@ -1,0 +1,62 @@
+<div class="auth-modal">
+  <div class="data-input">
+    <div class="top">
+      <div>
+        <img src="assets/tnet.svg" />
+      </div>
+      <h2 class="bold-font">Personal information</h2>
+    </div>
+    <div class="form-wrapper">
+      <div class="inputs">
+        <form [formGroup]="fs().form" (submit)="onSubmit()">
+          <div>
+            <app-segmented
+              label="Gender"
+              [control]="fs().getControl('gender')"
+              [submitted]="fs().submitted"
+              [segments]="['Male', 'Female']"
+              [required]="true"
+            />
+            <app-input
+              name="birthYear"
+              label="Birth year"
+              type="text"
+              [control]="fs().getControl('birthYear')"
+              [submitted]="fs().submitted"
+              [required]="true"
+            />
+            <app-input
+              name="phoneNumber"
+              label="Phone number"
+              type="text"
+              [control]="fs().getControl('phoneNumber')"
+              [submitted]="fs().submitted"
+              [required]="true"
+            />
+            <app-checkbox
+              label="I agree to"
+              clickableLabel="terms and conditions"
+              href="https://auth.tnet.ge/en/rules"
+              [submitted]="fs().submitted"
+              [control]="fs().getControl('termsAndConditions')"
+              [required]="true"
+            />
+            <app-checkbox
+              label="I agree to"
+              clickableLabel="privacy policy"
+              href="https://auth.tnet.ge/en/usageagreement"
+              [submitted]="fs().submitted"
+              [control]="fs().getControl('privacyPolicy')"
+              [required]="true"
+            />
+          </div>
+          <app-button
+            type="submit"
+            [title]="registerState?.loading() ? 'Loading...' : 'Create account'"
+            color="blue"
+          />
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

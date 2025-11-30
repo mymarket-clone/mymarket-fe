@@ -1,12 +1,3 @@
-export type User = {
-  accessToken: string
-  refreshToken: string
-  expiresAt: string
-  user: {
-    id: number
-    name: string
-    lastName: string
-    email: string
-    emailVerified: boolean
-  }
-}
+import { ILoginUser } from '../interfaces/response/ILoginUser'
+
+export type User = ILoginUser

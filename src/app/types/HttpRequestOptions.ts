@@ -1,4 +1,4 @@
-import { HttpMethod } from './HttpMethod'
+import { HttpMethod } from './enums/HttpMethod'
 
 export type HttpRequestOptions<DataType, BodyType> = {
   method: HttpMethod

@@ -8,6 +8,15 @@
   background-color: transparent;
   z-index: 10;
 
+  .sent-to {
+    margin-bottom: 1rem;
+    font-size: 14px;
+
+    > span {
+      font-weight: bold;
+    }
+  }
+
   .input-wrapper {
     display: flex;
     align-items: center;
@@ -30,7 +39,7 @@
       padding-inline: 1rem;
       padding-block: 10px;
 
-      input {
+      .input {
         position: relative;
         width: 100%;
         height: 100%;
@@ -59,6 +68,11 @@
             opacity: 0.7;
           }
         }
+
+        &.disabled {
+          background-color: $raisin-10 !important;
+          cursor: not-allowed;
+        }
       }
 
       p {
@@ -85,6 +99,62 @@
       }
     }
 
+    .send-code-btn {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      cursor: pointer;
+      gap: 8px;
+      padding: 6px 8px;
+      transition: all 0.3s ease;
+      background-color: $blue-100;
+      border-radius: 6px;
+      margin-right: 12px;
+
+      > div {
+        position: absolute;
+        inset: 0;
+        background-color: $blue-20;
+        transition: all 100ms ease;
+        transform-origin: right center;
+        width: 100%;
+        left: 100%;
+      }
+
+      > span {
+        position: relative;
+        z-index: 2;
+        color: $white;
+      }
+
+      &.disabled {
+        cursor: not-allowed;
+      }
+
+      &.disabled > div {
+        animation: slideProgress 30s linear forwards;
+      }
+
+      &.loading {
+        opacity: 0.4;
+      }
+    }
+
+    @keyframes slideProgress {
+      0% {
+        left: 100%;
+      }
+      1% {
+        left: 0;
+      }
+      100% {
+        left: 100%;
+      }
+    }
+
     .trailing-icon {
       display: flex;
       align-items: center;
@@ -103,6 +173,20 @@
     &.hasError {
       border-color: $red-500;
     }
+
+    &.disabled {
+      background-color: $raisin-10 !important;
+    }
+
+    .input.disabled {
+      background-color: $raisin-10 !important;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .send-code-btn {
+      pointer-events: auto;
+    }
   }
 
   .error-message {
@@ -110,5 +194,11 @@
     margin-top: 4px;
     padding-inline: 8px;
     color: $red-500;
+  }
+
+  .sent-message {
+    font-size: 12px;
+    margin-top: 4px;
+    padding-inline: 8px;
   }
 }

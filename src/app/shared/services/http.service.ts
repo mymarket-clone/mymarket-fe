@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http'
 import { inject, signal } from '@angular/core'
 import { Observable } from 'rxjs'
-import { HttpMethod } from '../../types/HttpMethod'
+import { HttpMethod } from '../../types/enums/HttpMethod'
 import { HttpRequestOptions } from '../../types/HttpRequestOptions'
 import { IHttpService } from '../../interfaces/common/IHttpService'
 import { FormGroup } from '@angular/forms'
 
 export abstract class HttpService {
-  private readonly httpClient = inject(HttpClient)
-  private readonly API_URL = 'https://localhost:7289/api/'
+  protected readonly httpClient = inject(HttpClient)
+  protected readonly API_URL = 'https://localhost:7289/api/'
 
   protected request<Data, Body = undefined>(
     options: HttpRequestOptions<Data, Body> & { form?: FormGroup }
@@ -51,7 +51,7 @@ export abstract class HttpService {
       error: (errors) => {
         const serverErrors = errors.error?.errors || null
 
-        error.set(serverErrors[0] || 'Unknown error')
+        error.set(serverErrors?.[0] || serverErrors || 'Unknown error')
         loading.set(false)
         onError?.(serverErrors || 'Unknown error')
 

@@ -1,12 +1,13 @@
 import { Component } from '@angular/core'
 import { Input } from '../../../components/input/input'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
-import { RouterLink } from '@angular/router'
+import { Router, RouterLink } from '@angular/router'
 import { Button } from '../../../components/button/button'
 import { AuthService } from '../../../services/auth.service'
 import { LoginForm } from '../../../types/forms/LoginForm'
 import { FormService } from '../../../services/form.service'
 import { LoginCredentials } from '../../../interfaces/payload/LoginCredentials'
+import { UserStore } from '../../../store/user.store'
 
 @Component({
   selector: 'app-login',
@@ -20,12 +21,14 @@ export class Login {
 
   public constructor(
     private readonly authService: AuthService,
+    private readonly userStore: UserStore,
+    private readonly router: Router,
     public readonly fs: FormService<LoginForm>
   ) {
     this.fs.setForm(
       new FormGroup({
-        emailOrPhone: new FormControl('', [Validators.required]),
-        password: new FormControl('', [Validators.required, Validators.minLength(8)]),
+        emailOrPhone: new FormControl('', Validators.required),
+        password: new FormControl('', Validators.required),
       })
     )
   }
@@ -37,6 +40,10 @@ export class Login {
       this.loginState = this.authService.loginUser({
         body: this.fs.form.getRawValue() as LoginCredentials,
         form: this.fs.form,
+        onSuccess: (response) => {
+          this.userStore.setUser(response)
+          this.router.navigate(['/'])
+        },
       })
     }
   }

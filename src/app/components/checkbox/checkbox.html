@@ -1,0 +1,21 @@
+<div class="checkbox">
+  <div class="cont">
+    <input
+      type="checkbox"
+      [checked]="control()!.value"
+      (change)="toggle()"
+      [class.error]="hasError()"
+      [class.checked]="control().value"
+    />
+    <div>
+      <label>{{ label() }} <a [href]="href()">{{ clickableLabel() }}</a></label>
+      @if (required()) {
+      <span>*</span>
+      }
+    </div>
+  </div>
+
+  @if (hasError()) {
+  <span class="error-message">{{ getErrorMessage() }}</span>
+  }
+</div>

@@ -1,4 +1,12 @@
-<div class="input-wrapper" [class.trailing]="hasTrailingIcon()" [class.hasError]="hasError()">
+@if(sendEmailButton() && codeSent()) {
+<div class="sent-to">One-time code was sent to <span>{{ control().value }}</span></div>
+}
+<div
+  class="input-wrapper"
+  [class.trailing]="hasTrailingIcon()"
+  [class.hasError]="hasError()"
+  [class.disabled]="disabled()"
+>
   <div class="input-container">
     <input
       [formControl]="control()"
@@ -7,6 +15,7 @@
       class="input outline-none"
       autocomplete="off"
       placeholder=" "
+      [class.disabled]="disabled()"
     />
     <p>
       <span class="label">{{ label() }}</span>
@@ -25,8 +34,26 @@
     />
   </button>
   }
+  <!-- Code sent -->
+  @if(sendEmailButton()) {
+  <button
+    type="button"
+    class="send-code-btn"
+    [class.disabled]="sendCodeActive()"
+    [class.loading]="sendEmailVerificationCodeState?.loading()"
+    (click)="handleSendCode()"
+  >
+    <span>Get code</span>
+    <div></div>
+  </button>
+  }
 </div>
 
 @if (hasError()) {
 <span class="error-message">{{ getErrorMessage() }}</span>
+}
+
+<!-- Message for code sent -->
+@if (sendEmailButton() && codeSent()) {
+<span class="sent-message">The code is active for 3 minutes</span>
 }

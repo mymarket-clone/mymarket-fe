@@ -5,6 +5,11 @@ import { User } from '../types/User'
 export class UserStore {
   private user = signal<User | null>(null)
 
+  public constructor() {
+    const stored = window.localStorage.getItem('user')
+    if (stored) this.user.set(JSON.parse(stored))
+  }
+
   public setUser(user: User | null): void {
     this.user.set(user)
     window.localStorage.setItem('user', JSON.stringify(user))
