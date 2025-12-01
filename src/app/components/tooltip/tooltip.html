@@ -1,0 +1,12 @@
+<div
+  class="tooltip"
+  [class.visible]="tooltip.visible"
+  [class.top]="tooltip.position === 'top'"
+  [class.bottom]="tooltip.position === 'bottom'"
+  [style.top.px]="tooltip.y"
+  [style.left.px]="tooltip.x"
+>
+  @if (tooltip.isTemplate) {
+  <ng-container [ngTemplateOutlet]="templateContent"></ng-container>
+  } @else { {{ tooltip.content }} }
+</div>

@@ -164,6 +164,10 @@
       transition: all 0.2s ease-in-out;
       height: 32px;
       width: 32px;
+
+      &:hover {
+        background: $raisin-10;
+      }
     }
 
     &.trailing {

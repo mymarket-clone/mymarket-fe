@@ -9,7 +9,7 @@
       </div>
     </div>
     <div>
-      <button routerLink="/user/login">{{ userStore.getUser() ? "Logout" : "Login" }}</button>
+      <button (click)="handleLoginButton()">{{ userStore.getUser() ? "Logout" : "Login" }}</button>
     </div>
   </div>
 </div>

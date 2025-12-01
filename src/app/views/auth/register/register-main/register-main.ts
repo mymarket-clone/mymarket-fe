@@ -5,10 +5,12 @@ import { RegisterForm } from '../../../../types/forms/RegisterForm'
 import { FormService } from '../../../../services/form.service'
 import { Button } from '../../../../components/button/button'
 import { RegisterStage } from '../../../../types/enums/RegisterStage'
+import { RouterLink } from '@angular/router'
+import { TooltipDirective } from '../../../../directives/appTooltip'
 
 @Component({
   selector: 'app-register-main',
-  imports: [Input, ReactiveFormsModule, Button],
+  imports: [Input, ReactiveFormsModule, Button, RouterLink, TooltipDirective],
   templateUrl: './register-main.html',
   styleUrl: './register-main.scss',
 })

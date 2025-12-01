@@ -4,7 +4,8 @@ export interface IBaseError {
   status: number
   instance: string
   errors: Record<string, string[]>
-  Code: string
+  code: string
+  email?: string
 }
 
 export interface IBaseSuccess<T> {

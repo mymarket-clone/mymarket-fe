@@ -8,10 +8,12 @@ import { LoginForm } from '../../../types/forms/LoginForm'
 import { FormService } from '../../../services/form.service'
 import { LoginCredentials } from '../../../interfaces/payload/LoginCredentials'
 import { UserStore } from '../../../store/user.store'
+import { TooltipDirective } from '../../../directives/appTooltip'
+import { HttpStatus } from '../../../types/enums/HttpStatus'
 
 @Component({
   selector: 'app-login',
-  imports: [Input, ReactiveFormsModule, RouterLink, Button],
+  imports: [Input, ReactiveFormsModule, RouterLink, Button, TooltipDirective],
   providers: [FormService],
   templateUrl: './login.html',
   styleUrl: './login.scss',
@@ -43,6 +45,13 @@ export class Login {
         onSuccess: (response) => {
           this.userStore.setUser(response)
           this.router.navigate(['/'])
+        },
+        onError: (_, record) => {
+          if (record?.status == HttpStatus.Unauthorized && record?.email) {
+            this.router.navigate(['/user/register'], {
+              queryParams: { email: record.email },
+            })
+          }
         },
       })
     }

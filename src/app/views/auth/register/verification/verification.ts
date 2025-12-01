@@ -9,7 +9,7 @@ import { SendEmailVerificationForm } from '../../../../types/forms/SendEmailVeri
 import { AuthService } from '../../../../services/auth.service'
 import { VerifyEmailCodeCredentials } from '../../../../interfaces/payload/VerifyEmailCodeCredentials'
 import { UserStore } from '../../../../store/user.store'
-import { Router } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 
 @Component({
   selector: 'app-verification',
@@ -28,12 +28,15 @@ export class Verification {
     private readonly authservice: AuthService,
     private readonly userStore: UserStore,
     private readonly router: Router,
+    private readonly actR: ActivatedRoute,
     public readonly vfs: FormService<SendEmailVerificationForm>
   ) {
     effect(() => {
       this.vfs.setForm(
         new FormGroup({
-          email: new FormControl(this.fs().getControl('email').value),
+          email: new FormControl(
+            this.fs().getControl('email').value || this.actR.snapshot.queryParamMap.get('email')
+          ),
           code: new FormControl(''),
         })
       )

@@ -1,0 +1,57 @@
+@use '../../styles/vars.scss' as *;
+
+:host {
+  .tooltip {
+    position: fixed;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  .tooltip.visible {
+    opacity: 1;
+  }
+
+  .tooltip.top {
+    transform: translate(-50%, -100%);
+    margin-bottom: 4px;
+
+    &::after {
+      content: '';
+      height: 8px;
+      width: 8px;
+      transform: translateX(-50%) rotate(225deg);
+      position: absolute;
+      background: inherit;
+      z-index: -1;
+      left: 50%;
+      bottom: -11%;
+    }
+  }
+
+  .tooltip.bottom {
+    transform: translate(-50%, 0%);
+    margin-top: 19px;
+
+    &::after {
+      content: '';
+      height: 8px;
+      width: 8px;
+      transform: translateX(-50%) rotate(225deg);
+      position: absolute;
+      background: inherit;
+      z-index: -1;
+      left: 50%;
+      top: -11%;
+    }
+  }
+
+  .tooltip:not(.has-template) {
+    background-color: $black-2;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+  }
+}

@@ -13,6 +13,7 @@ import { passwordValidator } from '../../../utils/validators/passwordValidator'
 import { passwordMatchValidator } from '../../../utils/validators/passwordMatchValidator'
 import { lettersOnlyValidator } from '../../../utils/validators/lettersOnlyValidatior'
 import { Verification } from './verification/verification'
+import { ActivatedRoute } from '@angular/router'
 
 @Component({
   selector: 'app-register',
@@ -28,6 +29,7 @@ export class Register {
 
   public constructor(
     private readonly authService: AuthService,
+    private readonly actR: ActivatedRoute,
     public readonly fs: FormService<RegisterForm>
   ) {
     this.fs.setForm(
@@ -55,6 +57,10 @@ export class Register {
         { validators: passwordMatchValidator }
       )
     )
+
+    if (this.actR.snapshot.queryParamMap.get('email')) {
+      this.stage.set(RegisterStage.Verification)
+    }
   }
 
   public moveTo(stage: RegisterStage): void {

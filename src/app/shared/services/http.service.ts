@@ -53,9 +53,9 @@ export abstract class HttpService {
 
         error.set(serverErrors?.[0] || serverErrors || 'Unknown error')
         loading.set(false)
-        onError?.(serverErrors || 'Unknown error')
+        onError?.(serverErrors || 'Unknown error', errors.error)
 
-        if (form) {
+        if (form && serverErrors && typeof serverErrors === 'object') {
           Object.entries(serverErrors).forEach(([field, messages]) => {
             const normalizedField = field.charAt(0).toLowerCase() + field.slice(1)
             form.get(normalizedField)?.setErrors({ server: messages })

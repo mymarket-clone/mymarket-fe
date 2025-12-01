@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { RouterLink } from '@angular/router'
+import { Router, RouterLink } from '@angular/router'
 import { UserStore } from '../../../../store/user.store'
 
 @Component({
@@ -9,9 +9,20 @@ import { UserStore } from '../../../../store/user.store'
   styleUrl: './header.scss',
 })
 export class Header {
-  public constructor(public readonly userStore: UserStore) {}
+  public constructor(
+    public readonly userStore: UserStore,
+    private readonly router: Router
+  ) {}
 
   public get userJson(): string {
     return JSON.stringify(this.userStore.getUser(), null, 2) ?? 'No user'
+  }
+
+  public handleLoginButton(): void {
+    if (this.userStore.getUser()) {
+      this.userStore.logout()
+    } else {
+      this.router.navigate(['/user/login'])
+    }
   }
 }
