@@ -1,0 +1,27 @@
+@use '../../styles/vars.scss' as *;
+
+:host {
+  position: absolute;
+  left: -40px;
+
+  button {
+    border-radius: 50%;
+    cursor: pointer;
+    height: 32px;
+    width: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease-in-out;
+
+    img {
+      transform: rotate(90deg);
+      height: 32px;
+      width: 40px;
+    }
+
+    &:hover {
+      background-color: $raisin-10;
+    }
+  }
+}

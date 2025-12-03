@@ -8,7 +8,7 @@
       [class.checked]="control().value"
     />
     <div>
-      <label>{{ label() }} <a [href]="href()">{{ clickableLabel() }}</a></label>
+      <label>{{ label() }} <a [href]="href()" target="_blank">{{ clickableLabel() }}</a></label>
       @if (required()) {
       <span>*</span>
       }

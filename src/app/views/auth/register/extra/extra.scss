@@ -5,6 +5,10 @@
   justify-content: center;
   width: 100%;
 
+  &.hidden {
+    display: none;
+  }
+
   .auth-modal {
     background-color: $white;
     position: relative;
@@ -81,6 +85,14 @@
           tab-size: 4;
           text-align: center;
           color: $raisin-130;
+        }
+
+        .top-wrapper {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          position: relative;
         }
       }
 

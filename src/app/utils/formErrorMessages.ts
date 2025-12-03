@@ -5,7 +5,6 @@ export const formErrorMessages: Record<string, (err: ValidationErrors) => string
   maxlength: (e) => `Maximum length is ${e['requiredLength']}`,
   email: () => 'Please enter a valid email address',
   pattern: () => 'Invalid format',
-  birthYear: () => `You must be 18 years old`,
   userExists: () => 'User with this email already exists',
   minLength: (e) => `Password must be at least ${e['requiredLength']} characters`,
   digit: () => 'Password must contain at least one digit (0-9)',

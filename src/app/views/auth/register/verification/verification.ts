@@ -10,10 +10,11 @@ import { AuthService } from '../../../../services/auth.service'
 import { VerifyEmailCodeCredentials } from '../../../../interfaces/payload/VerifyEmailCodeCredentials'
 import { UserStore } from '../../../../store/user.store'
 import { ActivatedRoute, Router } from '@angular/router'
+import { ButtonChevron } from '../../../../components/button-chevron/button-chevron'
 
 @Component({
   selector: 'app-verification',
-  imports: [Input, ReactiveFormsModule, Button],
+  imports: [Input, ReactiveFormsModule, Button, ButtonChevron],
   templateUrl: './verification.html',
   styleUrl: './verification.scss',
 })
@@ -55,5 +56,11 @@ export class Verification {
         this.router.navigate(['/'])
       },
     })
+  }
+
+  public handleChevron(): void {
+    this.fs().form.reset()
+    this.fs().resetSubmitted()
+    this.moveTo.emit(RegisterStage.Main)
   }
 }

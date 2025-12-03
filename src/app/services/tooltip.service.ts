@@ -1,19 +1,10 @@
 import { Injectable, TemplateRef } from '@angular/core'
 import { BehaviorSubject } from 'rxjs'
-import { Position } from '../directives/appTooltip'
-
-export interface TooltipData {
-  content: string | TemplateRef<unknown>
-  x: number
-  y: number
-  visible: boolean
-  isTemplate?: boolean
-  position?: Position
-}
+import { TooltipData } from '../types/TooltipData'
 
 @Injectable({ providedIn: 'root' })
 export class TooltipService {
-  private tooltipSubject = new BehaviorSubject<TooltipData>({
+  private tooltipSubject = new BehaviorSubject<TooltipData<string | TemplateRef<unknown>>>({
     content: '',
     x: 0,
     y: 0,
@@ -23,9 +14,9 @@ export class TooltipService {
 
   public tooltip$ = this.tooltipSubject.asObservable()
 
-  public showText(text: string, x: number, y: number, position: Position): void {
+  public showText({ content, x, y, position }: TooltipData<string>): void {
     this.tooltipSubject.next({
-      content: text,
+      content,
       x,
       y,
       visible: true,
@@ -34,14 +25,9 @@ export class TooltipService {
     })
   }
 
-  public showTemplate(
-    template: TemplateRef<unknown>,
-    x: number,
-    y: number,
-    position: Position
-  ): void {
+  public showTemplate({ content, x, y, position }: TooltipData<TemplateRef<unknown>>): void {
     this.tooltipSubject.next({
-      content: template,
+      content,
       x,
       y,
       visible: true,

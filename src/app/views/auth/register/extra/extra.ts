@@ -9,10 +9,11 @@ import { RegisterStage } from '../../../../types/enums/RegisterStage'
 import { Checkbox } from '../../../../components/checkbox/checkbox'
 import { AuthService } from '../../../../services/auth.service'
 import { RegisterCredentials } from '../../../../interfaces/payload/RegisterCredentials'
+import { ButtonChevron } from '../../../../components/button-chevron/button-chevron'
 
 @Component({
   selector: 'app-register-extra',
-  imports: [Input, Button, ReactiveFormsModule, Segmented, Checkbox],
+  imports: [Input, Button, ReactiveFormsModule, Segmented, Checkbox, ButtonChevron],
   templateUrl: './extra.html',
   styleUrl: './extra.scss',
 })

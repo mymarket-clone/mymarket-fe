@@ -8,7 +8,6 @@ import { RegisterMain } from './register-main/register-main'
 import { Extra } from './extra/extra'
 import { notZeroValidator } from '../../../utils/validators/notZeroValidator'
 import { RegisterStage } from '../../../types/enums/RegisterStage'
-import { birthYearValidator } from '../../../utils/validators/birthYearValidator'
 import { passwordValidator } from '../../../utils/validators/passwordValidator'
 import { passwordMatchValidator } from '../../../utils/validators/passwordMatchValidator'
 import { lettersOnlyValidator } from '../../../utils/validators/lettersOnlyValidatior'
@@ -45,11 +44,7 @@ export class Register {
           password: new FormControl('', [Validators.required, passwordValidator]),
           passwordConfirm: new FormControl('', Validators.required),
           gender: new FormControl(0, [Validators.required, notZeroValidator]),
-          birthYear: new FormControl(2016, [
-            Validators.required,
-            notZeroValidator,
-            birthYearValidator,
-          ]),
+          birthYear: new FormControl(2016, [Validators.required, notZeroValidator]),
           phoneNumber: new FormControl('', [Validators.required]),
           termsAndConditions: new FormControl(false, [Validators.requiredTrue]),
           privacyPolicy: new FormControl(false, [Validators.requiredTrue]),
