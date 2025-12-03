@@ -20,6 +20,7 @@ export class FormService<T extends { [P in keyof T]: AbstractControl }> {
 
   public setSubmitted(): void {
     this._submitted.set(true)
+    this._form.markAllAsTouched()
   }
 
   public resetSubmitted(): void {

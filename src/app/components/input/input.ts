@@ -1,7 +1,6 @@
-import { Component, input, signal } from '@angular/core'
+import { Component, input, output, signal } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { formErrorMessages } from '../../utils/formErrorMessages'
-import { AuthService } from '../../services/auth.service'
 
 @Component({
   selector: 'app-input',
@@ -18,14 +17,13 @@ export class Input<T = string> {
   public required = input.required<boolean>()
   public disabled = input<boolean>(false)
   public sendEmailButton = input<boolean>(false)
+  public sendCodeActive = input<boolean>(false)
+  public codeSent = input<boolean>(false)
+  public codeSendLoading = input<boolean>(false)
+
+  public sendClick = output()
 
   public passwordHidden = signal<boolean>(true)
-  public sendCodeActive = signal<boolean>(false)
-  public codeSent = signal<boolean>(false)
-
-  public sendEmailVerificationCodeState?: ReturnType<AuthService['sendEmailVerificationCode']>
-
-  public constructor(private readonly authService: AuthService) {}
 
   public inputType(): string {
     const type = this.type()
@@ -42,16 +40,8 @@ export class Input<T = string> {
 
   public hasError(): boolean {
     const control = this.control()
-    const errors = control.errors
-    if (!errors) return false
-
-    const isRequiredError = !!errors['required']
-
-    if (!this.required() && isRequiredError) {
-      return this.submitted()
-    }
-
-    return this.submitted() || control.touched || control.dirty
+    if (!control) return false
+    return !!control.errors && (control.touched || control.dirty)
   }
 
   public getErrorMessage(): string | null {
@@ -68,17 +58,7 @@ export class Input<T = string> {
   }
 
   public handleSendCode(): void {
-    if (this.sendCodeActive() || this.sendEmailVerificationCodeState?.loading()) return
-
-    this.sendEmailVerificationCodeState = this.authService.sendEmailVerificationCode({
-      body: { email: this.control().value as string },
-      onSuccess: () => {
-        this.codeSent.set(true)
-        this.sendCodeActive.set(true)
-
-        setTimeout(() => this.sendCodeActive.set(false), 30000)
-      },
-      onError: (err) => console.error(err),
-    })
+    if (this.sendCodeActive() || this.codeSendLoading()) return
+    this.sendClick.emit()
   }
 }

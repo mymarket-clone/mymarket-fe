@@ -40,7 +40,7 @@
     type="button"
     class="send-code-btn"
     [class.disabled]="sendCodeActive()"
-    [class.loading]="sendEmailVerificationCodeState?.loading()"
+    [class.loading]="codeSendLoading()"
     (click)="handleSendCode()"
   >
     <span>Get code</span>

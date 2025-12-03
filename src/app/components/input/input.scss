@@ -132,6 +132,7 @@
 
       &.disabled {
         cursor: not-allowed;
+        opacity: 0.4;
       }
 
       &.disabled > div {
@@ -139,6 +140,7 @@
       }
 
       &.loading {
+        cursor: not-allowed;
         opacity: 0.4;
       }
     }

@@ -1,4 +1,4 @@
-import { Component, effect, input, output } from '@angular/core'
+import { Component, effect, input, output, signal } from '@angular/core'
 import { RegisterStage } from '../../../../types/enums/RegisterStage'
 import { Input } from '../../../../components/input/input'
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
@@ -10,23 +10,23 @@ import { AuthService } from '../../../../services/auth.service'
 import { VerifyEmailCodeCredentials } from '../../../../interfaces/payload/VerifyEmailCodeCredentials'
 import { UserStore } from '../../../../store/user.store'
 import { ActivatedRoute, Router } from '@angular/router'
-import { ButtonChevron } from '../../../../components/button-chevron/button-chevron'
 
 @Component({
   selector: 'app-verification',
-  imports: [Input, ReactiveFormsModule, Button, ButtonChevron],
+  imports: [Input, ReactiveFormsModule, Button],
   templateUrl: './verification.html',
   styleUrl: './verification.scss',
 })
 export class Verification {
+  public sendCodeActive = signal<boolean>(false)
+  public codeSent = signal<boolean>(false)
+
   public fs = input.required<FormService<RegisterForm>>()
   public submitted = input.required<boolean>()
   public moveTo = output<RegisterStage>()
 
-  public verifyEmailCode?: ReturnType<AuthService['verifyEmailCode']>
-
   public constructor(
-    private readonly authservice: AuthService,
+    private readonly authService: AuthService,
     private readonly userStore: UserStore,
     private readonly router: Router,
     private readonly actR: ActivatedRoute,
@@ -44,10 +44,13 @@ export class Verification {
     })
   }
 
+  public verifyEmailCode?: ReturnType<AuthService['verifyEmailCode']>
+  public sendEmailVerificationCodeState?: ReturnType<AuthService['sendEmailVerificationCode']>
+
   public onSubmit(): void {
     this.vfs.setSubmitted()
 
-    this.verifyEmailCode = this.authservice.verifyEmailCode({
+    this.verifyEmailCode = this.authService.verifyEmailCode({
       body: this.vfs.form.getRawValue() as VerifyEmailCodeCredentials,
       form: this.vfs.form,
       onSuccess: (response) => {
@@ -58,9 +61,23 @@ export class Verification {
     })
   }
 
-  public handleChevron(): void {
-    this.fs().form.reset()
-    this.fs().resetSubmitted()
-    this.moveTo.emit(RegisterStage.Main)
+  public sendCode(): void {
+    const emailControl = this.vfs.getControl('email')
+
+    emailControl.markAsTouched()
+    emailControl.updateValueAndValidity()
+
+    if (emailControl.invalid) return
+
+    this.sendEmailVerificationCodeState = this.authService.sendEmailVerificationCode({
+      body: { email: emailControl.value as string },
+      onSuccess: () => {
+        this.codeSent.set(true)
+        this.sendCodeActive.set(true)
+
+        setTimeout(() => this.sendCodeActive.set(false), 30000)
+      },
+      onError: (err) => console.error(err),
+    })
   }
 }

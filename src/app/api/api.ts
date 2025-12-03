@@ -4,4 +4,6 @@ export default {
   userExists: 'auth/userExists',
   sendEmailVerificationCode: 'auth/SendEmailVerificationCode',
   verifyEmailCode: 'auth/VerifyEmailCode',
+  sendPasswordRecovery: 'auth/SendPasswordRecovery',
+  passwordRecovery: 'auth/PasswordRecovery',
 }

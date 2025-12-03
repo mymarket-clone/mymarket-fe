@@ -10,6 +10,8 @@ import api from '../api/api'
 import { catchError, map, Observable, of } from 'rxjs'
 import { SendEmailVerificationCredentials } from '../interfaces/payload/EmailVerificationCredentials'
 import { VerifyEmailCodeCredentials } from '../interfaces/payload/VerifyEmailCodeCredentials'
+import { SendPasswordRecoveryCredentials } from '../interfaces/payload/SendPasswordRecoveryCredentials'
+import { PasswordRecoveryCredentials } from '../interfaces/payload/PasswordRecoveryCredentials'
 
 @Injectable({ providedIn: 'root' })
 export class AuthService extends HttpService {
@@ -56,6 +58,32 @@ export class AuthService extends HttpService {
     return this.request({
       method: HttpMethod.POST,
       endpoint: api.verifyEmailCode,
+      body: options.body,
+      form: options.form,
+      onSuccess: options.onSuccess,
+      onError: options.onError,
+    })
+  }
+
+  public sendPasswordRecovery(
+    options: ServiceRequest<SendPasswordRecoveryCredentials, void>
+  ): IHttpService<void> {
+    return this.request({
+      method: HttpMethod.POST,
+      endpoint: api.sendPasswordRecovery,
+      body: options.body,
+      form: options.form,
+      onSuccess: options.onSuccess,
+      onError: options.onError,
+    })
+  }
+
+  public passwordRecovery(
+    options: ServiceRequest<PasswordRecoveryCredentials, void>
+  ): IHttpService<void> {
+    return this.request({
+      method: HttpMethod.POST,
+      endpoint: api.passwordRecovery,
       body: options.body,
       form: options.form,
       onSuccess: options.onSuccess,

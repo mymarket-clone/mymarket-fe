@@ -2,7 +2,6 @@
   <div class="data-input">
     <div class="top">
       <div class="top-wrapper">
-        <app-button-chevron (onClick)="handleChevron()" />
         <img src="assets/tnet.svg" />
       </div>
       <h2 class="bold-font">Email verification</h2>
@@ -20,6 +19,10 @@
               [required]="false"
               [sendEmailButton]="true"
               [disabled]="true"
+              [sendCodeActive]="sendCodeActive()"
+              [codeSent]="codeSent()"
+              [codeSendLoading]="sendEmailVerificationCodeState?.loading() || false"
+              (sendClick)="sendCode()"
             />
             <app-input
               name="Code"
