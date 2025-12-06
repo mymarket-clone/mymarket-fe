@@ -12,7 +12,7 @@ import { TooltipDirective } from '../../../../directives/appTooltip'
   selector: 'app-register-main',
   imports: [Input, ReactiveFormsModule, Button, RouterLink, TooltipDirective],
   templateUrl: './register-main.html',
-  styleUrl: './register-main.scss',
+  styleUrls: ['./register-main.scss', '../../../../shared/styles/auth-modal.scss'],
 })
 export class RegisterMain {
   public fs = input.required<FormService<RegisterForm>>()

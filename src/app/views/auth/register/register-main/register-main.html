@@ -1,15 +1,15 @@
-<div class="auth-modal">
-  <div class="data-input">
-    <div class="top">
-      <div class="top-wrapper">
-        <img src="assets/tnet.svg" />
+<div class="auth-container">
+  <div class="auth-modal">
+    <div class="data-input">
+      <div class="top">
+        <div class="top-wrapper">
+          <img src="assets/tnet.svg" />
+        </div>
+        <h2 class="bold-font">Create account</h2>
       </div>
-      <h2 class="bold-font">Create account</h2>
-    </div>
-    <div class="form-wrapper">
-      <div class="inputs">
-        <form [formGroup]="fs().form" (submit)="onSubmit()">
-          <div>
+      <div class="form-wrapper">
+        <div class="inputs">
+          <form [formGroup]="fs().form" (submit)="onSubmit()">
             <app-input
               name="name"
               label="First name"
@@ -50,42 +50,43 @@
               [submitted]="fs().submitted"
               [required]="true"
             />
-          </div>
-          <app-button type="submit" title="Continue" color="blue" />
-        </form>
+            <app-button type="submit" title="Continue" color="blue" />
+          </form>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="socials">
-    <app-button
-      appTooltip
-      position="bottom"
-      tooltipText="Login with Google"
-      color="raisin"
-      img="assets/google.svg"
-      [borderOnHover]="true"
-    />
-    <app-button
-      appTooltip
-      position="bottom"
-      tooltipText="Login with Facebook"
-      color="raisin"
-      img="assets/facebook.svg"
-      [borderOnHover]="true"
-    />
-    <app-button
-      appTooltip
-      position="bottom"
-      tooltipText="Login with Apple"
-      color="raisin"
-      img="assets/apple.svg"
-      [borderOnHover]="true"
-    />
-  </div>
-  <div class="signup">
-    <span>
+    <div class="socials">
+      <app-button
+        appTooltip
+        position="bottom"
+        tooltipText="Login with Google"
+        color="raisin"
+        src="google"
+        imgType="svg"
+        [borderOnHover]="true"
+      />
+      <app-button
+        appTooltip
+        position="bottom"
+        tooltipText="Login with Facebook"
+        color="raisin"
+        src="facebook"
+        imgType="svg"
+        [borderOnHover]="true"
+      />
+      <app-button
+        appTooltip
+        position="bottom"
+        tooltipText="Login with Apple"
+        color="raisin"
+        src="apple"
+        imgType="svg"
+        [borderOnHover]="true"
+      />
+    </div>
+    <div class="signup">
       <a routerLink="/user/login"> Sign in</a>
       with your existing account
-    </span>
+    </div>
   </div>
 </div>

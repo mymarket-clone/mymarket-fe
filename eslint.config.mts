@@ -11,7 +11,7 @@ export default defineConfig([
     languageOptions: { globals: globals.browser },
   },
   {
-    ignores: ['**/node_modules/**', '**/dist/**', '**/.angular/**', 'commitlint.config.cjs'],
+    ignores: ['**/node_modules/**', '**/dist/**', '**/.angular/**', '*.config.*js'],
   },
   {
     files: ['**/*.{ts,mts,cts}'],

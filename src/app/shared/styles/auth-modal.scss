@@ -1,0 +1,144 @@
+:host {
+  display: block;
+  width: 100%;
+
+  .auth-container {
+    height: 100vh;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 40px;
+
+    .auth-modal {
+      background-color: $white;
+      position: relative;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      max-width: 600px;
+      padding: 56px 88px 40px;
+      border-radius: 16px;
+
+      @media (max-width: 640px) {
+        padding: 32px 24px 40px;
+        max-width: 600px !important;
+      }
+
+      @media (max-width: 768px) {
+        max-width: 576px;
+      }
+
+      .data-input {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 48px;
+        width: 100%;
+
+        @media (max-width: 768px) {
+          gap: 24px;
+        }
+
+        .top {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          align-items: center;
+          justify-content: center;
+          gap: 40px;
+
+          @media (max-width: 768px) {
+            gap: 24px;
+          }
+
+          > div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            gap: 24px;
+
+            @media (max-width: 768px) {
+              gap: 32px;
+            }
+
+            img {
+              width: 130px;
+              height: 40px;
+            }
+          }
+
+          h2 {
+            font-size: 24px;
+            font-weight: bold;
+            line-height: 32px;
+            tab-size: 4;
+            text-align: center;
+            color: $raisin-130;
+          }
+
+          .top-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+
+            ::ng-deep {
+              svg-icon {
+                svg {
+                  width: 130px;
+                  height: 40px;
+                }
+              }
+            }
+          }
+        }
+
+        ::ng-deep {
+          .logo-small {
+            svg {
+              width: 130px;
+              height: 40px;
+            }
+          }
+        }
+
+        .form-wrapper {
+          display: flex;
+          flex-direction: column;
+          gap: 32px;
+          width: 100%;
+
+          .inputs {
+            width: 100%;
+
+            form {
+              display: flex;
+              flex-direction: column;
+              gap: 32px;
+
+              @media (max-width: 768px) {
+                gap: 24px;
+              }
+
+              > div {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+              }
+            }
+          }
+
+          @media (max-width: 768px) {
+            gap: 24px;
+          }
+        }
+      }
+    }
+  }
+}

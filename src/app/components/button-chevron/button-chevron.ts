@@ -1,8 +1,9 @@
 import { Component, input, output } from '@angular/core'
+import { SvgIconComponent } from 'angular-svg-icon'
 
 @Component({
   selector: 'app-button-chevron',
-  imports: [],
+  imports: [SvgIconComponent],
   templateUrl: './button-chevron.html',
   styleUrl: './button-chevron.scss',
 })

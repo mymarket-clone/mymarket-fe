@@ -1,15 +1,14 @@
-@use '../../styles/vars.scss' as *;
-
 :host {
   width: 100%;
   z-index: 1;
   position: relative;
 
   button {
+    @include text-sm;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1rem;
+    padding: 16px;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -17,10 +16,15 @@
     height: 56px;
     color: $white;
     border: 1px solid transparent;
-    font-size: 14px;
 
     @media (max-width: 768px) {
       height: 48px;
+    }
+
+    &.text {
+      @media (max-width: 768px) {
+        padding-top: 20px;
+      }
     }
 
     &.disabled {
@@ -47,6 +51,18 @@
 
       &:hover {
         background-color: $white;
+      }
+    }
+
+    ::ng-deep {
+      svg-icon {
+        svg {
+          height: 24px;
+
+          @media (max-width: 640px) {
+            height: 20px;
+          }
+        }
       }
     }
   }

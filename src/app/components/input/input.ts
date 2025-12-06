@@ -1,11 +1,12 @@
 import { Component, input, output, signal } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 import { BaseInput } from '../../shared/components/base-input/base-input'
-import { InputType } from '../../types/Input'
+import { InputType } from '../../types/GenericTypes'
+import { SvgIconComponent } from 'angular-svg-icon'
 
 @Component({
   selector: 'app-input',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, SvgIconComponent],
   templateUrl: './input.html',
   styleUrl: './input.scss',
 })
@@ -17,6 +18,7 @@ export class Input<T = string> extends BaseInput<T> {
   public sendCodeActive = input<boolean>(false)
   public codeSent = input<boolean>(false)
   public codeSendLoading = input<boolean>(false)
+  public showTopEmail = input<boolean>(true)
 
   public sendClick = output()
 

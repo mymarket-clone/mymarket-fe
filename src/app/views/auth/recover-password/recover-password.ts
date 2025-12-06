@@ -13,16 +13,17 @@ import { PasswordEnterForm } from '../../../types/forms/PasswordEnterForm'
 import { passwordValidator } from '../../../utils/validators/passwordValidator'
 import { passwordMatchValidator } from '../../../utils/validators/passwordMatchValidator'
 import { PasswordRecoveryCredentials } from '../../../interfaces/payload/PasswordRecoveryCredentials'
+import { SvgIconComponent } from 'angular-svg-icon'
 
 @Component({
   selector: 'app-recover-password',
-  imports: [ButtonChevron, Input, ReactiveFormsModule, Button],
+  imports: [ButtonChevron, Input, ReactiveFormsModule, Button, SvgIconComponent],
   providers: [
     { provide: 'prfService', useClass: FormService },
     { provide: 'pefService', useClass: FormService },
   ],
   templateUrl: './recover-password.html',
-  styleUrl: './recover-password.scss',
+  styleUrls: ['./recover-password.scss', '../../../shared/styles/auth-modal.scss'],
 })
 export class RecoverPassword {
   public PasswordResetStage = PasswordRecoveryStage

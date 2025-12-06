@@ -10,13 +10,14 @@ import { LoginCredentials } from '../../../interfaces/payload/LoginCredentials'
 import { UserStore } from '../../../store/user.store'
 import { TooltipDirective } from '../../../directives/appTooltip'
 import { HttpStatus } from '../../../types/enums/HttpStatus'
+import { SvgIconComponent } from 'angular-svg-icon'
 
 @Component({
   selector: 'app-login',
-  imports: [Input, ReactiveFormsModule, RouterLink, Button, TooltipDirective],
+  imports: [Input, ReactiveFormsModule, RouterLink, Button, TooltipDirective, SvgIconComponent],
   providers: [FormService],
   templateUrl: './login.html',
-  styleUrl: './login.scss',
+  styleUrls: ['./login.scss', '../../../shared/styles/auth-modal.scss'],
 })
 export class Login {
   public loginState?: ReturnType<AuthService['loginUser']>

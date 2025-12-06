@@ -1,79 +1,22 @@
-@use '../../../styles/vars.scss' as *;
-
 :host {
-  display: block;
-
   .auth-container {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 40px;
-
     .auth-modal {
-      background-color: $white;
-      position: relative;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      flex-direction: column;
-      max-width: 600px;
-      padding: 56px 88px 40px;
-      border-radius: 1rem;
-
-      @media (max-width: 640px) {
-        padding: 32px 24px 40px;
-      }
-
       .data-input {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 48px;
-        width: 100%;
-
-        @media (max-width: 768px) {
-          gap: 24px;
-        }
-
-        .logo-small {
-          width: 130px;
-          height: 40px;
-        }
-
         .form-wrapper {
-          display: flex;
-          flex-direction: column;
-          gap: 32px;
-          width: 100%;
-
           .inputs {
-            width: 100%;
-
-            form {
-              display: flex;
-              flex-direction: column;
-              gap: 1rem;
-            }
-
             .recover-password {
               display: flex;
               justify-content: flex-end;
 
               a {
                 color: $blue-100;
-                font-size: 14px;
+                @include text-sm;
 
                 @media (max-width: 640px) {
-                  font-size: 12px;
+                  @include text-xs;
                 }
               }
             }
-          }
-
-          @media (max-width: 768px) {
-            gap: 24px;
           }
         }
       }
@@ -81,9 +24,9 @@
       .separator {
         display: none;
         align-items: center;
-        gap: 1rem;
+        gap: 16px;
         width: 100%;
-        margin-top: 20px;
+        margin-top: 28px;
 
         @media (max-width: 640px) {
           display: flex;
@@ -99,9 +42,9 @@
         }
 
         span {
+          @include text-xs;
           color: $raisin-130;
           opacity: 0.6;
-          font-size: 12px;
         }
       }
 
@@ -120,25 +63,28 @@
       .signup {
         display: flex;
         gap: 8px;
-        font-size: 14px;
+        @include text-sm;
         margin-top: 40px;
 
         @media (max-width: 640px) {
-          font-size: 12px;
+          @include text-xs;
+        }
+
+        @media (max-width: 768px) {
           margin-top: 80px;
         }
 
-        span {
-          a {
-            color: $blue-100;
-          }
+        a {
+          color: $blue-100;
+          line-height: inherit;
+          font-size: inherit;
         }
       }
 
       .marginator {
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: 16px;
         width: 100%;
         margin-block: 40px;
 
@@ -177,10 +123,11 @@
           color: $raisin-50;
 
           p {
-            font-size: 14px;
+            @include text-sm;
+            color: $raisin-50;
 
             @media (max-width: 640px) {
-              font-size: 12px;
+              @include text-xs;
               text-align: center;
             }
           }
@@ -209,12 +156,19 @@
         color: $white;
 
         p {
-          font-size: 14px;
+          color: inherit;
+          @include text-sm;
 
           @media (max-width: 640px) {
-            font-size: 12px;
+            @include text-xs;
             text-align: center;
           }
+        }
+      }
+
+      > div {
+        &:last-of-type {
+          height: 52px;
         }
       }
     }

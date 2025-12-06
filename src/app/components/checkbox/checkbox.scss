@@ -1,5 +1,3 @@
-@use '../../styles/vars.scss' as *;
-
 :host {
   .checkbox {
     display: flex;
@@ -8,7 +6,7 @@
     .cont {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 16px;
 
       > input {
         height: 20px;
@@ -40,12 +38,18 @@
       }
 
       > div {
+        @include text-sm;
         width: 100%;
         display: flex;
         align-items: center;
 
+        @media (max-width: 640px) {
+          @include text-xs;
+        }
+
         label {
-          font-size: 14px;
+          line-height: inherit;
+          font-size: inherit;
 
           a {
             color: $blue-100;
@@ -53,13 +57,15 @@
         }
 
         span {
+          line-height: inherit;
+          font-size: inherit;
           color: $red-500;
         }
       }
     }
 
     .error-message {
-      font-size: 12px;
+      @include text-xs;
       margin-top: 4px;
       padding-inline: 8px;
       color: $red-500;

@@ -1,4 +1,4 @@
-@if(sendEmailButton() && codeSent()) {
+@if(sendEmailButton() && codeSent() && showTopEmail()) {
 <div class="sent-to">One-time code was sent to <span>{{ control().value }}</span></div>
 }
 <div
@@ -12,26 +12,26 @@
       [formControl]="control()"
       [name]="name()"
       [type]="inputType()"
-      class="input outline-none"
+      class="outline-none"
       autocomplete="off"
       placeholder=" "
       [class.disabled]="disabled()"
     />
-    <p>
-      <span class="label">{{ label() }}</span>
+    <label>
+      <span>{{ label() }}</span>
       @if (required()) {
       <span class="required-star">*</span>
       }
-    </p>
+    </label>
   </div>
   <!-- Trailing icon -->
   @if (type() === "password") {
   <button type="button" class="trailing-icon" (click)="togglePasswordVisibility()">
-    <img
-      [src]="
-            passwordHidden() ? 'assets/eye-open.svg' : 'assets/eye-closed.svg'
-          "
-    />
+    @if (passwordHidden()) {
+    <svg-icon src="assets/eye-open.svg" />
+    } @else {
+    <svg-icon src="assets/eye-closed.svg" />
+    }
   </button>
   }
   <!-- Code sent -->

@@ -10,20 +10,21 @@ import { AuthService } from '../../../../services/auth.service'
 import { VerifyEmailCodeCredentials } from '../../../../interfaces/payload/VerifyEmailCodeCredentials'
 import { UserStore } from '../../../../store/user.store'
 import { ActivatedRoute, Router } from '@angular/router'
+import { ButtonChevron } from '../../../../components/button-chevron/button-chevron'
 
 @Component({
   selector: 'app-verification',
-  imports: [Input, ReactiveFormsModule, Button],
+  imports: [Input, ReactiveFormsModule, Button, ButtonChevron],
   templateUrl: './verification.html',
-  styleUrl: './verification.scss',
+  styleUrls: ['./verification.scss', '../../../../shared/styles/auth-modal.scss'],
 })
 export class Verification {
-  public sendCodeActive = signal<boolean>(false)
-  public codeSent = signal<boolean>(false)
-
   public fs = input.required<FormService<RegisterForm>>()
   public submitted = input.required<boolean>()
   public moveTo = output<RegisterStage>()
+
+  public sendCodeActive = signal<boolean>(false)
+  public codeSent = signal<boolean>(false)
 
   public constructor(
     private readonly authService: AuthService,
@@ -46,6 +47,10 @@ export class Verification {
 
   public verifyEmailCode?: ReturnType<AuthService['verifyEmailCode']>
   public sendEmailVerificationCodeState?: ReturnType<AuthService['sendEmailVerificationCode']>
+
+  public handleChevron(): void {
+    this.router.navigate(['/user/login'])
+  }
 
   public onSubmit(): void {
     this.vfs.setSubmitted()

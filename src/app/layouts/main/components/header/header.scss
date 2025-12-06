@@ -2,7 +2,7 @@
   display: block;
 
   > .wrapper {
-    padding-block: 1.5rem;
+    padding-block: 24px;
 
     .container {
       display: flex;
@@ -11,7 +11,7 @@
       .header-left {
         display: flex;
         align-items: center;
-        gap: 1.5rem;
+        gap: 24px;
       }
     }
   }

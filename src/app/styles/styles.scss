@@ -1,5 +1,3 @@
-@use '../styles/vars.scss' as *;
-
 @font-face {
   font-family: 'TBCXRegular';
   src: url('../../assets/fonts/TBCXRegular.woff2'), format('woff2');
@@ -81,7 +79,7 @@ video {
 }
 
 .wrapper {
-  padding-inline: 1rem;
+  padding-inline: 16px;
 }
 
 .outline-none {

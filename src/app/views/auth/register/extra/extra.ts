@@ -15,7 +15,7 @@ import { ButtonChevron } from '../../../../components/button-chevron/button-chev
   selector: 'app-register-extra',
   imports: [Input, Button, ReactiveFormsModule, Segmented, Checkbox, ButtonChevron],
   templateUrl: './extra.html',
-  styleUrl: './extra.scss',
+  styleUrls: ['./extra.scss', '../../../../shared/styles/auth-modal.scss'],
 })
 export class Extra {
   public fs = input.required<FormService<RegisterForm>>()

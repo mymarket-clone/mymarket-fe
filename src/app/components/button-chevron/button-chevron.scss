@@ -1,8 +1,10 @@
-@use '../../styles/vars.scss' as *;
-
 :host {
   position: absolute;
-  left: -40px;
+  left: 0;
+
+  @media (min-width: 640px) {
+    left: -40px;
+  }
 
   button {
     border-radius: 50%;
@@ -14,10 +16,14 @@
     justify-content: center;
     transition: all 0.3s ease-in-out;
 
-    svg {
-      transform: rotate(90deg);
-      height: 40px;
-      width: 40px;
+    ::ng-deep {
+      .chevron {
+        svg {
+          transform: rotate(90deg);
+          height: 32px !important;
+          width: 40px !important;
+        }
+      }
     }
 
     &:hover {

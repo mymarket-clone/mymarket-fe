@@ -16,10 +16,10 @@ import { ActivatedRoute } from '@angular/router'
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, RegisterMain, Extra, Verification],
+  imports: [ReactiveFormsModule, Extra, Verification, RegisterMain],
   providers: [FormService],
   templateUrl: './register.html',
-  styleUrl: './register.scss',
+  styleUrls: ['./register.scss', '../../../shared/styles/auth-modal.scss'],
 })
 export class Register {
   public registerState?: ReturnType<AuthService['registerUser']>

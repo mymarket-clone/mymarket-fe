@@ -1,44 +1,48 @@
-<div class="auth-modal">
-  <div class="data-input">
-    <div class="top">
-      <div class="top-wrapper">
-        <img src="assets/tnet.svg" />
+<div class="auth-container">
+  <div class="auth-modal">
+    <div class="data-input">
+      <div class="top">
+        <div class="top-wrapper">
+          <app-button-chevron (onClick)="handleChevron()" />
+          <img src="assets/tnet.svg" />
+        </div>
+        <h2 class="bold-font">Email verification</h2>
       </div>
-      <h2 class="bold-font">Email verification</h2>
-    </div>
-    <div class="form-wrapper">
-      <div class="inputs">
-        <form [formGroup]="fs().form" (submit)="onSubmit()">
-          <div>
-            <app-input
-              name="email"
-              label="Email"
-              type="email"
-              [control]="vfs.getControl('email')"
-              [submitted]="fs().submitted"
-              [required]="false"
-              [sendEmailButton]="true"
-              [disabled]="true"
-              [sendCodeActive]="sendCodeActive()"
-              [codeSent]="codeSent()"
-              [codeSendLoading]="sendEmailVerificationCodeState?.loading() || false"
-              (sendClick)="sendCode()"
+      <div></div>
+      <div class="form-wrapper">
+        <div class="inputs">
+          <form [formGroup]="fs().form" (submit)="onSubmit()">
+            <div>
+              <app-input
+                name="email"
+                label="Email"
+                type="email"
+                [control]="vfs.getControl('email')"
+                [submitted]="fs().submitted"
+                [required]="false"
+                [sendEmailButton]="true"
+                [disabled]="true"
+                [sendCodeActive]="sendCodeActive()"
+                [codeSent]="codeSent()"
+                [codeSendLoading]="sendEmailVerificationCodeState?.loading() || false"
+                (sendClick)="sendCode()"
+              />
+              <app-input
+                name="Code"
+                label="One-time code"
+                type="text"
+                [control]="vfs.getControl('code')"
+                [submitted]="fs().submitted"
+                [required]="false"
+              />
+            </div>
+            <app-button
+              type="submit"
+              [title]="verifyEmailCode?.loading() ? 'Loading...' : 'Verify code'"
+              color="blue"
             />
-            <app-input
-              name="Code"
-              label="One-time code"
-              type="text"
-              [control]="vfs.getControl('code')"
-              [submitted]="fs().submitted"
-              [required]="false"
-            />
-          </div>
-          <app-button
-            type="submit"
-            [title]="verifyEmailCode?.loading() ? 'Loading...' : 'Verify code'"
-            color="blue"
-          />
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   </div>

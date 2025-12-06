@@ -2,32 +2,34 @@
   <div class="auth-container">
     <div class="auth-modal">
       <div class="data-input">
-        <img class="logo-small" src="assets/logo-small.svg" alt="logo" />
+        <svg-icon class="logo-small" src="assets/logo-small.svg" alt="logo" />
         <div class="form-wrapper">
           <div class="inputs">
             <form [formGroup]="fs.form" (submit)="onSubmit()">
-              <app-input
-                name="emailOrPhone"
-                label="Email / Phone number"
-                type="text"
-                [control]="fs.getControl('emailOrPhone')"
-                [submitted]="fs.submitted"
-                [required]="true"
-              />
-              <app-input
-                name="password"
-                label="Password"
-                type="password"
-                [control]="fs.getControl('password')"
-                [submitted]="fs.submitted"
-                [required]="true"
-              />
-              <div class="recover-password">
-                <a routerLink="/user/recover-password">Recover password</a>
+              <div>
+                <app-input
+                  name="emailOrPhone"
+                  label="Email / Phone number"
+                  type="text"
+                  [control]="fs.getControl('emailOrPhone')"
+                  [submitted]="fs.submitted"
+                  [required]="false"
+                />
+                <app-input
+                  name="password"
+                  label="Password"
+                  type="password"
+                  [control]="fs.getControl('password')"
+                  [submitted]="fs.submitted"
+                  [required]="false"
+                />
+                <div class="recover-password">
+                  <a routerLink="/user/recover-password">Recover password</a>
+                </div>
               </div>
               <app-button
                 type="submit"
-                [title]="loginState?.loading() ? 'Loading...' : 'Sign In'"
+                [title]="loginState?.loading() ? 'Loading...' : 'Sign in'"
                 color="blue"
               />
             </form>
@@ -45,7 +47,8 @@
           position="bottom"
           tooltipText="Login with Google"
           color="raisin"
-          img="assets/google.svg"
+          imgType="svg"
+          src="google"
           [borderOnHover]="true"
         />
         <app-button
@@ -53,7 +56,8 @@
           position="bottom"
           tooltipText="Login with Facebook"
           color="raisin"
-          img="assets/facebook.svg"
+          src="facebook"
+          imgType="svg"
           [borderOnHover]="true"
         />
         <app-button
@@ -61,33 +65,31 @@
           position="bottom"
           tooltipText="Login with Apple"
           color="raisin"
-          img="assets/apple.svg"
+          imgType="svg"
+          src="apple"
           [borderOnHover]="true"
         />
       </div>
       <div class="signup">
-        <span
-          >Don't have an account?
-          <a routerLink="/user/register"> Sign up</a>
-        </span>
+        Don't have an account?
+        <a routerLink="/user/register">Sign up</a>
       </div>
       <div class="marginator">
         <hr />
       </div>
       <div class="abbr">
-        <img src="assets/tnet.svg" />
+        <svg-icon src="assets/tnet.svg" />
         <div class="abbr-wrap">
           <p>Use one account across 9 TNET platforms</p>
         </div>
       </div>
     </div>
     <div class="abbr-out">
-      <img src="assets/tnet-white.svg" />
+      <svg-icon src="assets/tnet-white.svg" />
       <div class="abbr-wrap">
         <p>Use one account across 9 TNET platforms</p>
       </div>
+      <div></div>
     </div>
   </div>
 </div>
-
-<ng-template #test> 123 </ng-template>

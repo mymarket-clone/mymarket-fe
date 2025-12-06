@@ -4,8 +4,11 @@
   [class.borderOnHover]="borderOnHover()"
   [class.blue]="color() === 'blue'"
   [class.raisin]="color() === 'raisin'"
+  [class.text]="title()"
 >
-  @if (title()) { {{ title() }} } @else {
-  <img [src]="img()" />
-  }
+  @if (title()) { {{ title() }} } @else if (src()) { @if (imgType() == 'img') {
+  <img [src]="src()" />
+  } @else {
+  <svg-icon [src]="`assets/${src()}.svg`"></svg-icon>
+  } }
 </button>
