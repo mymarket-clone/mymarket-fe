@@ -1,9 +1,10 @@
 import { Component } from '@angular/core'
 import { RouterOutlet } from '@angular/router'
+import { SvgIconComponent } from 'angular-svg-icon'
 
 @Component({
   selector: 'app-auth',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, SvgIconComponent],
   templateUrl: './auth.html',
   styleUrl: './auth.scss',
 })

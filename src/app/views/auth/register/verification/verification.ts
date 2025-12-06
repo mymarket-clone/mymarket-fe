@@ -11,10 +11,11 @@ import { VerifyEmailCodeCredentials } from '../../../../interfaces/payload/Verif
 import { UserStore } from '../../../../store/user.store'
 import { ActivatedRoute, Router } from '@angular/router'
 import { ButtonChevron } from '../../../../components/button-chevron/button-chevron'
+import { SvgIconComponent } from 'angular-svg-icon'
 
 @Component({
   selector: 'app-verification',
-  imports: [Input, ReactiveFormsModule, Button, ButtonChevron],
+  imports: [Input, ReactiveFormsModule, Button, ButtonChevron, SvgIconComponent],
   templateUrl: './verification.html',
   styleUrls: ['./verification.scss', '../../../../shared/styles/auth-modal.scss'],
 })

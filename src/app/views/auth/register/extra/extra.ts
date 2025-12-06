@@ -10,10 +10,19 @@ import { Checkbox } from '../../../../components/checkbox/checkbox'
 import { AuthService } from '../../../../services/auth.service'
 import { RegisterCredentials } from '../../../../interfaces/payload/RegisterCredentials'
 import { ButtonChevron } from '../../../../components/button-chevron/button-chevron'
+import { SvgIconComponent } from 'angular-svg-icon'
 
 @Component({
   selector: 'app-register-extra',
-  imports: [Input, Button, ReactiveFormsModule, Segmented, Checkbox, ButtonChevron],
+  imports: [
+    Input,
+    Button,
+    ReactiveFormsModule,
+    Segmented,
+    Checkbox,
+    ButtonChevron,
+    SvgIconComponent,
+  ],
   templateUrl: './extra.html',
   styleUrls: ['./extra.scss', '../../../../shared/styles/auth-modal.scss'],
 })

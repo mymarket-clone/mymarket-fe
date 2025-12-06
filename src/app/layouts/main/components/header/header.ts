@@ -1,10 +1,11 @@
 import { Component } from '@angular/core'
 import { Router, RouterLink } from '@angular/router'
 import { UserStore } from '../../../../store/user.store'
+import { SvgIconComponent } from 'angular-svg-icon'
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink],
+  imports: [RouterLink, SvgIconComponent],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })

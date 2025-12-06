@@ -7,10 +7,11 @@ import { Button } from '../../../../components/button/button'
 import { RegisterStage } from '../../../../types/enums/RegisterStage'
 import { RouterLink } from '@angular/router'
 import { TooltipDirective } from '../../../../directives/appTooltip'
+import { SvgIconComponent } from 'angular-svg-icon'
 
 @Component({
   selector: 'app-register-main',
-  imports: [Input, ReactiveFormsModule, Button, RouterLink, TooltipDirective],
+  imports: [Input, ReactiveFormsModule, Button, RouterLink, TooltipDirective, SvgIconComponent],
   templateUrl: './register-main.html',
   styleUrls: ['./register-main.scss', '../../../../shared/styles/auth-modal.scss'],
 })
