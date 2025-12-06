@@ -1,6 +1,7 @@
 import { Component, input, output, signal } from '@angular/core'
-import { FormControl, ReactiveFormsModule } from '@angular/forms'
-import { formErrorMessages } from '../../utils/formErrorMessages'
+import { ReactiveFormsModule } from '@angular/forms'
+import { BaseInput } from '../../shared/components/base-input/base-input'
+import { InputType } from '../../types/Input'
 
 @Component({
   selector: 'app-input',
@@ -8,13 +9,9 @@ import { formErrorMessages } from '../../utils/formErrorMessages'
   templateUrl: './input.html',
   styleUrl: './input.scss',
 })
-export class Input<T = string> {
+export class Input<T = string> extends BaseInput<T> {
   public name = input.required<string>()
-  public label = input.required<string>()
-  public type = input.required<'text' | 'password' | 'email' | 'segmented'>()
-  public control = input.required<FormControl<T | null>>()
-  public submitted = input.required<boolean>()
-  public required = input.required<boolean>()
+  public type = input.required<InputType>()
   public disabled = input<boolean>(false)
   public sendEmailButton = input<boolean>(false)
   public sendCodeActive = input<boolean>(false)
@@ -36,25 +33,6 @@ export class Input<T = string> {
 
   public togglePasswordVisibility(): void {
     this.passwordHidden.set(!this.passwordHidden())
-  }
-
-  public hasError(): boolean {
-    const control = this.control()
-    if (!control) return false
-    return !!control.errors && (control.touched || control.dirty)
-  }
-
-  public getErrorMessage(): string | null {
-    const control = this.control()
-    const errors = control.errors
-
-    if (!errors) return null
-    if (errors['server']) return errors['server']
-
-    const errorKey = Object.keys(errors)[0]
-    const handler = formErrorMessages[errorKey]
-
-    return handler ? handler(errors[errorKey]) : 'Invalid value'
   }
 
   public handleSendCode(): void {
