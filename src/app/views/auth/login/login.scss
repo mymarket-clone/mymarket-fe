@@ -121,6 +121,7 @@
           align-items: center;
           gap: 8px;
           color: $raisin-50;
+          position: relative;
 
           p {
             @include text-sm;
@@ -132,12 +133,96 @@
             }
           }
 
-          ::ng-deep {
-            svg-icon {
-              cursor: pointer;
-              svg {
-                path {
-                  color: $raisin-50;
+          .websites {
+            position: relative;
+            display: flex;
+
+            .sites {
+              position: absolute;
+              inset: 0;
+              opacity: 0;
+              pointer-events: none;
+              padding-top: 20px;
+              transition: opacity 0.2s ease-in-out;
+
+              .cont {
+                .s-wrap {
+                  position: absolute;
+                  top: 100%;
+                  left: 50%;
+                  transform: translateX(-50%);
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  justify-content: center;
+                  padding: 24px 16px;
+                  border-radius: 10px;
+                  box-shadow: rgba(0, 0, 0, 0.1) 0 0 15px;
+                  background-color: $white;
+                  gap: 8px;
+
+                  @media (min-width: 768px) {
+                    gap: 24px;
+                  }
+
+                  div {
+                    &:first-of-type {
+                      display: flex;
+                      gap: 8px;
+
+                      @media (min-width: 768px) {
+                        gap: 20px;
+                      }
+                    }
+
+                    &:last-of-type {
+                      display: flex;
+                      height: 20px;
+                      gap: 8px;
+
+                      @media (min-width: 768px) {
+                        gap: 24px;
+                      }
+                    }
+
+                    &::ng-deep {
+                      svg-icon {
+                        .mymarket,
+                        .myauto,
+                        .myparts,
+                        .myhome,
+                        .tktge,
+                        .superapp,
+                        .livo {
+                          height: 24px;
+                        }
+
+                        .myjobs,
+                        .swoop {
+                          height: 20px;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+
+            &:hover .sites,
+            &:focus-within .sites {
+              opacity: 1;
+              pointer-events: auto;
+            }
+
+            ::ng-deep {
+              svg-icon {
+                position: relative;
+                z-index: 99;
+                cursor: pointer;
+                svg {
+                  path {
+                    color: $raisin-50;
+                  }
                 }
               }
             }
@@ -156,10 +241,6 @@
         display: flex;
       }
 
-      img {
-        min-height: 33px;
-      }
-
       .abbr-wrap {
         display: flex;
         align-items: center;
@@ -173,6 +254,77 @@
           @media (max-width: 640px) {
             @include text-xs;
             text-align: center;
+          }
+        }
+
+        .excl {
+          cursor: pointer;
+        }
+
+        &::ng-deep {
+          svg-icon {
+            svg {
+              path {
+                fill: $white;
+              }
+            }
+          }
+        }
+      }
+
+      .s-wrap-b {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        opacity: 0;
+        transition: opacity 0.2s ease-in;
+
+        @media (min-width: 768px) {
+          gap: 24px;
+        }
+
+        &.visible {
+          opacity: 1;
+        }
+
+        div {
+          display: flex;
+          gap: 8px;
+          align-items: center;
+          justify-content: center;
+
+          @media (min-width: 768px) {
+            gap: 20px;
+          }
+
+          &:last-of-type {
+            gap: 16px;
+
+            @media (min-width: 768px) {
+              gap: 24px;
+            }
+          }
+
+          &::ng-deep {
+            svg-icon {
+              .mymarket,
+              .myauto,
+              .myparts,
+              .myhome,
+              .myjobs {
+                height: 24px;
+              }
+
+              .superapp-s,
+              .tktge,
+              .livo-s {
+                height: 20px;
+              }
+
+              .swoop {
+                height: 16px;
+              }
+            }
           }
         }
       }

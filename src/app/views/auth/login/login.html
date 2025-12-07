@@ -81,7 +81,46 @@
         <svg-icon src="assets/tnet.svg" />
         <div class="abbr-wrap">
           <p>Use one account across 9 TNET platforms</p>
-          <svg-icon appTooltip position="bottom" [tooltipComponent]="sites" src="assets/excl.svg" />
+          <div class="websites">
+            <svg-icon src="assets/excl.svg" />
+            <div class="sites">
+              <div class="cont">
+                <div class="s-wrap">
+                  <div>
+                    <a href="https://www.myauto.ge" target="_blank">
+                      <svg-icon src="assets/myauto.svg" />
+                    </a>
+                    <a href="https://www.myhome.ge" target="_blank">
+                      <svg-icon src="assets/myhome.svg" />
+                    </a>
+                    <a href="https://www.mymarket.ge" target="_blank">
+                      <svg-icon src="assets/mymarket.svg" />
+                    </a>
+                    <a href="https://www.myjobs.ge" target="_blank">
+                      <svg-icon src="assets/myjobs.svg" />
+                    </a>
+                    <a href="https://www.myparts.ge" target="_blank">
+                      <svg-icon src="assets/myparts.svg" />
+                    </a>
+                  </div>
+                  <div>
+                    <a href="https://www.livo.ge" target="_blank">
+                      <svg-icon src="assets/livo.svg" />
+                    </a>
+                    <a href="https://www.superapp.tnet.ge" target="_blank">
+                      <svg-icon src="assets/superapp.svg" />
+                    </a>
+                    <a href="https://www.tkt.ge" target="_blank">
+                      <svg-icon src="assets/tktge.svg" />
+                    </a>
+                    <a href="https://www.swoop.ge" target="_blank">
+                      <svg-icon src="assets/swoop.svg" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -89,26 +128,41 @@
       <svg-icon src="assets/tnet-white.svg" />
       <div class="abbr-wrap">
         <p>Use one account across 9 TNET platforms</p>
+        <svg-icon class="excl" (click)="abbrState.set(!abbrState())" src="assets/excl.svg" />
       </div>
-      <div></div>
+      <div class="s-wrap-b" [class.visible]="abbrState()">
+        <div>
+          <a href="https://www.myauto.ge" target="_blank">
+            <svg-icon src="assets/myauto.svg" />
+          </a>
+          <a href="https://www.myhome.ge" target="_blank">
+            <svg-icon src="assets/myhome.svg" />
+          </a>
+          <a href="https://www.mymarket.ge" target="_blank">
+            <svg-icon src="assets/mymarket.svg" />
+          </a>
+          <a href="https://www.myjobs.ge" target="_blank">
+            <svg-icon src="assets/myjobs.svg" />
+          </a>
+          <a href="https://www.myparts.ge" target="_blank">
+            <svg-icon src="assets/myparts.svg" />
+          </a>
+        </div>
+        <div>
+          <a href="https://www.livo.ge" target="_blank">
+            <svg-icon src="assets/livo-s.svg" />
+          </a>
+          <a href="https://www.superapp.tnet.ge" target="_blank">
+            <svg-icon src="assets/superapp-s.svg" />
+          </a>
+          <a href="https://www.tkt.ge" target="_blank">
+            <svg-icon src="assets/tktge.svg" />
+          </a>
+          <a href="https://www.swoop.ge" target="_blank">
+            <svg-icon src="assets/swoop.svg" />
+          </a>
+        </div>
+      </div>
     </div>
   </div>
-
-  <ng-template #sites>
-    <div class="sites">
-      <div>
-        <svg-icon src="assets/myauto.svg" />
-        <svg-icon src="assets/myhome.svg" />
-        <svg-icon src="assets/mymarket.svg" />
-        <svg-icon src="assets/myjobs.svg" />
-        <svg-icon src="assets/myparts.svg" />
-      </div>
-      <div>
-        <svg-icon src="assets/livo.svg" />
-        <svg-icon src="assets/superapp.svg" />
-        <svg-icon src="assets/tktge.svg" />
-        <svg-icon src="assets/swoop.svg" />
-      </div>
-    </div>
-  </ng-template>
 </div>

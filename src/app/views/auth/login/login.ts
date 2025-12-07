@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, signal } from '@angular/core'
 import { Input } from '../../../components/input/input'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { Router, RouterLink } from '@angular/router'
@@ -21,6 +21,7 @@ import { SvgIconComponent } from 'angular-svg-icon'
 })
 export class Login {
   public loginState?: ReturnType<AuthService['loginUser']>
+  public abbrState = signal<boolean>(false)
 
   public constructor(
     private readonly authService: AuthService,
