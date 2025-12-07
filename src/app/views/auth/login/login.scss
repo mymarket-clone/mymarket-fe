@@ -112,7 +112,7 @@
           display: none;
         }
 
-        img {
+        .tnet-wrapper {
           min-height: 33px;
         }
 
@@ -136,6 +136,10 @@
           .websites {
             position: relative;
             display: flex;
+
+            .icon-wrapper {
+              min-width: 16px;
+            }
 
             .sites {
               position: absolute;
@@ -241,6 +245,10 @@
         display: flex;
       }
 
+      .tnet-wrapper-s {
+        min-height: 33px;
+      }
+
       .abbr-wrap {
         display: flex;
         align-items: center;
@@ -257,15 +265,16 @@
           }
         }
 
-        .excl {
+        .icon-wrapper-s {
           cursor: pointer;
-        }
+          min-width: 16px;
 
-        &::ng-deep {
-          svg-icon {
-            svg {
-              path {
-                fill: $white;
+          &::ng-deep {
+            svg-icon {
+              svg {
+                path {
+                  fill: $white;
+                }
               }
             }
           }

@@ -2,7 +2,9 @@
   <div class="auth-container">
     <div class="auth-modal">
       <div class="data-input">
-        <svg-icon class="logo-small" src="assets/logo-small.svg" alt="logo" />
+        <div class="logo-wrapper">
+          <svg-icon class="logo-small" src="assets/logo-small.svg" alt="logo" />
+        </div>
         <div class="form-wrapper">
           <div class="inputs">
             <form [formGroup]="fs.form" (submit)="onSubmit()">
@@ -78,11 +80,15 @@
         <hr />
       </div>
       <div class="abbr">
-        <svg-icon src="assets/tnet.svg" />
+        <div class="tnet-wrapper">
+          <svg-icon src="assets/tnet.svg" />
+        </div>
         <div class="abbr-wrap">
           <p>Use one account across 9 TNET platforms</p>
           <div class="websites">
-            <svg-icon src="assets/excl.svg" />
+            <div class="icon-wrapper">
+              <svg-icon src="assets/excl.svg" />
+            </div>
             <div class="sites">
               <div class="cont">
                 <div class="s-wrap">
@@ -125,10 +131,14 @@
       </div>
     </div>
     <div class="abbr-out">
-      <svg-icon src="assets/tnet-white.svg" />
+      <div class="tnet-wrapper-s">
+        <svg-icon src="assets/tnet-white.svg" />
+      </div>
       <div class="abbr-wrap">
         <p>Use one account across 9 TNET platforms</p>
-        <svg-icon class="excl" (click)="abbrState.set(!abbrState())" src="assets/excl.svg" />
+        <div class="icon-wrapper-s">
+          <svg-icon (click)="abbrState.set(!abbrState())" src="assets/excl.svg" />
+        </div>
       </div>
       <div class="s-wrap-b" [class.visible]="abbrState()">
         <div>

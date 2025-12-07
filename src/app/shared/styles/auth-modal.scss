@@ -87,6 +87,7 @@
             align-items: center;
             justify-content: center;
             width: 100%;
+            min-height: 40px;
 
             ::ng-deep {
               svg-icon {
@@ -99,11 +100,14 @@
           }
         }
 
-        ::ng-deep {
-          .logo-small {
-            svg {
-              width: 130px;
-              height: 40px;
+        .logo-wrapper {
+          min-height: 40px;
+          ::ng-deep {
+            .logo-small {
+              svg {
+                width: 130px;
+                height: 40px;
+              }
             }
           }
         }
