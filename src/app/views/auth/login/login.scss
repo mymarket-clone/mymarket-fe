@@ -131,6 +131,17 @@
               text-align: center;
             }
           }
+
+          ::ng-deep {
+            svg-icon {
+              cursor: pointer;
+              svg {
+                path {
+                  color: $raisin-50;
+                }
+              }
+            }
+          }
         }
       }
     }

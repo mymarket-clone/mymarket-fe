@@ -81,6 +81,7 @@
         <svg-icon src="assets/tnet.svg" />
         <div class="abbr-wrap">
           <p>Use one account across 9 TNET platforms</p>
+          <svg-icon appTooltip position="bottom" [tooltipComponent]="sites" src="assets/excl.svg" />
         </div>
       </div>
     </div>
@@ -92,4 +93,22 @@
       <div></div>
     </div>
   </div>
+
+  <ng-template #sites>
+    <div class="sites">
+      <div>
+        <svg-icon src="assets/myauto.svg" />
+        <svg-icon src="assets/myhome.svg" />
+        <svg-icon src="assets/mymarket.svg" />
+        <svg-icon src="assets/myjobs.svg" />
+        <svg-icon src="assets/myparts.svg" />
+      </div>
+      <div>
+        <svg-icon src="assets/livo.svg" />
+        <svg-icon src="assets/superapp.svg" />
+        <svg-icon src="assets/tktge.svg" />
+        <svg-icon src="assets/swoop.svg" />
+      </div>
+    </div>
+  </ng-template>
 </div>
