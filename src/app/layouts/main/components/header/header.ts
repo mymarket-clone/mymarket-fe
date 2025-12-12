@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
 import { Router, RouterLink } from '@angular/router'
-import { UserStore } from '../../../../store/user.store'
+import { UserStore } from '../../../../store/user/user.store'
 import { SvgIconComponent } from 'angular-svg-icon'
 
 @Component({

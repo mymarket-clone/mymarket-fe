@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core'
-import { FormService } from '../../../services/form.service'
+import { FormService } from '../../../services/form-service/form.service'
 import { RegisterForm } from '../../../types/forms/RegisterForm'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { AuthService } from '../../../services/auth.service'

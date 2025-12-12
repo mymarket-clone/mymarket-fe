@@ -1,7 +1,7 @@
 import { Component, input, output } from '@angular/core'
 import { Input } from '../../../../components/input/input'
 import { Button } from '../../../../components/button/button'
-import { FormService } from '../../../../services/form.service'
+import { FormService } from '../../../../services/form-service/form.service'
 import { RegisterForm } from '../../../../types/forms/RegisterForm'
 import { ReactiveFormsModule } from '@angular/forms'
 import { Segmented } from '../../../../components/segmented/segmented'
