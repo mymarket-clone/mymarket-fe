@@ -14,6 +14,6 @@ export class Checkbox extends BaseInput<boolean> {
   public toggle(): void {
     const control = this.control()
     control.setValue(!control.value)
-    control.markAsTouched()
+    control.markAllAsDirty()
   }
 }

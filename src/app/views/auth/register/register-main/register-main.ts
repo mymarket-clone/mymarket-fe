@@ -17,7 +17,6 @@ import { SvgIconComponent } from 'angular-svg-icon'
 })
 export class RegisterMain {
   public fs = input.required<FormService<RegisterForm>>()
-  public submitted = input.required<boolean>()
   public moveTo = output<RegisterStage>()
 
   public onSubmit(): void {
@@ -25,7 +24,7 @@ export class RegisterMain {
 
     controlsToSubmit.forEach((controlName) => {
       const control = this.fs().getControl(controlName as keyof RegisterForm)
-      control.markAsTouched()
+      control.markAllAsDirty()
     })
 
     const allValid = controlsToSubmit.every(

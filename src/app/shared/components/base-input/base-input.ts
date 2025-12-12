@@ -15,14 +15,12 @@ export class BaseInput<T = string> {
   public submitted = input.required<boolean>()
 
   public hasError(): boolean {
-    const control = this.control()
-    if (!control) return false
-    return !!control.errors && (control.touched || control.dirty)
+    if (!this.control()) return false
+    return !!this.control().errors && (this.submitted() || this.control().dirty)
   }
 
   public getErrorMessage(): string | null {
-    const control = this.control()
-    const errors = control.errors
+    const errors = this.control().errors
 
     if (!errors) return null
     if (errors['server']) return errors['server']

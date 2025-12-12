@@ -1,11 +1,7 @@
 <div class="wrapper">
   <div class="auth-container">
     @if (stage() === RegisterStage.Main) {
-    <app-register-main
-      [fs]="fs"
-      [submitted]="fs.submitted"
-      (moveTo)="moveTo($event)"
-    ></app-register-main>
+    <app-register-main [fs]="fs" (moveTo)="moveTo($event)"></app-register-main>
     } @else if (stage() === RegisterStage.Extra) {
     <app-register-extra
       [fs]="fs"

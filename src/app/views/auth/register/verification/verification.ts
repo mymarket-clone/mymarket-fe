@@ -70,7 +70,7 @@ export class Verification {
   public sendCode(): void {
     const emailControl = this.vfs.getControl('email')
 
-    emailControl.markAsTouched()
+    emailControl.markAsDirty()
     emailControl.updateValueAndValidity()
 
     if (emailControl.invalid) return

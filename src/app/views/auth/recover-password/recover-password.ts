@@ -85,7 +85,7 @@ export class RecoverPassword {
   public sendCode(): void {
     const emailControl = this.prf.getControl('email')
 
-    emailControl.markAsTouched()
+    emailControl.markAsDirty()
     emailControl.updateValueAndValidity()
 
     if (emailControl.invalid) return

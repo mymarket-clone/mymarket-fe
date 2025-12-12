@@ -54,6 +54,7 @@
             </div>
             <app-button
               type="submit"
+              [disabled]="registerState?.loading() ?? false"
               [title]="registerState?.loading() ? 'Loading...' : 'Create account'"
               color="blue"
             />
