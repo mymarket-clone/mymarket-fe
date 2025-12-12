@@ -1,11 +1,10 @@
 import { Component, input } from '@angular/core'
-import { InlineSVGModule } from 'ng-inline-svg'
 import { SvgIconComponent } from 'angular-svg-icon'
 import { ButtonType, ImgType } from '../../types/GenericTypes'
 
 @Component({
   selector: 'app-button',
-  imports: [InlineSVGModule, SvgIconComponent],
+  imports: [SvgIconComponent],
   templateUrl: './button.html',
   styleUrl: './button.scss',
 })
