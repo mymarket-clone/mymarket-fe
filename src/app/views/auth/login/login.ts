@@ -54,6 +54,7 @@ export class Login {
     this.loginFs.submit(() => {
       this.loginState = this.authService.loginUser({
         body: this.loginFs.getValues(),
+        form: this.loginFs.form,
         onSuccess: (response) => {
           this.userStore.setUser(response)
           this.router.navigate(['/'])
