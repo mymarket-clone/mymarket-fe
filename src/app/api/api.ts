@@ -6,4 +6,5 @@ export default {
   verifyEmailCode: 'auth/VerifyEmailCode',
   sendPasswordRecovery: 'auth/SendPasswordRecovery',
   passwordRecovery: 'auth/PasswordRecovery',
+  verifyPasswordCode: 'auth/VerifyPasswordCode',
 }

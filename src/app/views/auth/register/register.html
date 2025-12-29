@@ -1,16 +1,197 @@
-<div class="wrapper">
-  <div class="auth-container">
-    @if (stage() === RegisterStage.Main) {
-    <app-register-main [fs]="fs" (moveTo)="moveTo($event)"></app-register-main>
-    } @else if (stage() === RegisterStage.Extra) {
-    <app-register-extra
-      [fs]="fs"
-      [submitted]="fs.submitted"
-      (moveTo)="moveTo($event)"
-    ></app-register-extra>
-    } @else if (stage() === RegisterStage.Verification) {
-    <app-verification [fs]="fs" [submitted]="fs.submitted" (moveTo)="moveTo($event)">
-    </app-verification>
+<div class="w-full flex items-center justify-center flex-1 flex-col gap-10 h-[calc(100vh-48px)]">
+  <div
+    class="bg-white relative w-full sm:w-xl flex flex-col items-center pb-10 pt-8 px-6 sm:px-22 sm:pt-14 sm:pb-10 rounded-2xl z-10 max-w-150 md:w-150"
+  >
+    <div [class.!gap-16]="registrationStage() === 'Verification'" class="flex flex-col gap-6 md:gap-8 w-full">
+      <div class="flex flex-col gap-6 md:gap-10">
+        <div class="relative flex items-center justify-center w-full">
+          <span class="min-h-10">
+            <svg-icon src="/assets/tnet.svg" />
+          </span>
+          @if (registrationStage() !== 'Main') {
+          <button
+            class="bottom-1! rounded-full bg-white hover:bg-raisin-10 flex items-center justify-center cursor-pointer size-8 transition-all duration-200 ease-in-out button absolute left-0 sm:-left-10"
+          >
+            <svg
+              routerLink="/user/login"
+              viewBox="0 0 24 24"
+              class="flex items-center justify-center rotate-90 size-10"
+            >
+              <path
+                d="M16.59 8.29492L12 12.8749L7.41 8.29492L6 9.70492L12 15.7049L18 9.70492L16.59 8.29492Z"
+                fill="#1B1D27"
+              />
+            </svg>
+          </button>
+          }
+        </div>
+        @if (registrationStage() === 'Main') {
+        <h2 class="md: font-bold text-2xl leading-8 text-center">Create account</h2>
+        } @else if (registrationStage() === 'Extra') {
+        <h2 class="md: font-bold text-2xl leading-8 text-center">Personal information</h2>
+        } @else if (registrationStage() === 'Verification') {
+        <h2 class="md: font-bold text-2xl leading-8 text-center">Email verification</h2>
+        }
+      </div>
+      <form
+        autocomplete="off"
+        [formGroup]="registerFormMain.form"
+        (submit)="onSubmit()"
+        class="w-full flex relative transition-all duration-200"
+      >
+        <div class="w-full flex flex-col gap-4">
+          @if (registrationStage() === 'Main') {
+          <app-input
+            name="firstName"
+            label="First name"
+            [control]="registerFormMain.getControl('firstname')"
+            [submitted]="registerFormMain.submitted"
+          />
+          <app-input
+            name="lastName"
+            label="Last name"
+            [control]="registerFormMain.getControl('lastname')"
+            [submitted]="registerFormMain.submitted"
+          />
+          <app-input
+            name="email"
+            label="Email"
+            type="email"
+            [control]="registerFormMain.getControl('email')"
+            [submitted]="registerFormMain.submitted"
+          />
+          <app-input
+            name="password"
+            label="Password"
+            type="password"
+            [control]="registerFormMain.getControl('password')"
+            [submitted]="registerFormMain.submitted"
+          />
+          <app-input
+            name="passwordConfirm"
+            label="Re-enter password"
+            type="password"
+            [control]="registerFormMain.getControl('passwordConfirm')"
+            [submitted]="registerFormMain.submitted"
+          />
+          @if (passwordVisible()) {
+          <div
+            class="transition-opacity duration-300 ease-in-out"
+            [style.opacity]="passwordNotEmpty() ? 1 : 0"
+          >
+            <app-password-strength [password]="registerFormMain.getControl('password').value" />
+          </div>
+          } } @else if (registrationStage() === "Extra") {
+          <app-segmented
+            label="Gender"
+            [control]="registerFormExtra.getControl('gender')"
+            [submitted]="registerFormExtra.submitted"
+            [segments]="['Male', 'Female']"
+          />
+          <app-input
+            name="birthYear"
+            label="Birth year"
+            [control]="registerFormExtra.getControl('birthYear')"
+            [submitted]="registerFormExtra.submitted"
+          />
+          <app-input
+            name="phoneNumber"
+            label="Phone number"
+            [control]="registerFormExtra.getControl('phoneNumber')"
+            [submitted]="registerFormExtra.submitted"
+          />
+          <app-checkbox
+            label="I agree to the"
+            clickableLabel="terms and conditions"
+            href="https://auth.tnet.ge/en/rules"
+            [submitted]="registerFormExtra.submitted"
+            [control]="registerFormExtra.getControl('termsAndConditions')"
+            [required]="true"
+          />
+          <app-checkbox
+            label="I agree to the"
+            clickableLabel="privacy policy"
+            href="https://auth.tnet.ge/en/usageagreement"
+            [submitted]="registerFormExtra.submitted"
+            [control]="registerFormExtra.getControl('privacyPolicy')"
+            [required]="true"
+          />
+          } @else if (registrationStage() === "Verification") {
+          <app-input
+            name="email"
+            label="Email"
+            type="email"
+            [control]="registerFormVerification.getControl('email')"
+            [submitted]="registerFormVerification.submitted"
+            [disabled]="true"
+            [trailingContent]="sendEmail"
+            [bottomContent]="bottomText"
+          />
+          <app-input
+            name="code"
+            label="One-time code"
+            [control]="registerFormVerification.getControl('code')"
+            [submitted]="registerFormVerification.submitted"
+          />
+          }
+          <app-button [class.mt-4]="registrationStage() !== 'Main'" [title]="'Continue'" />
+        </div>
+      </form>
+    </div>
+    @if(registrationStage() === 'Main') {
+    <div class="flex flex-col gap-6 md:gap-8 w-full">
+      <div
+        class="flex items-center gap-2 sm:gap-5 w-full mt-5 [&>button]:relative [&>button]:flex [&>button]:items-center [&>button]:sm:py-3.5 [&>button]:py-2.75 [&>button]:flex-1 [&>button]:justify-center [&>button]:transition-all [&>button]:duration-200 [&>button]:cursor-pointer [&>button]:border [&>button]:border-transparent [&>button]:bg-raisin-10 [&>button]:rounded-lg [&>button]:h-12 [&>button]:md:h-14 [&>button]:hover:rounded-xl [&>button]:hover:border [&>button]:hover:border-raisin-20 [&>button]:hover:bg-transparent"
+      >
+        <button Inject [content]="tooltipLogin" [context]="{text: 'Login with Google'}" type="button">
+          <span class="h-5 sm:h-6">
+            <svg-icon src="assets/google.svg" />
+          </span>
+        </button>
+        <button Inject [content]="tooltipLogin" [context]="{text: 'Login with Facebook'}" type="button">
+          <span class="h-5 sm:h-6">
+            <svg-icon src="assets/facebook.svg" />
+          </span>
+        </button>
+        <button Inject [content]="tooltipLogin" [context]="{text: 'Login with Apple'}" type="button">
+          <span class="h-5 sm:h-6">
+            <svg-icon src="assets/apple.svg" />
+          </span>
+        </button>
+      </div>
+      <div class="flex gap-1 text-xs sm:text-sm justify-center">
+        <a class="text-blue-100" routerLink="/user/login">Sign in</a>
+        with your existing account
+      </div>
+    </div>
     }
   </div>
 </div>
+
+<ng-template #tooltipLogin let-text="text">
+  <div
+    class="absolute top-[calc(100%+11px)] left-1/2 -translate-x-1/2 rounded-lg text-[12px] px-2.5 py-1.5 bg-raisin-150"
+  >
+    <span class="text-white text-nowrap">{{ text }}</span>
+    <div class="bg-raisin-150 size-2 absolute left-1/2 -translate-x-1/2 -top-1 rotate-45"></div>
+  </div>
+</ng-template>
+
+<ng-template #sendEmail>
+  <button
+    type="button"
+    [disabled]="sendCodeActive()"
+    (click)="sendCode()"
+    [class.disabled:opacity-100]="codeSent()"
+    [class.disabled:after:bg-blue-20]="codeSent()"
+    class="relative z-50 overflow-hidden flex items-center justify-center mr-3 gap-2 px-2 py-1.5 rounded-md bg-blue-100 sm:text-sm text-xs text-white transition-all duration-200 cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:after:absolute disabled:after:inset-y-0 disabled:after:left-0 disabled:after:w-full disabled:after:animate-slide-progress"
+  >
+    <span class="relative z-10">Get code</span>
+  </button>
+</ng-template>
+
+<ng-template #bottomText>
+  <span [hidden]="!codeSent()" class="text-gray-600 text-xs mt-1 px-2">
+    The code is active for 3 minutes
+  </span>
+</ng-template>

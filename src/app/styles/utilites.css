@@ -1,0 +1,16 @@
+@layer utilities {
+  .bg-auth-new {
+    background-image: url(https://auth.tnet.ge/images/BG_1.webp);
+  }
+
+  .container {
+    width: 100%;
+  }
+
+  @media (min-width: 768px) {
+    .container {
+      max-width: 1248px;
+      margin-inline: auto;
+    }
+  }
+}

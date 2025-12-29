@@ -3,8 +3,7 @@ import { Header } from './components/header/header'
 
 @Component({
   selector: 'app-main',
-  imports: [Header],
   templateUrl: './main.html',
-  styleUrl: './main.scss',
+  imports: [Header],
 })
 export class Main {}

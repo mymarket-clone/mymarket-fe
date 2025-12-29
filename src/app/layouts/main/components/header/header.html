@@ -1,7 +1,9 @@
-<div class="wrapper">
-  <div class="container">
-    <div class="header-left">
-      <a routerLink="/">
+<nav
+  class="bg-white px-4 py-4 drop-shadow-lg md:border-b md:border-b-gray-100 md:py-6 md:drop-shadow-none"
+>
+  <div class="flex flex-nowrap items-center justify-between md:flex-wrap container">
+    <div class="flex items-center">
+      <a class="min-h-10" routerLink="/">
         <svg-icon src="assets/logo.svg" alt="Logo" />
       </a>
       <div>
@@ -9,7 +11,9 @@
       </div>
     </div>
     <div>
-      <button (click)="handleLoginButton()">{{ userStore.getUser() ? "Logout" : "Login" }}</button>
+      <button (click)="handleLoginButton()">
+        {{ userStore.getUser() ? 'Logout' : 'Login' }}
+      </button>
     </div>
   </div>
-</div>
+</nav>

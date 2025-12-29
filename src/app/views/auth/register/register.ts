@@ -1,64 +1,224 @@
-import { Component, signal } from '@angular/core'
-import { FormService } from '../../../services/form-service/form.service'
-import { RegisterForm } from '../../../types/forms/RegisterForm'
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
+import { Component, OnInit, signal } from '@angular/core'
+import { SvgIconComponent } from 'angular-svg-icon'
+import { InjectElementDirective } from '../../../directives/injectElement.directive'
+import { Input } from '../../../components/input/input'
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
+import { FormService } from '../../../services/form.service'
+import { Zod } from '../../../utils/Zod'
+import { RegistrationStage } from '../../../types/RegistrationStage'
+import { Button } from '../../../components/button/button'
 import { AuthService } from '../../../services/auth.service'
-import { userExistsValidator } from '../../../utils/userExistsValidator'
-import { RegisterMain } from './register-main/register-main'
-import { Extra } from './extra/extra'
-import { notZeroValidator } from '../../../utils/validators/notZeroValidator'
-import { RegisterStage } from '../../../types/enums/RegisterStage'
-import { passwordValidator } from '../../../utils/validators/passwordValidator'
-import { passwordMatchValidator } from '../../../utils/validators/passwordMatchValidator'
-import { lettersOnlyValidator } from '../../../utils/validators/lettersOnlyValidatior'
-import { Verification } from './verification/verification'
-import { ActivatedRoute } from '@angular/router'
+import { ActivatedRoute, Router, RouterLink } from '@angular/router'
+import { userExistsValidator } from '../../../utils/AsyncValidators'
+import {
+  IRegisterFormExtra,
+  IRegisterFormMain,
+  IRegisterFormVerification,
+} from '../../../interfaces/forms/IRegisterForm'
+import { Segmented } from '../../../components/segmented/segmented'
+import { Checkbox } from '../../../components/checkbox/checkbox'
+import { UserStore } from '../../../store/user.store'
+import { PasswordStrength } from '../../../components/password-strength/password-strength'
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, Extra, Verification, RegisterMain],
-  providers: [FormService],
+  imports: [
+    SvgIconComponent,
+    InjectElementDirective,
+    Input,
+    ReactiveFormsModule,
+    Button,
+    RouterLink,
+    Segmented,
+    Checkbox,
+    PasswordStrength,
+  ],
+  providers: [
+    { provide: 'registerFormMain', useClass: FormService },
+    { provide: 'registerFormExtra', useClass: FormService },
+    { provide: 'registerFormVerification', useClass: FormService },
+  ],
   templateUrl: './register.html',
-  styleUrls: ['./register.scss', '../../../shared/styles/auth-modal.scss'],
 })
-export class Register {
+export class Register implements OnInit {
+  public registrationStage = signal<RegistrationStage>('Main')
+
   public registerState?: ReturnType<AuthService['registerUser']>
-  public stage = signal<RegisterStage>(RegisterStage.Main)
-  public readonly RegisterStage = RegisterStage
+  public sendEmailVerificationCodeState?: ReturnType<AuthService['sendEmailVerificationCode']>
+  public verifyEmailCodeState?: ReturnType<AuthService['verifyEmailCode']>
+
+  public registerFormMain = new FormService<IRegisterFormMain>()
+  public registerFormExtra = new FormService<IRegisterFormExtra>()
+  public registerFormVerification = new FormService<IRegisterFormVerification>()
+
+  public sendCodeActive = signal<boolean>(false)
+  public codeSent = signal<boolean>(false)
+  public codeSendLoading = signal<boolean>(false)
+
+  public showPasswordStrength = signal(false)
+  public passwordNotEmpty = signal(false)
+  public passwordVisible = signal(false)
 
   public constructor(
     private readonly authService: AuthService,
     private readonly actR: ActivatedRoute,
-    public readonly fs: FormService<RegisterForm>
+    private readonly router: Router,
+    private readonly userStore: UserStore
   ) {
-    this.fs.setForm(
-      new FormGroup(
-        {
-          name: new FormControl('', [Validators.required, lettersOnlyValidator]),
-          lastname: new FormControl('', Validators.required),
-          email: new FormControl('', {
-            validators: [Validators.required, Validators.email],
-            asyncValidators: [userExistsValidator(this.authService)],
-            updateOn: 'blur',
-          }),
-          password: new FormControl('', [Validators.required, passwordValidator]),
-          passwordConfirm: new FormControl('', Validators.required),
-          gender: new FormControl(0, [Validators.required, notZeroValidator]),
-          birthYear: new FormControl(2016, [Validators.required, notZeroValidator]),
-          phoneNumber: new FormControl('', [Validators.required]),
-          termsAndConditions: new FormControl(false, [Validators.requiredTrue]),
-          privacyPolicy: new FormControl(false, [Validators.requiredTrue]),
-        },
-        { validators: passwordMatchValidator }
-      )
+    this.registerFormMain.setForm(
+      new FormGroup({
+        firstname: new FormControl('', [
+          Zod.required(),
+          Zod.onlyLetters('First name must contain only letters'),
+        ]),
+        lastname: new FormControl('', [
+          Zod.required(),
+          Zod.onlyLetters('Last name must contain only letters'),
+        ]),
+        email: new FormControl('', {
+          validators: [Zod.required(), Zod.email()],
+          asyncValidators: userExistsValidator(this.authService),
+          updateOn: 'blur',
+        }),
+        password: new FormControl('', [Zod.required(), Zod.password()]),
+        passwordConfirm: new FormControl('', Zod.required()),
+      })
     )
 
+    this.registerFormExtra.setForm(
+      new FormGroup({
+        gender: new FormControl(1, Zod.required()),
+        birthYear: new FormControl(
+          new Date().getFullYear() - 16,
+          Zod.between(1900, new Date().getFullYear())
+        ),
+        phoneNumber: new FormControl('', Zod.required()),
+        termsAndConditions: new FormControl(false, {
+          nonNullable: true,
+          validators: Zod.true(),
+        }),
+        privacyPolicy: new FormControl(false, {
+          nonNullable: true,
+          validators: Zod.true(),
+        }),
+      })
+    )
+
+    this.registerFormVerification.setForm(
+      new FormGroup({
+        email: new FormControl(this.actR.snapshot.queryParamMap.get('email') || '', [
+          Zod.required(),
+          Zod.email(),
+        ]),
+        code: new FormControl('', [Zod.length(4)]),
+      })
+    )
+  }
+
+  public ngOnInit(): void {
     if (this.actR.snapshot.queryParamMap.get('email')) {
-      this.stage.set(RegisterStage.Verification)
+      this.registrationStage.set('Verification')
+    }
+
+    this.onPasswordChange()
+  }
+
+  public validateMain(): void {
+    this.registerFormMain.submit(() => {
+      this.proceedToStage('Extra')
+    })
+  }
+
+  public registerUser(): void {
+    this.registerFormExtra.submit(() => {
+      if (this.registerFormExtra.form.valid) {
+        this.registerState = this.authService.registerUser({
+          body: {
+            ...this.registerFormMain.getValues(),
+            ...this.registerFormExtra.getValues(),
+          },
+          form: new FormGroup({
+            ...this.registerFormMain.form.controls,
+            ...this.registerFormExtra.form.controls,
+          }),
+          onSuccess: () => {
+            this.registerFormVerification
+              .getControl('email')
+              .setValue(this.registerFormMain.getControl('email').value)
+            this.registrationStage.set('Verification')
+          },
+          onError: (err) => {
+            console.error(err)
+          },
+        })
+      }
+    })
+  }
+
+  public verifyEmail(): void {
+    this.verifyEmailCodeState = this.authService.verifyEmailCode({
+      body: this.registerFormVerification.getValues(),
+      form: this.registerFormVerification.form,
+      onSuccess: (response) => {
+        this.userStore.logout()
+        this.userStore.setUser(response)
+        this.router.navigate(['/'])
+      },
+    })
+  }
+
+  public sendCode(): void {
+    this.sendCodeActive.set(true)
+    this.codeSendLoading.set(true)
+
+    const emailControl = this.registerFormVerification.getControl('email')
+
+    if (emailControl.invalid) {
+      this.registerFormVerification.setError('email', 'Please enter valid email address')
+      return
+    }
+
+    this.sendEmailVerificationCodeState = this.authService.sendEmailVerificationCode({
+      body: { email: emailControl.value as string },
+      onSuccess: () => {
+        this.codeSent.set(true)
+        this.sendCodeActive.set(true)
+
+        setTimeout(() => this.sendCodeActive.set(false), 30000)
+      },
+      onError: (err) => console.error(err),
+    })
+  }
+
+  public proceedToStage(stage: RegistrationStage): void {
+    this.registrationStage.set(stage)
+  }
+
+  public onSubmit(): void {
+    switch (this.registrationStage()) {
+      case 'Main':
+        this.validateMain()
+        break
+
+      case 'Extra':
+        this.registerUser()
+        break
+
+      case 'Verification':
+        this.verifyEmail()
+        break
     }
   }
 
-  public moveTo(stage: RegisterStage): void {
-    this.stage.set(stage)
+  public onPasswordChange(): void {
+    this.registerFormMain.getControl('password')!.valueChanges.subscribe((value: string | null) => {
+      if (value?.length) {
+        this.passwordVisible.set(true)
+        requestAnimationFrame(() => this.passwordNotEmpty.set(true))
+      } else {
+        this.passwordNotEmpty.set(false)
+        setTimeout(() => this.passwordVisible.set(false), 300)
+      }
+    })
   }
 }

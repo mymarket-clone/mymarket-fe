@@ -1,13 +1,12 @@
 import { Component } from '@angular/core'
-import { Router, RouterLink } from '@angular/router'
-import { UserStore } from '../../../../store/user/user.store'
 import { SvgIconComponent } from 'angular-svg-icon'
+import { Router } from '@angular/router'
+import { UserStore } from '../../../../store/user.store'
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, SvgIconComponent],
+  imports: [SvgIconComponent],
   templateUrl: './header.html',
-  styleUrl: './header.scss',
 })
 export class Header {
   public constructor(
@@ -20,10 +19,7 @@ export class Header {
   }
 
   public handleLoginButton(): void {
-    if (this.userStore.getUser()) {
-      this.userStore.logout()
-    } else {
-      this.router.navigate(['/user/login'])
-    }
+    if (this.userStore.getUser()) this.userStore.logout()
+    else this.router.navigate(['/user/login'])
   }
 }

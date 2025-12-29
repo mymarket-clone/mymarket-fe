@@ -1,17 +1,14 @@
 import { Component, input, signal } from '@angular/core'
+import { BaseInput } from '../../shared/components/base-input'
 import { Gender } from '../../types/enums/Gender'
-import { BaseInput } from '../../shared/components/base-input/base-input'
 
 @Component({
   selector: 'app-segmented',
-  imports: [],
   templateUrl: './segmented.html',
-  styleUrl: './segmented.scss',
 })
-export class Segmented extends BaseInput<number> {
+export class Segmented extends BaseInput {
   public segments = input.required<string[]>()
-
-  public static = signal<boolean | null>(null)
+  public static = signal<boolean>(false)
 
   public setFirst(): void {
     this.static.set(false)
@@ -20,6 +17,6 @@ export class Segmented extends BaseInput<number> {
 
   public setSecond(): void {
     this.static.set(true)
-    this.control().setValue(Gender.Male)
+    this.control().setValue(Gender.Female)
   }
 }

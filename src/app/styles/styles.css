@@ -1,0 +1,28 @@
+@import 'tailwindcss';
+@import './utilites.css';
+@import './theme.css';
+
+@font-face {
+  font-family: 'TBCXRegular';
+  src: url('../../assets/fonts/TBCXRegular.woff2'), format('woff2');
+}
+
+@font-face {
+  font-family: 'TBCXBold';
+  src: url('../../assets/fonts/TBCXBold.woff2'), format('woff2');
+}
+
+.font-regular {
+  font-family: 'TBCXRegular', sans-serif;
+}
+
+.font-bold {
+  font-family: 'TBCXBold', sans-serif;
+}
+
+*,
+::backdrop,
+:after,
+:before {
+  font-family: 'TBCXRegular', sans-serif;
+}

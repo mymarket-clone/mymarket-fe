@@ -1,21 +1,25 @@
-<div class="checkbox">
-  <div class="cont">
+<div class="flex flex-col">
+  <div class="flex items-center gap-4">
     <input
       type="checkbox"
       [checked]="control()!.value"
       (change)="toggle()"
       [class.error]="hasError()"
-      [class.checked]="control().value"
+      class="border-raisin-40 hover:border-green hover:shadow-[0_0_0_4px_rgba(26,186,107,0.20)] h-5 w-5 min-w-5 appearance-none rounded-md border-2 bg-center bg-no-repeat cursor-pointer checked:border-transparent checked:bg-green checked:bg-[url('https://auth.tnet.ge/checkbox/tick.svg')] focus:ring-transparent disabled:hover:shadow-none disabled:cursor-auto disabled:hover:border-raisin-40 disabled:opacity-40 transition-all ease-in-out duration-200"
     />
-    <div>
-      <label>{{ label() }} <a [href]="href()" target="_blank">{{ clickableLabel() }}</a></label>
+
+    <div class="flex items-center w-full text-sm sm:text-xs">
+      <label class="flex items-center gap-1">
+        {{ label() }}
+        <a [href]="href()" target="_blank" class="text-blue-500">{{ clickableLabel() }}</a>
+      </label>
       @if (required()) {
-      <span>*</span>
+      <span class="text-red-500">*</span>
       }
     </div>
   </div>
 
   @if (hasError()) {
-  <span class="error-message">{{ getErrorMessage() }}</span>
+  <span class="text-xs mt-1 px-2 text-red-500">{{ getError() }}</span>
   }
 </div>

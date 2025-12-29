@@ -1,19 +1,36 @@
-<div class="segmented">
-  <span>
-    <label class="label">{{ label() }}</label>
-    @if (true) {
-    <span class="required-star">*</span>
+<div class="flex flex-col gap-2">
+  <span class="flex items-center gap-1">
+    <label class="flex text-xs md:text-sm"> {{ label() }} </label>
+    @if(hasError()) {
+    <span class="text-red-500">*</span>
     }
   </span>
-  <div class="cont">
-    <div class="segment">
-      <span class="left" (click)="setFirst()" [class.active]="static() === false"
-        >{{ segments()[0]}}</span
+
+  <div>
+    <div class="flex w-full h-12 md:h-14">
+      <span
+        class="group relative flex items-center justify-center cursor-pointer border-[#D4D4D4] border p-3 flex-1 transition-all duration-200 rounded-l-lg z-10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white"
+        [class.bg-blue-100-10]="static() === false"
+        [class.text-blue-500]="static() === false"
+        [class.border-blue-500]="static() === false"
+        (click)="setFirst()"
       >
-      <span class="right" (click)="setSecond()" [class.active]="static()">{{ segments()[1]}}</span>
+        <span class="font-normal text-xs md:text-sm"> {{ segments()[0] }} </span>
+      </span>
+      <span
+        class="group relative flex items-center justify-center cursor-pointer border-[#D4D4D4] border p-3 flex-1 transition-all -left-px duration-200 rounded-r-lg focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white"
+        [class.bg-blue-100-10]="static()"
+        [class.text-blue-500]="static()"
+        [class.border-blue-500]="static()"
+        [class.z-500]="static()"
+        (click)="setSecond()"
+      >
+        <span class="font-normal text-xs md:text-sm"> {{ segments()[1] }} </span>
+      </span>
     </div>
-    @if (hasError()) {
-    <span class="error-message">Select Gender</span>
+
+    @if(hasError()) {
+    <span class="text-xs mt-1 px-2 text-red-500"> Select Gender </span>
     }
   </div>
 </div>

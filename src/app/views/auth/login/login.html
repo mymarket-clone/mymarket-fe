@@ -1,178 +1,156 @@
-<div class="wrapper">
-  <div class="auth-container">
-    <div class="auth-modal">
-      <div class="data-input">
-        <div class="logo-wrapper">
-          <svg-icon class="logo-small" src="assets/logo-small.svg" alt="logo" />
-        </div>
-        <div class="form-wrapper">
-          <div class="inputs">
-            <form [formGroup]="fs.form" (submit)="onSubmit()">
-              <div>
+<div class="w-full flex items-center justify-center flex-1 flex-col gap-10 h-[calc(100vh-48px)]">
+  <div
+    class="bg-white relative w-full sm:w-xl flex flex-col items-center pb-10 pt-8 px-6 sm:px-22 sm:pt-14 sm:pb-10 rounded-2xl z-10 max-w-150 md:w-150"
+  >
+    <div class="flex flex-col items-center gap-8 w-full">
+      <div class="flex w-full flex-col gap-6 md:gap-12 items-center">
+        <span class="min-h-10">
+          <svg-icon src="assets/logo.svg" />
+        </span>
+        <div class="flex flex-col gap-8 w-full">
+          <form autocomplete="off" [formGroup]="loginFs.form" (submit)="onSubmit()" class="w-full">
+            <div class="flex flex-col gap-6 md:gap-8">
+              <div class="flex flex-col gap-4">
                 <app-input
                   name="emailOrPhone"
                   label="Email / Phone number"
-                  type="text"
-                  [control]="fs.getControl('emailOrPhone')"
-                  [submitted]="fs.submitted"
-                  [required]="false"
+                  [control]="loginFs.getControl('emailOrPhone')"
+                  [submitted]="loginFs.submitted"
                 />
                 <app-input
                   name="password"
                   label="Password"
                   type="password"
-                  [control]="fs.getControl('password')"
-                  [submitted]="fs.submitted"
-                  [required]="false"
+                  [control]="loginFs.getControl('password')"
+                  [submitted]="loginFs.submitted"
                 />
-                <div class="recover-password">
-                  <a routerLink="/user/recover-password">Recover password</a>
+                <div class="flex justify-end">
+                  <a
+                    class="text-blue-100 text-xs sm:text-sm align-bottom text-end"
+                    routerLink="/user/recover-password"
+                  >
+                    Recover password
+                  </a>
                 </div>
               </div>
-              <app-button
-                type="submit"
-                [title]="loginState?.loading() ? 'Loading...' : 'Sign in'"
-                color="blue"
-              />
-            </form>
-          </div>
-        </div>
-      </div>
-      <div class="separator">
-        <hr />
-        <span>Or</span>
-        <hr />
-      </div>
-      <div class="socials">
-        <app-button
-          appTooltip
-          position="bottom"
-          tooltipText="Login with Google"
-          color="raisin"
-          imgType="svg"
-          src="google"
-          [borderOnHover]="true"
-        />
-        <app-button
-          appTooltip
-          position="bottom"
-          tooltipText="Login with Facebook"
-          color="raisin"
-          src="facebook"
-          imgType="svg"
-          [borderOnHover]="true"
-        />
-        <app-button
-          appTooltip
-          position="bottom"
-          tooltipText="Login with Apple"
-          color="raisin"
-          imgType="svg"
-          src="apple"
-          [borderOnHover]="true"
-        />
-      </div>
-      <div class="signup">
-        Don't have an account?
-        <a routerLink="/user/register">Sign up</a>
-      </div>
-      <div class="marginator">
-        <hr />
-      </div>
-      <div class="abbr">
-        <div class="tnet-wrapper">
-          <svg-icon src="assets/tnet.svg" />
-        </div>
-        <div class="abbr-wrap">
-          <p>Use one account across 9 TNET platforms</p>
-          <div class="websites">
-            <div class="icon-wrapper">
-              <svg-icon src="assets/excl.svg" />
+              <app-button [disabled]="!!loginState?.loading()" [title]="'Sign in'" />
             </div>
-            <div class="sites">
-              <div class="cont">
-                <div class="s-wrap">
-                  <div>
-                    <a href="https://www.myauto.ge" target="_blank">
-                      <svg-icon src="assets/myauto.svg" />
-                    </a>
-                    <a href="https://www.myhome.ge" target="_blank">
-                      <svg-icon src="assets/myhome.svg" />
-                    </a>
-                    <a href="https://www.mymarket.ge" target="_blank">
-                      <svg-icon src="assets/mymarket.svg" />
-                    </a>
-                    <a href="https://www.myjobs.ge" target="_blank">
-                      <svg-icon src="assets/myjobs.svg" />
-                    </a>
-                    <a href="https://www.myparts.ge" target="_blank">
-                      <svg-icon src="assets/myparts.svg" />
-                    </a>
-                  </div>
-                  <div>
-                    <a href="https://www.livo.ge" target="_blank">
-                      <svg-icon src="assets/livo.svg" />
-                    </a>
-                    <a href="https://www.superapp.tnet.ge" target="_blank">
-                      <svg-icon src="assets/superapp.svg" />
-                    </a>
-                    <a href="https://www.tkt.ge" target="_blank">
-                      <svg-icon src="assets/tktge.svg" />
-                    </a>
-                    <a href="https://www.swoop.ge" target="_blank">
-                      <svg-icon src="assets/swoop.svg" />
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
-    <div class="abbr-out">
-      <div class="tnet-wrapper-s">
-        <svg-icon src="assets/tnet-white.svg" />
-      </div>
-      <div class="abbr-wrap">
-        <p>Use one account across 9 TNET platforms</p>
-        <div class="icon-wrapper-s">
-          <svg-icon (click)="abbrState.set(!abbrState())" src="assets/excl.svg" />
-        </div>
-      </div>
-      <div class="s-wrap-b" [class.visible]="abbrState()">
-        <div>
-          <a href="https://www.myauto.ge" target="_blank">
-            <svg-icon src="assets/myauto.svg" />
-          </a>
-          <a href="https://www.myhome.ge" target="_blank">
-            <svg-icon src="assets/myhome.svg" />
-          </a>
-          <a href="https://www.mymarket.ge" target="_blank">
-            <svg-icon src="assets/mymarket.svg" />
-          </a>
-          <a href="https://www.myjobs.ge" target="_blank">
-            <svg-icon src="assets/myjobs.svg" />
-          </a>
-          <a href="https://www.myparts.ge" target="_blank">
-            <svg-icon src="assets/myparts.svg" />
-          </a>
-        </div>
-        <div>
-          <a href="https://www.livo.ge" target="_blank">
-            <svg-icon src="assets/livo-s.svg" />
-          </a>
-          <a href="https://www.superapp.tnet.ge" target="_blank">
-            <svg-icon src="assets/superapp-s.svg" />
-          </a>
-          <a href="https://www.tkt.ge" target="_blank">
-            <svg-icon src="assets/tktge.svg" />
-          </a>
-          <a href="https://www.swoop.ge" target="_blank">
-            <svg-icon src="assets/swoop.svg" />
-          </a>
-        </div>
+    <div class="w-full flex items-center gap-4 sm:hidden mt-7">
+      <hr class="bg-raisin-130 opacity-10 w-full" />
+      <span class="text-raisin-130 opacity-60 text-xs">Or</span>
+      <hr class="bg-raisin-130 opacity-10 w-full" />
+    </div>
+    <div
+      class="flex items-center gap-2 sm:gap-5 w-full mt-5 [&>button]:relative [&>button]:flex [&>button]:items-center [&>button]:sm:py-3.5 [&>button]:py-2.75 [&>button]:flex-1 [&>button]:justify-center [&>button]:transition-all [&>button]:duration-200 [&>button]:cursor-pointer [&>button]:border [&>button]:border-transparent [&>button]:bg-raisin-10 [&>button]:rounded-lg [&>button]:h-12 [&>button]:md:h-14 [&>button]:hover:rounded-xl [&>button]:hover:border [&>button]:hover:border-raisin-20 [&>button]:hover:bg-transparent"
+    >
+      <button Inject [content]="tooltipLogin" [context]="{text: 'Login with Google'}" type="button">
+        <span class="h-5 sm:h-6">
+          <svg-icon src="assets/google.svg" />
+        </span>
+      </button>
+      <button Inject [content]="tooltipLogin" [context]="{text: 'Login with Facebook'}" type="button">
+        <span class="h-5 sm:h-6">
+          <svg-icon src="assets/facebook.svg" />
+        </span>
+      </button>
+      <button Inject [content]="tooltipLogin" [context]="{text: 'Login with Apple'}" type="button">
+        <span class="h-5 sm:h-6">
+          <svg-icon src="assets/apple.svg" />
+        </span>
+      </button>
+    </div>
+    <div class="flex gap-2 text-xs sm:text-sm mt-20 md:mt-10">
+      Don't have an account?
+      <a routerLink="/user/register" class="text-blue-100">Sign up</a>
+    </div>
+    <div class="w-full items-center gap-4 my-10 hidden sm:block">
+      <hr class="bg-raisin-130 opacity-10 w-full" />
+    </div>
+    <div class="hidden sm:flex flex-col gap-2 items-center">
+      <span class="min-h-8.25">
+        <svg-icon src="assets/tnet2.svg" />
+      </span>
+      <div class="flex items-center gap-2 text-raisin-50">
+        <p class="text-xs sm:text-sm text-center">Use one account across 9 TNET platforms</p>
+        <span Inject [content]="tooltipTnet" [hoverable]="true" class="min-w-3.75 relative cursor-pointer">
+          <svg-icon src="assets/excl.svg" />
+        </span>
       </div>
     </div>
   </div>
+  <div class="sm:hidden flex flex-col gap-2 items-center">
+    <span class="min-h-8.25">
+      <svg-icon src="assets/tnet-white.svg" />
+    </span>
+    <div class="flex items-center gap-2 text-white">
+      <p class="text-xs sm:text-sm text-center">Use one account across 9 TNET platforms</p>
+      <span (click)="toggleSites()" class="min-w-3.75 cursor-pointer">
+        <svg-icon src="assets/excl-white.svg" />
+      </span>
+    </div>
+    <div
+      [class.opacity-100]="showSites()"
+      class="flex items-center flex-col gap-2 md:gap-6 transition-all duration-200 ease-in-out opacity-0"
+    >
+      <ng-container *ngTemplateOutlet="sites; context: { suffix: '-s' }" />
+    </div>
+  </div>
 </div>
+
+<ng-template #tooltipLogin let-text="text">
+  <div
+    class="absolute top-[calc(100%+11px)] left-1/2 -translate-x-1/2 rounded-lg text-[12px] px-2.5 py-1.5 bg-raisin-150"
+  >
+    <span class="text-white text-nowrap">{{ text }}</span>
+    <div class="bg-raisin-150 size-2 absolute left-1/2 -translate-x-1/2 -top-1 rotate-45"></div>
+  </div>
+</ng-template>
+
+<ng-template #tooltipTnet let-text="text">
+  <div
+    class="absolute top-[calc(100%+11px)] left-1/2 -translate-x-1/2 rounded-[10px] text-[12px] bg-white shadow-[0_0_15px_0_rgba(0,0,0,0.1)] py-6 px-4"
+  >
+    <div class="bg-white size-2 absolute left-1/2 -translate-x-1/2 -top-1 rotate-45"></div>
+    <div class="flex items-center flex-col gap-2 md:gap-6">
+      <ng-container *ngTemplateOutlet="sites; context: { suffix: '' }" />
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #sites let-suffix="suffix">
+  <div class="flex items-center gap-2 md:gap-5">
+    <a target="_blank" href="https://myauto.ge">
+      <svg-icon src="assets/myauto.svg" />
+    </a>
+    <a target="_blank" href="https://myhome.ge">
+      <svg-icon src="assets/myhome.svg" />
+    </a>
+    <a target="_blank" href="https://mymarket.ge">
+      <svg-icon src="assets/mymarket.svg" />
+    </a>
+    <a target="_blank" href="https://myjobs.ge">
+      <svg-icon src="assets/myjobs.svg" />
+    </a>
+    <a target="_blank" href="https://myparts.ge">
+      <svg-icon src="assets/myparts.svg" />
+    </a>
+  </div>
+  <div class="flex items-center gap-4 md:gap-6">
+    <a target="_blank" href="https://livo.ge">
+      <svg-icon src="assets/livo.svg" />
+    </a>
+    <a target="_blank" href="https://superapp.tnet.ge/">
+      <svg-icon [src]="'assets/superapp' + suffix + '.svg'" />
+    </a>
+    <a target="_blank" href="https://tkt.ge">
+      <svg-icon src="assets/tktge.svg" />
+    </a>
+    <a target="_blank" href="https://swoop.ge">
+      <svg-icon src="assets/swoop.svg" />
+    </a>
+  </div>
+</ng-template>

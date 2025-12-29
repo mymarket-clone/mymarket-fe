@@ -6,6 +6,5 @@ import { SvgIconComponent } from 'angular-svg-icon'
   selector: 'app-auth',
   imports: [RouterOutlet, SvgIconComponent],
   templateUrl: './auth.html',
-  styleUrl: './auth.scss',
 })
 export class Auth {}

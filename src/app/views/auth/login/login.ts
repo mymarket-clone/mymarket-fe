@@ -1,61 +1,75 @@
 import { Component, signal } from '@angular/core'
-import { Input } from '../../../components/input/input'
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
-import { Router, RouterLink } from '@angular/router'
-import { Button } from '../../../components/button/button'
 import { AuthService } from '../../../services/auth.service'
-import { LoginForm } from '../../../types/forms/LoginForm'
-import { FormService } from '../../../services/form-service/form.service'
-import { LoginCredentials } from '../../../interfaces/payload/LoginCredentials'
-import { UserStore } from '../../../store/user/user.store'
-import { TooltipDirective } from '../../../directives/appTooltip'
-import { HttpStatus } from '../../../types/enums/HttpStatus'
+import { UserStore } from '../../../store/user.store'
+import { Router, RouterLink } from '@angular/router'
+import { FormService } from '../../../services/form.service'
+import { ILoginForm } from '../../../interfaces/forms/ILoginForm'
+import { NgTemplateOutlet } from '@angular/common'
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
 import { SvgIconComponent } from 'angular-svg-icon'
+import { Zod } from '../../../utils/Zod'
+import { HttpStatus } from '../../../types/enums/HttpStatus'
+import { Button } from '../../../components/button/button'
+import { InjectElementDirective } from '../../../directives/injectElement.directive'
+import { Input } from '../../../components/input/input'
+import { HttpErrorCodes } from '../../../types/enums/HttpErrorCodes'
 
 @Component({
   selector: 'app-login',
-  imports: [Input, ReactiveFormsModule, RouterLink, Button, TooltipDirective, SvgIconComponent],
+  imports: [
+    Input,
+    SvgIconComponent,
+    ReactiveFormsModule,
+    RouterLink,
+    InjectElementDirective,
+    NgTemplateOutlet,
+    Button,
+  ],
   providers: [FormService],
   templateUrl: './login.html',
-  styleUrls: ['./login.scss', '../../../shared/styles/auth-modal.scss'],
 })
 export class Login {
+  public showSites = signal<boolean>(false)
   public loginState?: ReturnType<AuthService['loginUser']>
-  public abbrState = signal<boolean>(false)
 
   public constructor(
     private readonly authService: AuthService,
     private readonly userStore: UserStore,
     private readonly router: Router,
-    public readonly fs: FormService<LoginForm>
+    public readonly loginFs: FormService<ILoginForm>
   ) {
-    this.fs.setForm(
+    this.loginFs.setForm(
       new FormGroup({
-        emailOrPhone: new FormControl('', Validators.required),
-        password: new FormControl('', Validators.required),
+        emailOrPhone: new FormControl('', Zod.required()),
+        password: new FormControl('', Zod.required()),
       })
     )
   }
 
-  public onSubmit(): void {
-    this.fs.setSubmitted()
+  public toggleSites(): void {
+    this.showSites.set(!this.showSites())
+  }
 
-    if (this.fs.form.valid) {
+  public onSubmit(): void {
+    this.loginFs.submit(() => {
       this.loginState = this.authService.loginUser({
-        body: this.fs.form.getRawValue() as LoginCredentials,
-        form: this.fs.form,
+        body: this.loginFs.getValues(),
         onSuccess: (response) => {
           this.userStore.setUser(response)
           this.router.navigate(['/'])
         },
         onError: (_, record) => {
-          if (record?.status == HttpStatus.Unauthorized && record?.email) {
+          if (
+            record &&
+            record.status == HttpStatus.Unauthorized &&
+            record.code == HttpErrorCodes.EmailNotVerified
+          ) {
             this.router.navigate(['/user/register'], {
               queryParams: { email: record.email },
             })
           }
         },
       })
-    }
+    })
   }
 }

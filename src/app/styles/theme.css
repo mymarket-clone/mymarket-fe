@@ -1,0 +1,27 @@
+@theme {
+  --color-raisin-10: #e9eaeb;
+  --color-raisin-20: #d4d4d7;
+  --color-raisin-40: #a9aaaf;
+  --color-raisin-50: #93959b;
+  --color-raisin-130: #1b1d27;
+  --color-raisin-150: #272a37;
+  --color-blue-100: #3c74ff;
+  --color-blue-20: #d8e3ff;
+  --color-blue-100-10: #3c74ff1a;
+  --color-blue-110: #235be5;
+  --color-green: #1aba6b;
+
+  --animate-slide-progress: slideProgress 30s linear forwards;
+}
+
+@keyframes slideProgress {
+  0% {
+    left: 100%;
+  }
+  1% {
+    left: 0%;
+  }
+  100% {
+    left: 100%;
+  }
+}
