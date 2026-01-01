@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core'
 import { SvgIconComponent } from 'angular-svg-icon'
-import { InjectElementDirective } from '../../../directives/injectElement.directive'
+import { InjectElementDirective } from '../../../modules/directives/injectElement.directive'
 import { Input } from '../../../components/input/input'
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
 import { FormService } from '../../../services/form.service'
@@ -17,8 +17,9 @@ import {
 } from '../../../interfaces/forms/IRegisterForm'
 import { Segmented } from '../../../components/segmented/segmented'
 import { Checkbox } from '../../../components/checkbox/checkbox'
-import { UserStore } from '../../../store/user.store'
+import { UserStore } from '../../../stores/user.store'
 import { PasswordStrength } from '../../../components/password-strength/password-strength'
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco'
 
 @Component({
   selector: 'app-register',
@@ -32,6 +33,7 @@ import { PasswordStrength } from '../../../components/password-strength/password
     Segmented,
     Checkbox,
     PasswordStrength,
+    TranslocoModule,
   ],
   providers: [
     { provide: 'registerFormMain', useClass: FormService },
@@ -60,46 +62,56 @@ export class Register implements OnInit {
   public passwordVisible = signal(false)
 
   public constructor(
+    private readonly ts: TranslocoService,
     private readonly authService: AuthService,
     private readonly actR: ActivatedRoute,
     private readonly router: Router,
-    private readonly userStore: UserStore
+    private readonly userStore: UserStore,
+    private readonly zod: Zod
   ) {
     this.registerFormMain.setForm(
       new FormGroup({
         firstname: new FormControl('', [
-          Zod.required(),
-          Zod.onlyLetters('First name must contain only letters'),
+          this.zod.required(),
+          this.zod.onlyLetters(
+            this.ts.translate('validators.onlyLetters', {
+              field: 'სახელი',
+            })
+          ),
         ]),
         lastname: new FormControl('', [
-          Zod.required(),
-          Zod.onlyLetters('Last name must contain only letters'),
+          this.zod.required(),
+          this.zod.onlyLetters(
+            this.ts.translate('validators.onlyLetters', {
+              field: 'გვარი',
+            })
+          ),
         ]),
         email: new FormControl('', {
-          validators: [Zod.required(), Zod.email()],
-          asyncValidators: userExistsValidator(this.authService),
+          validators: [this.zod.required(), this.zod.email()],
+          asyncValidators: userExistsValidator(this.authService, this.ts),
           updateOn: 'blur',
         }),
-        password: new FormControl('', [Zod.required(), Zod.password()]),
-        passwordConfirm: new FormControl('', Zod.required()),
+        password: new FormControl('', [this.zod.required(), this.zod.password()]),
+        passwordConfirm: new FormControl('', this.zod.required()),
       })
     )
 
     this.registerFormExtra.setForm(
       new FormGroup({
-        gender: new FormControl(1, Zod.required()),
+        gender: new FormControl(1, this.zod.required()),
         birthYear: new FormControl(
           new Date().getFullYear() - 16,
-          Zod.between(1900, new Date().getFullYear())
+          this.zod.between(1900, new Date().getFullYear())
         ),
-        phoneNumber: new FormControl('', Zod.required()),
+        phoneNumber: new FormControl('', this.zod.required()),
         termsAndConditions: new FormControl(false, {
           nonNullable: true,
-          validators: Zod.true(),
+          validators: this.zod.true(),
         }),
         privacyPolicy: new FormControl(false, {
           nonNullable: true,
-          validators: Zod.true(),
+          validators: this.zod.true(),
         }),
       })
     )
@@ -107,10 +119,10 @@ export class Register implements OnInit {
     this.registerFormVerification.setForm(
       new FormGroup({
         email: new FormControl(this.actR.snapshot.queryParamMap.get('email') || '', [
-          Zod.required(),
-          Zod.email(),
+          this.zod.required(),
+          this.zod.email(),
         ]),
-        code: new FormControl('', [Zod.length(4)]),
+        code: new FormControl('', [this.zod.length(4)]),
       })
     )
   }

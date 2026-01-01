@@ -1,4 +1,5 @@
 import { Component, effect, input, signal } from '@angular/core'
+import { TranslocoService } from '@jsverse/transloco'
 import z from 'zod'
 
 @Component({
@@ -9,7 +10,7 @@ export class PasswordStrength {
   public password = input.required<string | null>()
   public passwordStrength = signal<number>(0)
 
-  public constructor() {
+  public constructor(private readonly ts: TranslocoService) {
     effect(() => {
       const pwd = this.password() ?? ''
       const strength = [
@@ -33,10 +34,10 @@ export class PasswordStrength {
 
   public getStrengthLabel(): string {
     const strength = this.passwordStrength()
-    if (strength <= 1) return 'Weak'
-    if (strength === 2) return 'Average'
-    if (strength === 3) return 'Good'
-    return 'Strong'
+    if (strength <= 1) return this.ts.translate('weak')
+    if (strength === 2) return this.ts.translate('average')
+    if (strength === 3) return this.ts.translate('good')
+    return this.ts.translate('strong')
   }
 
   public getStrengthColor(): string {

@@ -2,15 +2,16 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/
 import { provideRouter } from '@angular/router'
 import { routes } from './app.routes'
 import { provideAngularSvgIcon } from 'angular-svg-icon'
-import { provideHttpClient } from '@angular/common/http'
-import { provideQueryClient, QueryClient } from '@tanstack/angular-query-experimental'
+import { provideHttpClient, withInterceptors } from '@angular/common/http'
+import { httpInterceptor } from './modules/interceptors/http.interceptor'
+import { provideI18n } from './modules/providers/transloco.provider'
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
+    provideI18n(),
     provideRouter(routes),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([httpInterceptor])),
     provideAngularSvgIcon(),
-    provideQueryClient(new QueryClient()),
   ],
 }

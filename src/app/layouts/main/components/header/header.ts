@@ -1,7 +1,7 @@
 import { Component } from '@angular/core'
 import { SvgIconComponent } from 'angular-svg-icon'
 import { Router } from '@angular/router'
-import { UserStore } from '../../../../store/user.store'
+import { UserStore } from '../../../../stores/user.store'
 
 @Component({
   selector: 'app-header',

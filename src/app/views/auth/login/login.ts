@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core'
 import { AuthService } from '../../../services/auth.service'
-import { UserStore } from '../../../store/user.store'
+import { UserStore } from '../../../stores/user.store'
 import { Router, RouterLink } from '@angular/router'
 import { FormService } from '../../../services/form.service'
 import { ILoginForm } from '../../../interfaces/forms/ILoginForm'
@@ -10,9 +10,10 @@ import { SvgIconComponent } from 'angular-svg-icon'
 import { Zod } from '../../../utils/Zod'
 import { HttpStatus } from '../../../types/enums/HttpStatus'
 import { Button } from '../../../components/button/button'
-import { InjectElementDirective } from '../../../directives/injectElement.directive'
+import { InjectElementDirective } from '../../../modules/directives/injectElement.directive'
 import { Input } from '../../../components/input/input'
 import { HttpErrorCodes } from '../../../types/enums/HttpErrorCodes'
+import { TranslocoModule } from '@jsverse/transloco'
 
 @Component({
   selector: 'app-login',
@@ -24,6 +25,7 @@ import { HttpErrorCodes } from '../../../types/enums/HttpErrorCodes'
     InjectElementDirective,
     NgTemplateOutlet,
     Button,
+    TranslocoModule,
   ],
   providers: [FormService],
   templateUrl: './login.html',
@@ -36,12 +38,13 @@ export class Login {
     private readonly authService: AuthService,
     private readonly userStore: UserStore,
     private readonly router: Router,
+    private readonly zod: Zod,
     public readonly loginFs: FormService<ILoginForm>
   ) {
     this.loginFs.setForm(
       new FormGroup({
-        emailOrPhone: new FormControl('', Zod.required()),
-        password: new FormControl('', Zod.required()),
+        emailOrPhone: new FormControl('', this.zod.required()),
+        password: new FormControl('', this.zod.required()),
       })
     )
   }

@@ -12,10 +12,11 @@ import { IPasswordEnterForm } from '../../../interfaces/forms/IPasswordEnterForm
 import { Zod } from '../../../utils/Zod'
 import { HttpStatus } from '../../../types/enums/HttpStatus'
 import { HttpErrorCodes } from '../../../types/enums/HttpErrorCodes'
+import { TranslocoModule } from '@jsverse/transloco'
 
 @Component({
   selector: 'app-password-recovery',
-  imports: [SvgIconComponent, Input, Button, RouterLink, ReactiveFormsModule],
+  imports: [SvgIconComponent, Input, Button, RouterLink, ReactiveFormsModule, TranslocoModule],
   providers: [
     { provide: 'sendPasswordRecoveryForm', useClass: FormService },
     { provide: 'passwordEnter', useClass: FormService },
@@ -38,24 +39,25 @@ export class PasswordRecovery {
 
   public constructor(
     private readonly authService: AuthService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly zod: Zod
   ) {
     this.sendPasswordRecoveryFs.setForm(
       new FormGroup({
-        email: new FormControl('', [Zod.required(), Zod.email()]),
-        code: new FormControl('', Zod.required()),
+        email: new FormControl('', [this.zod.required(), this.zod.email()]),
+        code: new FormControl('', this.zod.required()),
       })
     )
 
     this.passwordEnterFs.setForm(
       new FormGroup(
         {
-          code: new FormControl('', Zod.required()),
-          password: new FormControl('', [Zod.required(), Zod.password()]),
-          passwordConfirm: new FormControl('', Zod.required()),
+          code: new FormControl('', this.zod.required()),
+          password: new FormControl('', [this.zod.required(), this.zod.password()]),
+          passwordConfirm: new FormControl('', this.zod.required()),
         },
         {
-          validators: Zod.match('password', 'passwordConfirm'),
+          validators: this.zod.match('password', 'passwordConfirm'),
         }
       )
     )

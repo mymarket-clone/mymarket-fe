@@ -1,4 +1,7 @@
-<div class="w-full flex items-center justify-center flex-1 flex-col gap-10 h-[calc(100vh-48px)]">
+<div
+  *transloco="let t"
+  class="w-full flex items-center justify-center flex-1 flex-col gap-10 h-[calc(100vh-48px)]"
+>
   <div
     class="bg-white relative w-full sm:w-xl flex flex-col items-center pb-10 pt-8 px-6 sm:px-22 sm:pt-14 sm:pb-10 rounded-2xl z-10 max-w-150 md:w-150"
   >
@@ -12,14 +15,12 @@
             <div class="flex flex-col gap-6 md:gap-8">
               <div class="flex flex-col gap-4">
                 <app-input
-                  name="emailOrPhone"
-                  label="Email / Phone number"
+                  [label]="t('auth.emailOrPhone')"
                   [control]="loginFs.getControl('emailOrPhone')"
                   [submitted]="loginFs.submitted"
                 />
                 <app-input
-                  name="password"
-                  label="Password"
+                  [label]="t('auth.password')"
                   type="password"
                   [control]="loginFs.getControl('password')"
                   [submitted]="loginFs.submitted"
@@ -29,11 +30,11 @@
                     class="text-blue-100 text-xs sm:text-sm align-bottom text-end"
                     routerLink="/user/recover-password"
                   >
-                    Recover password
+                    {{ t('auth.recoverPassword') }}
                   </a>
                 </div>
               </div>
-              <app-button [disabled]="!!loginState?.loading()" [title]="'Sign in'" />
+              <app-button [disabled]="!!loginState?.loading()" [title]="t('auth.signIn')" />
             </div>
           </form>
         </div>
@@ -41,31 +42,46 @@
     </div>
     <div class="w-full flex items-center gap-4 sm:hidden mt-7">
       <hr class="bg-raisin-130 opacity-10 w-full" />
-      <span class="text-raisin-130 opacity-60 text-xs">Or</span>
+      <span class="text-raisin-130 opacity-60 text-xs">{{ t('auth.or') }}</span>
       <hr class="bg-raisin-130 opacity-10 w-full" />
     </div>
     <div
       class="flex items-center gap-2 sm:gap-5 w-full mt-5 [&>button]:relative [&>button]:flex [&>button]:items-center [&>button]:sm:py-3.5 [&>button]:py-2.75 [&>button]:flex-1 [&>button]:justify-center [&>button]:transition-all [&>button]:duration-200 [&>button]:cursor-pointer [&>button]:border [&>button]:border-transparent [&>button]:bg-raisin-10 [&>button]:rounded-lg [&>button]:h-12 [&>button]:md:h-14 [&>button]:hover:rounded-xl [&>button]:hover:border [&>button]:hover:border-raisin-20 [&>button]:hover:bg-transparent"
     >
-      <button Inject [content]="tooltipLogin" [context]="{text: 'Login with Google'}" type="button">
+      <button
+        Inject
+        [content]="tooltipLogin"
+        [context]="{text: t('auth.socialSignIn', {media: 'Google'})}"
+        type="button"
+      >
         <span class="h-5 sm:h-6">
           <svg-icon src="assets/google.svg" />
         </span>
       </button>
-      <button Inject [content]="tooltipLogin" [context]="{text: 'Login with Facebook'}" type="button">
+      <button
+        Inject
+        [content]="tooltipLogin"
+        [context]="{text: t('auth.socialSignIn', {media: 'Facebook'})}"
+        type="button"
+      >
         <span class="h-5 sm:h-6">
           <svg-icon src="assets/facebook.svg" />
         </span>
       </button>
-      <button Inject [content]="tooltipLogin" [context]="{text: 'Login with Apple'}" type="button">
+      <button
+        Inject
+        [content]="tooltipLogin"
+        [context]="{text: t('auth.socialSignIn', {media: 'Apple'})}"
+        type="button"
+      >
         <span class="h-5 sm:h-6">
           <svg-icon src="assets/apple.svg" />
         </span>
       </button>
     </div>
     <div class="flex gap-2 text-xs sm:text-sm mt-20 md:mt-10">
-      Don't have an account?
-      <a routerLink="/user/register" class="text-blue-100">Sign up</a>
+      {{ t('auth.noAccount') }}
+      <a routerLink="/user/register" class="text-blue-100"> {{ t('auth.create') }} </a>
     </div>
     <div class="w-full items-center gap-4 my-10 hidden sm:block">
       <hr class="bg-raisin-130 opacity-10 w-full" />
@@ -75,7 +91,7 @@
         <svg-icon src="assets/tnet2.svg" />
       </span>
       <div class="flex items-center gap-2 text-raisin-50">
-        <p class="text-xs sm:text-sm text-center">Use one account across 9 TNET platforms</p>
+        <p class="text-xs sm:text-sm text-center">{{ t('auth.tnet9') }}</p>
         <span Inject [content]="tooltipTnet" [hoverable]="true" class="min-w-3.75 relative cursor-pointer">
           <svg-icon src="assets/excl.svg" />
         </span>
@@ -87,7 +103,7 @@
       <svg-icon src="assets/tnet-white.svg" />
     </span>
     <div class="flex items-center gap-2 text-white">
-      <p class="text-xs sm:text-sm text-center">Use one account across 9 TNET platforms</p>
+      <p class="text-xs sm:text-sm text-center">{{ t('auth.tnet9') }}</p>
       <span (click)="toggleSites()" class="min-w-3.75 cursor-pointer">
         <svg-icon src="assets/excl-white.svg" />
       </span>

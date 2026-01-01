@@ -1,8 +1,13 @@
+import { Injectable } from '@angular/core'
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms'
+import { TranslocoService } from '@jsverse/transloco'
 import * as z from 'zod'
 
+@Injectable({ providedIn: 'root' })
 export class Zod {
-  private static parser<T>(schema: z.ZodType<T>, skipEmpty: boolean = true): ValidatorFn {
+  public constructor(private readonly ts: TranslocoService) {}
+
+  private parser<T>(schema: z.ZodType<T>, skipEmpty: boolean = true): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const value = control.value
 
@@ -25,12 +30,12 @@ export class Zod {
           })
           return errors
         }
-        return { invalid: 'Invalid value' }
+        return { invalid: 'Invalid' }
       }
     }
   }
 
-  public static required(message: string = 'Required Field'): ValidatorFn {
+  public required(message: string = this.ts.translate('validators.requiredField')): ValidatorFn {
     const schema = z
       .any()
       .refine(
@@ -41,53 +46,60 @@ export class Zod {
     return this.parser(schema, false)
   }
 
-  public static email(message: string = 'Please enter a valid email address'): ValidatorFn {
+  public email(message: string = this.ts.translate('validators.email')): ValidatorFn {
     const schema = z.email(message)
     return this.parser(schema)
   }
 
-  public static password(): ValidatorFn {
+  public password(): ValidatorFn {
     const schema = z
       .string()
-      .min(8, { message: 'Password must be at least 8 characters long' })
-      .refine((val) => /[0-9]/.test(val), { message: 'Password must contain at least one digit' })
-      .refine((val) => /[a-z]/.test(val), { message: 'Password must contain at least one lowercase letter' })
-      .refine((val) => /[A-Z]/.test(val), { message: 'Password must contain at least one uppercase letter' })
+      .min(8, { message: this.ts.translate('validators.passwordLength') })
+      .refine((val) => /[0-9]/.test(val), { message: this.ts.translate('validators.passwordDigit') })
+      .refine((val) => /[a-z]/.test(val), { message: this.ts.translate('validators.passwordLowercase') })
+      .refine((val) => /[A-Z]/.test(val), { message: this.ts.translate('validators.passwordUppercase') })
       .refine((val) => /[!@#$%^&*()_+{}\\[\]:;<>,.?~\\/-]/.test(val), {
-        message: 'Password must contain at least one special character',
+        message: this.ts.translate('validators.passwordCharacter'),
       })
 
     return this.parser(schema)
   }
 
-  public static between(min: number, max: number): ValidatorFn {
+  public between(min: number, max: number): ValidatorFn {
     const schema = z.preprocess(
       (val) => Number(val),
       z
         .number()
-        .min(min, { message: `Value must be at least ${min}` })
-        .max(max, { message: `Value must be at most ${max}` })
+        .min(min, { message: this.ts.translate('validators.valueAtLeast') + min })
+        .max(max, { message: this.ts.translate('validators.valueAtMost') + max })
     )
 
     return this.parser(schema)
   }
 
-  public static true(): ValidatorFn {
-    const schema = z.literal(true, { message: 'Requred field' })
+  public true(): ValidatorFn {
+    const schema = z.literal(true, { message: this.ts.translate('validators.requiredField') })
     return this.parser(schema)
   }
 
-  public static onlyLetters(message: string = 'Field must contain only letters'): ValidatorFn {
+  public onlyLetters(message: string): ValidatorFn {
     const schema = z.string().refine((value) => /^[A-Za-z]+$/.test(value), { message })
     return this.parser(schema)
   }
 
-  public static length(length: number, message: string = `Length must be ${length} charecters`): ValidatorFn {
+  public length(
+    length: number,
+    message: string = this.ts.translate('validators.requiredField', { length })
+  ): ValidatorFn {
     const schema = z.number().refine((val) => val != length, { message })
     return this.parser(schema)
   }
 
-  public static match(field1: string, field2: string, message: string = 'Fields do not match'): ValidatorFn {
+  public match(
+    field1: string,
+    field2: string,
+    message: string = this.ts.translate('validators.noMatch')
+  ): ValidatorFn {
     const schema = z
       .object({
         [field1]: z.string(),
