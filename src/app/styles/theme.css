@@ -3,6 +3,7 @@
   --color-raisin-20: #d4d4d7;
   --color-raisin-40: #a9aaaf;
   --color-raisin-50: #93959b;
+  --color-raisin-60: #e7eaf3;
   --color-raisin-130: #1b1d27;
   --color-raisin-150: #272a37;
   --color-blue-100: #3c74ff;
@@ -10,6 +11,12 @@
   --color-blue-100-10: #3c74ff1a;
   --color-blue-110: #235be5;
   --color-green: #1aba6b;
+  --color-gray-20: #eff0f4;
+  --color-gray-30: #f1f3f6;
+  --color-black-20: #222222;
+  --color-yellow-20: #fff4cc;
+  --color-yellow-30: #ffefb2;
+  --color-yellow: #fec900;
 
   --animate-slide-progress: slideProgress 30s linear forwards;
 }

@@ -1,19 +1,71 @@
-<nav
-  class="bg-white px-4 py-4 drop-shadow-lg md:border-b md:border-b-gray-100 md:py-6 md:drop-shadow-none"
->
-  <div class="flex flex-nowrap items-center justify-between md:flex-wrap container">
-    <div class="flex items-center">
-      <a class="min-h-10" routerLink="/">
-        <svg-icon src="assets/logo.svg" alt="Logo" />
-      </a>
-      <div>
-        <pre>{{ userJson }}</pre>
+<div *transloco="let t" class="container h-33.25">
+  <div class="row">
+    <div class="header-top h-20 col-12 px-md-0 relative w-full flex items-center content-between bg-white">
+      <div class="flex flex-1 items-center">
+        <div class="flex items-center content-between mr-7">
+          <a class="min-h-10" routerLink="/">
+            <svg-icon src="assets/logo-big.svg" alt="Logo" />
+          </a>
+        </div>
+        <div>
+          <form
+            autocorrect="off"
+            autocomplete="off"
+            class="h-10 md:w-70 relative flex border mr-7 border-gray-20 rounded-xl lg:w-[320px]"
+          >
+            <input
+              type="text"
+              [placeholder]="t('common.search')"
+              class="h-full w-full border-0 text-[14px] placeholder:text-[14px] placeholder:text-black-20! md:pr-25 pr-9 p-4"
+            />
+            <button
+              type="submit"
+              class="search-icon absolute border-0 items-center flex justify-center top-[52%] right-5 h-5 w-5 transform -translate-y-1/2 transition-all duration-200 ease-in-out"
+            >
+              <svg-icon src="/assets/search.svg" />
+            </button>
+          </form>
+        </div>
+      </div>
+      <ul class="navbar-nav flex items-center ml-1">
+        <button
+          routerLink="/menu/add-post"
+          class="flex items-center bg-yellow-20 px-6 h-10.5 max-w-34.5 rounded-xl hover:bg-yellow-30 transition-all duration-300 ease-in-out cursor-pointer"
+        >
+          <span class="mr-2 shrink w-21px h-5.25">
+            <svg-icon src="assets/header-add.svg" />
+          </span>
+          <span class="tbc-medium text-xs">Add</span>
+        </button>
+      </ul>
+    </div>
+    <div class="flex justify-between w-full overflow-hidden">
+      <div class="flex items-center justify-between pb-4 px-4 md:px-0">
+        @for (item of navbar?.()?.slice(0,5); track $index) {
+        <div class="mr-8 w-auto">
+          <a
+            [routerLink]="item.key"
+            class="cursor-pointer py-2 flex items-center text-raisin-150 text-sm hover:text-yellow! transition-all ease-in-out duration-300"
+          >
+            @if (item.iconPath) {
+            <svg-icon class="mr-1" [src]="item.iconPath" />
+            } {{ item.label }}
+          </a>
+        </div>
+        }
+      </div>
+      <div class="flex items-center justify-between pb-4 px-4 md:px-0">
+        @for (item of navbar?.()?.slice(5,8); track $index) {
+        <div class="mr-8 w-auto">
+          <a
+            [routerLink]="item.key"
+            class="cursor-pointer py-2 flex items-center text-raisin-150 text-sm hover:text-yellow! transition-all ease-in-out duration-300"
+          >
+            {{ item.label }}
+          </a>
+        </div>
+        }
       </div>
     </div>
-    <div>
-      <button (click)="handleLoginButton()">
-        {{ userStore.getUser() ? 'Logout' : 'Login' }}
-      </button>
-    </div>
   </div>
-</nav>
+</div>

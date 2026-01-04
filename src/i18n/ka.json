@@ -2,6 +2,9 @@
   "lang": "georgian",
   "langCode": "geo",
   "langAbbr": "ქარ",
+  "common": {
+    "search": "ძიება"
+  },
   "auth": {
     "emailOrPhone": "ელფოსტა / მობილურის ნომერი",
     "email": "ელფოსტა",

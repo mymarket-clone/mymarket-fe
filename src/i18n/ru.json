@@ -2,6 +2,9 @@
   "lang": "русский",
   "langCode": "ru",
   "langAbbr": "рус",
+  "common": {
+    "search": "Поиск"
+  },
   "auth": {
     "emailOrPhone": "E-mail / номер телефона",
     "email": "E-mail",

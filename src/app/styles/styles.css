@@ -8,15 +8,24 @@
 }
 
 @font-face {
+  font-family: 'TBCXMedium';
+  src: url('../../assets/fonts/TBCXMedium.woff2'), format('woff2');
+}
+
+@font-face {
   font-family: 'TBCXBold';
   src: url('../../assets/fonts/TBCXBold.woff2'), format('woff2');
 }
 
-.font-regular {
+.tbc-regular {
   font-family: 'TBCXRegular', sans-serif;
 }
 
-.font-bold {
+.tbc-medium {
+  font-family: 'TBCXMedium', sans-serif;
+}
+
+.tbc-bold {
   font-family: 'TBCXBold', sans-serif;
 }
 
@@ -25,4 +34,14 @@
 :after,
 :before {
   font-family: 'TBCXRegular', sans-serif;
+  outline: none;
+  color: #212529;
+}
+
+body {
+  overflow-y: scroll;
+}
+
+html {
+  overflow-y: scroll;
 }

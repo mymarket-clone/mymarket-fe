@@ -2,6 +2,9 @@
   "lang": "english",
   "langCode": "en",
   "langAbbr": "Eng",
+  "common": {
+    "search": "Search"
+  },
   "auth": {
     "emailOrPhone": "Email or phone",
     "email": "Email",
@@ -50,5 +53,15 @@
     "onlyLetters": "{{field}} must contain only letters",
     "lengthMustBe": "Length must be {{length}}",
     "noMatch": "Fields does not match"
+  },
+  "navbar": {
+    "usedProducts": "Used Products",
+    "tradeIn": "Trade In",
+    "shops": "Shops",
+    "sale": "Sale",
+    "gift": "Gift",
+    "openShop": "Open Shop",
+    "help": "Help",
+    "contact": "Contact"
   }
 }
