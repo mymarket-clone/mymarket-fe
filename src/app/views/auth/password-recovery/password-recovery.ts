@@ -12,11 +12,11 @@ import { IPasswordEnterForm } from '../../../interfaces/forms/IPasswordEnterForm
 import { Zod } from '../../../utils/Zod'
 import { HttpStatus } from '../../../types/enums/HttpStatus'
 import { HttpErrorCodes } from '../../../types/enums/HttpErrorCodes'
-import { TranslocoModule } from '@jsverse/transloco'
+import { TranslocoDirective } from '@jsverse/transloco'
 
 @Component({
   selector: 'app-password-recovery',
-  imports: [SvgIconComponent, Input, Button, RouterLink, ReactiveFormsModule, TranslocoModule],
+  imports: [SvgIconComponent, Input, Button, RouterLink, ReactiveFormsModule, TranslocoDirective],
   providers: [
     { provide: 'sendPasswordRecoveryForm', useClass: FormService },
     { provide: 'passwordEnter', useClass: FormService },

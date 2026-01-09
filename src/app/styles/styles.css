@@ -35,13 +35,18 @@
 :before {
   font-family: 'TBCXRegular', sans-serif;
   outline: none;
-  color: #212529;
 }
 
 body {
-  overflow-y: scroll;
+  color: #212529;
 }
 
 html {
   overflow-y: scroll;
+}
+
+.menu-hover {
+  li {
+    display: none;
+  }
 }

@@ -2,12 +2,12 @@ import { Component, signal, WritableSignal } from '@angular/core'
 import { SvgIconComponent } from 'angular-svg-icon'
 import { Router, RouterLink } from '@angular/router'
 import { UserStore } from '../../../../stores/user.store'
-import { TranslocoModule, TranslocoService } from '@jsverse/transloco'
+import { TranslocoDirective, TranslocoService } from '@jsverse/transloco'
 import { NavbarItem } from '../../../../types/NavbarItem'
 
 @Component({
   selector: 'app-header',
-  imports: [SvgIconComponent, TranslocoModule, RouterLink],
+  imports: [SvgIconComponent, TranslocoDirective, RouterLink],
   templateUrl: './header.html',
 })
 export class Header {
@@ -19,7 +19,7 @@ export class Header {
     public readonly userStore: UserStore
   ) {
     this.navbar = signal<NavbarItem[]>([
-      { label: this.ts.translate('navbar.usedProducts'), key: 'usedProducts', iconPath: null },
+      { label: this.ts.translate('navbar.installments'), key: 'installments', iconPath: null },
       { label: this.ts.translate('navbar.tradeIn'), key: 'tradeIn', iconPath: null },
       { label: this.ts.translate('navbar.shops'), key: 'shops', iconPath: null },
       { label: this.ts.translate('navbar.sale'), key: 'sale', iconPath: 'assets/discount.svg' },

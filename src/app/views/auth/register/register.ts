@@ -19,7 +19,8 @@ import { Segmented } from '../../../components/segmented/segmented'
 import { Checkbox } from '../../../components/checkbox/checkbox'
 import { UserStore } from '../../../stores/user.store'
 import { PasswordStrength } from '../../../components/password-strength/password-strength'
-import { TranslocoModule, TranslocoService } from '@jsverse/transloco'
+import { TranslocoDirective, TranslocoService } from '@jsverse/transloco'
+import { User } from '../../../types/User'
 
 @Component({
   selector: 'app-register',
@@ -33,7 +34,7 @@ import { TranslocoModule, TranslocoService } from '@jsverse/transloco'
     Segmented,
     Checkbox,
     PasswordStrength,
-    TranslocoModule,
+    TranslocoDirective,
   ],
   providers: [
     { provide: 'registerFormMain', useClass: FormService },
@@ -173,7 +174,7 @@ export class Register implements OnInit {
       form: this.registerFormVerification.form,
       onSuccess: (response) => {
         this.userStore.logout()
-        this.userStore.setUser(response)
+        this.userStore.setUser(response as unknown as User)
         this.router.navigate(['/'])
       },
     })

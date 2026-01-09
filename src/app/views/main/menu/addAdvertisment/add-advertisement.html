@@ -1,0 +1,24 @@
+<div class="relative flex flex-nowrap mt-6 gap-6">
+  <div class="lg:max-w-159 w-full shrink">
+    <div class="rounded-lg bg-white p-6 md:p-10">
+      <h1 class="text-sm tbc-bold leading-5">Product details</h1>
+      <div>
+        <label class="block text-xs tbc-medium leading-4.5! mt-5 mb-2">Advertisement type</label>
+        <div class="flex gap-2.5">
+          @for(item of postTypeValues; track $index) {
+          <div class="relative mb-2 flex justify-center items-center bg-gray-60 w-22.5 rounded-[44px]">
+            <label
+              [class.bg-blue-30]="adForm.getControl('postType').value === item"
+              [class.text-white]="adForm.getControl('postType').value === item"
+              (click)="setPostType($index)"
+              class="rounded-[44px] cursor-pointer text-sm leading-4.5 px-4 py-2.5 m-0 tbc-regular w-full text-center"
+            >
+              {{ postTypeItems()?.[item] }}
+            </label>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

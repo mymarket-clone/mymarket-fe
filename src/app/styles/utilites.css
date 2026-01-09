@@ -5,12 +5,13 @@
 
   .container {
     width: 100%;
+    padding-inline: 16px;
   }
 
   @media (min-width: 768px) {
     .container {
-      max-width: 1272px;
-      margin-inline: auto;
+      max-width: calc(1240px + 16px * 2);
+      margin-inline: auto
     }
   }
 }

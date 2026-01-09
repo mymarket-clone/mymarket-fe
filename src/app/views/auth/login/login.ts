@@ -13,7 +13,8 @@ import { Button } from '../../../components/button/button'
 import { InjectElementDirective } from '../../../modules/directives/injectElement.directive'
 import { Input } from '../../../components/input/input'
 import { HttpErrorCodes } from '../../../types/enums/HttpErrorCodes'
-import { TranslocoModule } from '@jsverse/transloco'
+import { TranslocoDirective } from '@jsverse/transloco'
+import { User } from '../../../types/User'
 
 @Component({
   selector: 'app-login',
@@ -25,7 +26,7 @@ import { TranslocoModule } from '@jsverse/transloco'
     InjectElementDirective,
     NgTemplateOutlet,
     Button,
-    TranslocoModule,
+    TranslocoDirective,
   ],
   providers: [FormService],
   templateUrl: './login.html',
@@ -59,7 +60,7 @@ export class Login {
         body: this.loginFs.getValues(),
         form: this.loginFs.form,
         onSuccess: (response) => {
-          this.userStore.setUser(response)
+          this.userStore.setUser(response as unknown as User)
           this.router.navigate(['/'])
         },
         onError: (_, record) => {

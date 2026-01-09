@@ -1,0 +1,79 @@
+<aside *transloco="let t" class="min-w-73.75 rounded-2xl border border-raisin-60 bg-white px-4">
+  <div class="rounded-2xl py-5">
+    <div class="flex items-center">
+      <div class="mr-2 flex overflow-hidden w-12 justify-center items-center h-12 rounded-[50%]">
+        <svg-icon src="assets/user.svg" />
+      </div>
+      <div class="overflow-hidden max-w-45">
+        <div class="tbc-bold text-[16px] truncate">{{ userStore.getUserName() }}</div>
+        <div class="tbc-medium text-blue-100! text-[12px] truncate">ID {{ userStore.getUserId() }}</div>
+      </div>
+    </div>
+    <div class="px-4 py-3 border border-gray-40 rounded-lg mt-6">
+      <div class="flex justify-between items-center">
+        <div class="block">
+          <div class="text-xs mb-1 text-gray-50">{{ t('menu.balance') }}</div>
+          <div class="text-xl h-7 tbc-bold">0.00</div>
+        </div>
+        <div class="flex items-center text-xs text-gray-50 cursor-pointer">
+          {{ t('menu.topUp') }}
+          <div class="ml-2 min-w-6 min-h-6">
+            <span class="tbc-bold flex justify-center items-center">
+              <svg-icon src="/assets/add.svg" />
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ul class="py-5 flex flex-col gap-4">
+      @for (list of menuList()[0]; track $index) {
+      <li routerLinkActive="active" [routerLink]="list.route" [routerLinkActiveOptions]="{ exact: true }">
+        <a class="tbc-regular text-sm no-underline w-full items-center flex text-gray-50">
+          <div class="flex items-center">
+            <span class="mr-3 min-w-8 min-h-8">
+              <svg-icon [src]="list.iconPath" />
+            </span>
+            {{ list.label }}
+          </div>
+        </a>
+      </li>
+      } @for (list of menuList()[1]; track $index;) {
+      <li
+        routerLinkActive="active"
+        [routerLink]="list.route"
+        [routerLinkActiveOptions]="{ exact: true }"
+        [class.border-t]="$first"
+        [class.border-gray-40]="$first"
+        [class.pt-6]="$first"
+      >
+        <a class="tbc-regular text-sm no-underline w-full items-center flex text-gray-50">
+          <div class="flex items-center">
+            <span class="mr-3 min-w-8 min-h-8">
+              <svg-icon [src]="list.iconPath" />
+            </span>
+            {{ list.label }}
+          </div>
+        </a>
+      </li>
+      } @for (list of menuList()[2]; track $index) {
+      <li
+        routerLinkActive="active"
+        [routerLink]="list.route"
+        [routerLinkActiveOptions]="{ exact: true }"
+        [class.border-t]="$first"
+        [class.border-gray-40]="$first"
+        [class.pt-6]="$first"
+      >
+        <a class="tbc-regular text-sm no-underline w-full items-center flex text-gray-50">
+          <div class="flex items-center">
+            <span class="mr-3 min-w-8 min-h-8">
+              <svg-icon [src]="list.iconPath" />
+            </span>
+            {{ list.label }}
+          </div>
+        </a>
+      </li>
+      }
+    </ul>
+  </div>
+</aside>

@@ -55,7 +55,7 @@
     "noMatch": "Fields does not match"
   },
   "navbar": {
-    "usedProducts": "Used Products",
+    "installments": "Installments",
     "tradeIn": "Trade In",
     "shops": "Shops",
     "sale": "Sale",
@@ -63,5 +63,30 @@
     "openShop": "Open Shop",
     "help": "Help",
     "contact": "Contact"
+  },
+  "menu": {
+    "balance": "Balance",
+    "topUp": "Top up",
+    "addAdvertisement": "Add an Advertisement",
+    "myListing": "My Listing",
+    "myCards": "My Cards",
+    "myAuction": "My Auction",
+    "incomingOffers": "Incoming Offers",
+    "onlineOrders": "Online Orders",
+    "myFinances": "My Finances",
+    "myMessages": "My Messages",
+    "myFavourites": "My Favourites",
+    "myCart": "My Cart",
+    "myOrders": "My Orders",
+    "sentOffers": "Sent Offers",
+    "myAddresses": "My Addresses",
+    "myBankAccounts": "My Bank Accounts",
+    "editAccount": "Edit Account",
+    "logOut": "Log out",
+    "home": "Home",
+    "sell": "Sell",
+    "buy": "Buy",
+    "rent": "Rent",
+    "services": "Services"
   }
 }

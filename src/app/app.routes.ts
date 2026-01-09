@@ -4,8 +4,9 @@ import { Auth } from './layouts/auth/auth'
 import { Login } from './views/auth/login/login'
 import { PasswordRecovery } from './views/auth/password-recovery/password-recovery'
 import { Register } from './views/auth/register/register'
-import { Menu } from './views/main/menu'
-import { AddPost } from './views/main/menu/addPost/addPost'
+import { Menu } from './views/main/menu/menu'
+import { loggedGuard } from './modules/guards/logged.guard'
+import { AddAdvertisement } from './views/main/menu/addAdvertisment/add-advertisement'
 
 export const routes: Routes = [
   {
@@ -18,12 +19,20 @@ export const routes: Routes = [
         children: [
           {
             path: '',
-            redirectTo: 'add-post',
+            redirectTo: 'add-advertisement',
             pathMatch: 'full',
           },
           {
-            path: 'add-post',
-            component: AddPost,
+            path: 'add-advertisement',
+            component: AddAdvertisement,
+            canActivate: [loggedGuard],
+            data: { requiresAuth: true },
+          },
+          {
+            path: 'my-listing',
+            component: AddAdvertisement,
+            canActivate: [loggedGuard],
+            data: { requiresAuth: true },
           },
         ],
       },
@@ -38,5 +47,7 @@ export const routes: Routes = [
       { path: 'register', component: Register },
       { path: 'recover-password', component: PasswordRecovery },
     ],
+    canActivate: [loggedGuard],
+    data: { requiresAuth: false },
   },
 ]
