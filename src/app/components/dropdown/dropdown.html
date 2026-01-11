@@ -10,6 +10,7 @@
   }
   <div class="relative">
     <div
+      #dropRootEl
       highLight
       hClass="border-blue-120!"
       (click)="dropEl.focus()"
@@ -23,7 +24,6 @@
         <div class="w-full">
           <input
             #dropEl
-            (blur)="selecting.set(false)"
             [formControl]="control()"
             autocorrect="off"
             autocomplete="off"
@@ -38,6 +38,7 @@
     </div>
     @if (selecting()) {
     <div
+      #dropMenuEl
       class="absolute bg-white top-[calc(100%+5px)] z-9999 rounded-[10px] border-gray-70 shadow-[0_2px_6px_0_rgba(39,42,55,0.1)] w-full overflow-hidden"
     >
       <div class="max-h-75 overflow-y-hidden relative py-1 whitespace-pre-wrap!">
