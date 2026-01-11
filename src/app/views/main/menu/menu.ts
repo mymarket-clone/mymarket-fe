@@ -4,8 +4,8 @@ import { UserStore } from '../../../stores/user.store'
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco'
 import { filter } from 'rxjs'
 import { MenuItem } from '../../../types/MenuItem'
-import { MenuTitle } from './menutitle/menu-title'
-import { MenuAside } from './menuAside/menu-aside'
+import { MenuTitle } from './menu-title/menu-title'
+import { MenuAside } from './menu-aside/menu-aside'
 
 @Component({
   selector: 'app-menu',

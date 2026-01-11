@@ -5,7 +5,7 @@ import { PromoType } from '../../types/enums/PromoType'
 
 export interface IAddAdForm {
   postType: FormControl<PostType>
-  categoryId: FormControl<number>
+  categoryId: FormControl<string>
   title: FormControl<string>
   description: FormControl<string>
   forDisabledPerson: FormControl<boolean>

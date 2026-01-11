@@ -7,11 +7,13 @@ import { PostType } from '../../../../types/enums/PostType'
 import { CurrencyType } from '../../../../types/enums/CurrencyType'
 import { PromoType } from '../../../../types/enums/PromoType'
 import { TranslocoService } from '@jsverse/transloco'
+import { Dropdown } from '../../../../components/dropdown/dropdown'
 
 @Component({
   selector: 'add-advertisement',
   templateUrl: './add-advertisement.html',
   providers: [FormService],
+  imports: [Dropdown],
 })
 export class AddAdvertisement {
   public postTypeItems = signal<Record<PostType, string> | null>(null)
@@ -35,7 +37,7 @@ export class AddAdvertisement {
           nonNullable: true,
           validators: zod.required(),
         }),
-        categoryId: new FormControl(0, {
+        categoryId: new FormControl('', {
           nonNullable: true,
           validators: zod.required(),
         }),

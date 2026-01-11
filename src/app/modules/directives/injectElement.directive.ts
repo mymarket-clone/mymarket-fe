@@ -9,7 +9,7 @@ import {
 } from '@angular/core'
 
 @Directive({
-  selector: '[Inject]',
+  selector: '[inject]',
   host: {
     '(mouseenter)': 'onMouseEnter()',
     '(mouseleave)': 'onMouseLeave()',

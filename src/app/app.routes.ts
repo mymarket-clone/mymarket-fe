@@ -6,7 +6,7 @@ import { PasswordRecovery } from './views/auth/password-recovery/password-recove
 import { Register } from './views/auth/register/register'
 import { Menu } from './views/main/menu/menu'
 import { loggedGuard } from './modules/guards/logged.guard'
-import { AddAdvertisement } from './views/main/menu/addAdvertisment/add-advertisement'
+import { AddAdvertisement } from './views/main/menu/add-advertisement/add-advertisement'
 
 export const routes: Routes = [
   {

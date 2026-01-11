@@ -7,7 +7,7 @@ import { InputType } from '../../types/Input'
   template: '',
 })
 export class BaseInput<T = unknown> {
-  public label = input.required<string>()
+  public label = input<string>()
   public control = input.required<FormControl<T>>()
   public required = input<boolean>(false)
   public submitted = input.required<boolean>()
