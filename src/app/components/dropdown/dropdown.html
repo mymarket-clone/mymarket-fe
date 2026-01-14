@@ -11,8 +11,7 @@
   <div class="relative">
     <div
       #dropRootEl
-      highLight
-      hClass="border-blue-120!"
+      [class.border-blue-120!]="selecting()"
       (click)="dropEl.focus()"
       (click)="selecting.set(true)"
       class="flex border border-gray-70 bg-transparent h-12 min-h-9.5 rounded-[10px] w-full hover:border-blue-120 transition-all duration-100 ease-in-out cursor-pointer"

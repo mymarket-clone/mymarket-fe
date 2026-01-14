@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core'
 import { SvgIconComponent } from 'angular-svg-icon'
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
 import { Input } from '../../../components/input/input'
-import { AuthService } from '../../../services/auth.service'
+import { ApiService } from '../../../services/http/api.service'
 import { Button } from '../../../components/button/button'
 import { Router, RouterLink } from '@angular/router'
 import { FormService } from '../../../services/form.service'
@@ -26,9 +26,9 @@ import { TranslocoDirective } from '@jsverse/transloco'
 export class PasswordRecovery {
   public passwordRecoveryStage = signal<PasswordRecoveryStage>('Verification')
 
-  public sendPasswordRecoveryState?: ReturnType<AuthService['sendPasswordRecovery']>
-  public verifyPasswordCodeState?: ReturnType<AuthService['verifyPasswordCode']>
-  public passwordRecoveryState?: ReturnType<AuthService['passwordRecovery']>
+  public sendPasswordRecoveryState?: ReturnType<ApiService['sendPasswordRecovery']>
+  public verifyPasswordCodeState?: ReturnType<ApiService['verifyPasswordCode']>
+  public passwordRecoveryState?: ReturnType<ApiService['passwordRecovery']>
 
   public sendPasswordRecoveryFs = new FormService<ISendEmailVerificationForm>()
   public passwordEnterFs = new FormService<IPasswordEnterForm>()
@@ -38,7 +38,7 @@ export class PasswordRecovery {
   public codeSendLoading = signal<boolean>(false)
 
   public constructor(
-    private readonly authService: AuthService,
+    private readonly authService: ApiService,
     private readonly router: Router,
     private readonly zod: Zod
   ) {

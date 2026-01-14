@@ -7,7 +7,7 @@ import { FormService } from '../../../services/form.service'
 import { Zod } from '../../../utils/Zod'
 import { RegistrationStage } from '../../../types/RegistrationStage'
 import { Button } from '../../../components/button/button'
-import { AuthService } from '../../../services/auth.service'
+import { ApiService } from '../../../services/http/api.service'
 import { ActivatedRoute, Router, RouterLink } from '@angular/router'
 import { userExistsValidator } from '../../../utils/AsyncValidators'
 import {
@@ -46,9 +46,9 @@ import { User } from '../../../types/User'
 export class Register implements OnInit {
   public registrationStage = signal<RegistrationStage>('Main')
 
-  public registerState?: ReturnType<AuthService['registerUser']>
-  public sendEmailVerificationCodeState?: ReturnType<AuthService['sendEmailVerificationCode']>
-  public verifyEmailCodeState?: ReturnType<AuthService['verifyEmailCode']>
+  public registerState?: ReturnType<ApiService['registerUser']>
+  public sendEmailVerificationCodeState?: ReturnType<ApiService['sendEmailVerificationCode']>
+  public verifyEmailCodeState?: ReturnType<ApiService['verifyEmailCode']>
 
   public registerFormMain = new FormService<IRegisterFormMain>()
   public registerFormExtra = new FormService<IRegisterFormExtra>()
@@ -64,7 +64,7 @@ export class Register implements OnInit {
 
   public constructor(
     private readonly ts: TranslocoService,
-    private readonly authService: AuthService,
+    private readonly authService: ApiService,
     private readonly actR: ActivatedRoute,
     private readonly router: Router,
     private readonly userStore: UserStore,
@@ -90,7 +90,7 @@ export class Register implements OnInit {
         ]),
         email: new FormControl('', {
           validators: [this.zod.required(), this.zod.email()],
-          asyncValidators: userExistsValidator(this.authService, this.ts),
+          asyncValidators: userExistsValidator(this.ts),
           updateOn: 'blur',
         }),
         password: new FormControl('', [this.zod.required(), this.zod.password()]),

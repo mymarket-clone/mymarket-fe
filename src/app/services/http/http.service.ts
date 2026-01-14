@@ -1,13 +1,14 @@
 import { HttpClient } from '@angular/common/http'
 import { inject, signal } from '@angular/core'
-import { HttpRequestOptions } from '../types/HttpRequestOptions'
 import { Observable } from 'rxjs'
-import { HttpMethod } from '../types/enums/HttpMethod'
-import { IHttpService } from '../interfaces/common/IHttpService'
+import { IHttpService } from '../../interfaces/common/IHttpService'
+import { HttpMethod } from '../../types/enums/HttpMethod'
+import { HttpRequestOptions } from '../../types/HttpRequestOptions'
+import { API_URL } from '../../api/api'
 
 export class HttpService {
   protected readonly httpClient = inject(HttpClient)
-  protected readonly API_URL = 'https://localhost:7289/api/'
+  protected readonly API_URL = API_URL
 
   protected request<Data, Body = undefined>(options: HttpRequestOptions<Data, Body>): IHttpService<Data> {
     const { method, endpoint, body, onSuccess, onError, form } = options

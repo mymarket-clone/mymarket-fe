@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core'
-import { AuthService } from '../../../services/auth.service'
+import { ApiService } from '../../../services/http/api.service'
 import { UserStore } from '../../../stores/user.store'
 import { Router, RouterLink } from '@angular/router'
 import { FormService } from '../../../services/form.service'
@@ -33,10 +33,10 @@ import { User } from '../../../types/User'
 })
 export class Login {
   public showSites = signal<boolean>(false)
-  public loginState?: ReturnType<AuthService['loginUser']>
+  public loginState?: ReturnType<ApiService['loginUser']>
 
   public constructor(
-    private readonly authService: AuthService,
+    private readonly authService: ApiService,
     private readonly userStore: UserStore,
     private readonly router: Router,
     private readonly zod: Zod,
