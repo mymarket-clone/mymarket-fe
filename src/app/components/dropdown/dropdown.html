@@ -16,9 +16,12 @@
       (click)="selecting.set(true)"
       class="flex border border-gray-70 bg-transparent h-12 min-h-9.5 rounded-[10px] w-full hover:border-blue-120 transition-all duration-100 ease-in-out cursor-pointer"
     >
-      <div class="mx-0.5 w-full flex items-center px-3.5 py-2.5 pr-2">
-        <div class="mx-0.5 w-full flex items-center text-xs text-raisin-70 leading-[15.48px] absolute">
-          @if (!control().value) { {{ label() }} }
+      <div class="mx-0.5 w-full flex items-center px-3.5 py-2.5 pr-2 relative">
+        <div
+          [class.text-black!]="currentLabel()"
+          class="mx-0.5 w-full flex items-center text-xs text-raisin-70 leading-[15.48px] absolute"
+        >
+          @if (!control().value) { {{ currentLabel() ?? label() }} }
         </div>
         <div class="w-full">
           <input
@@ -27,7 +30,7 @@
             autocorrect="off"
             autocomplete="off"
             autocapitalize="off"
-            class="w-full mx-0.5 leading-[15.48px] h-[15.48px] relative z-20"
+            class="w-full mx-0.5 leading-[15.48px] h-[15.48px] relative z-20 text-xs cursor-pointer truncate"
           />
         </div>
       </div>
@@ -38,12 +41,25 @@
     @if (selecting()) {
     <div
       #dropMenuEl
+      id="dropMenuEl"
       class="absolute bg-white top-[calc(100%+5px)] z-9999 rounded-[10px] border-gray-70 shadow-[0_2px_6px_0_rgba(39,42,55,0.1)] w-full overflow-hidden"
     >
-      <div class="max-h-75 overflow-y-hidden relative py-1 whitespace-pre-wrap!">
-        <div class="px-2.5 py-3.5 text-xs block w-full cursor-pointer select-none whitespace-pre-wrap!">
-          <div>Christmas</div>
+      <div class="max-h-75 overflow-y-auto relative py-1 whitespace-pre-wrap!">
+        @if (selectedCategoryRoute()?.length) {
+        <div
+          (click)="goHigherInCategory()"
+          class="px-3.5 py-2.5 text-xs block w-full cursor-pointer select-none whitespace-pre-wrap! leading-4.5 hover:text-blue-30 hover:bg-gray-70 transition-all duration-200"
+        >
+          <div>Back</div>
         </div>
+        } @for (category of currentData(); track $index) {
+        <div
+          (click)="goDeepInCategory(category.id)"
+          class="px-3.5 py-2.5 text-xs block w-full cursor-pointer select-none whitespace-pre-wrap! leading-4.5 hover:text-blue-30 hover:bg-gray-70 transition-all duration-200"
+        >
+          <div>{{ category.name }}</div>
+        </div>
+        }
       </div>
     </div>
     }

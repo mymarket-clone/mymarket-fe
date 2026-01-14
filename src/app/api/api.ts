@@ -1,13 +1,15 @@
 export const API_URL = 'https://localhost:7289/api/'
 
 export const api = {
-  loginUser: 'auth/LoginUser',
-  registerUser: 'auth/RegisterUser',
+  loginUser: 'auth/loginUser',
+  registerUser: 'auth/registerUser',
   userExists: 'auth/userExists',
-  sendEmailVerificationCode: 'auth/SendEmailVerificationCode',
-  verifyEmailCode: 'auth/VerifyEmailCode',
-  sendPasswordRecovery: 'auth/SendPasswordRecovery',
-  passwordRecovery: 'auth/PasswordRecovery',
-  verifyPasswordCode: 'auth/VerifyPasswordCode',
+  sendEmailVerificationCode: 'auth/sendEmailVerificationCode',
+  verifyEmailCode: 'auth/verifyEmailCode',
+  sendPasswordRecovery: 'auth/sendPasswordRecovery',
+  passwordRecovery: 'auth/vasswordRecovery',
+  verifyPasswordCode: 'auth/verifyPasswordCode',
   getCategories: 'categories',
+  getByIdWithChildren: 'categories/getByIdWithChildren',
+  getFlat: 'categories/getFlat',
 } as const

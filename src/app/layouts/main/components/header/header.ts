@@ -23,9 +23,10 @@ export class Header {
       { label: this.ts.translate('navbar.tradeIn'), key: 'tradeIn', iconPath: null },
       { label: this.ts.translate('navbar.shops'), key: 'shops', iconPath: null },
       { label: this.ts.translate('navbar.sale'), key: 'sale', iconPath: 'assets/discount.svg' },
-      { label: this.ts.translate('navbar.gift'), key: 'gift', iconPath: 'assets/gift.svg' },
+      { label: this.ts.translate('navbar.giveAway'), key: 'giveAway', iconPath: 'assets/gift.svg' },
       { label: this.ts.translate('navbar.openShop'), key: 'openShop', iconPath: null },
       { label: this.ts.translate('navbar.help'), key: 'help', iconPath: null },
+      { label: this.ts.translate('navbar.blog'), key: 'blog', iconPath: null },
       { label: this.ts.translate('navbar.contact'), key: 'contact', iconPath: null },
     ])
   }

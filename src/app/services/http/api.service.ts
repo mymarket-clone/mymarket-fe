@@ -107,4 +107,13 @@ export class ApiService extends HttpService implements IApiService {
       onError: options?.onError,
     })
   }
+
+  public getFlat(options?: IServiceRequest<void, ICategoryNode[]>): IHttpService<ICategoryNode[]> {
+    return this.request({
+      method: HttpMethod.GET,
+      endpoint: api.getFlat,
+      onSuccess: options?.onSuccess,
+      onError: options?.onError,
+    })
+  }
 }
