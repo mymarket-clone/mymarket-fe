@@ -2,32 +2,34 @@
   <div class="lg:max-w-159 w-full shrink">
     <div class="rounded-xl bg-white p-6 md:p-10">
       <h1 class="text-sm tbc-bold leading-5">Product details</h1>
-      <div>
-        <label class="block text-xs tbc-medium leading-4.5! mt-5 mb-2">Advertisement type</label>
-        <div class="flex gap-2.5">
-          @for(item of postTypeValues; track $index) {
-          <div class="relative mb-2 flex justify-center items-center bg-gray-60 w-22.5 rounded-[44px]">
-            <label
-              [class.bg-blue-30]="adForm.getControl('postType').value === item"
-              [class.text-white]="adForm.getControl('postType').value === item"
-              (click)="setPostType($index)"
-              class="rounded-[44px] cursor-pointer text-sm leading-4.5 px-4 py-2.5 m-0 tbc-regular w-full text-center"
-            >
-              {{ postTypeItems()?.[item] }}
-            </label>
-          </div>
-          }
-        </div>
-      </div>
+      <select-ship
+        [control]="adForm.getControl('postType')"
+        [submitted]="adForm.submitted"
+        [items]="postTypeItems()"
+        [values]="postTypeValues"
+        [required]="true"
+        label="Advertisement type"
+      />
       <div>
         <app-dropdown
           [required]="true"
           [control]="adForm.getControl('categoryId')"
           [submitted]="adForm.submitted"
           [label]="'Choose/type Category'"
-          [dataEndpoint]="'getFlat'"
+          [dataEndpoint]="'getCategoriesFlat'"
+          [dataFilter]="this.adForm.getControlSignal('postType')()!"
         />
       </div>
+      @if (!!adForm.getControl('categoryId').value) {
+      <select-ship
+        [control]="adForm.getControl('conditionType')"
+        [submitted]="adForm.submitted"
+        [items]="conditionTypeItems()"
+        [values]="conditionTypeValues"
+        [required]="true"
+        label="Condition of an item"
+      />
+      }
     </div>
   </div>
 </div>

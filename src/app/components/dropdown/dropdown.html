@@ -3,7 +3,7 @@
   <label class="flex items-center text-xs tbc-medium">
     <span class="block tbc-medium pt-3 pb-2">
       Choose/type Category @if (required()) {
-      <span class="text-red-500 ml-0.5">*</span>
+      <span class="text-red-500">*</span>
       }
     </span>
   </label>
@@ -13,20 +13,21 @@
       #dropRootEl
       [class.border-blue-120!]="selecting()"
       (click)="dropEl.focus()"
-      (click)="selecting.set(true)"
+      (click)="onDropdownOpen()"
       class="flex border border-gray-70 bg-transparent h-12 min-h-9.5 rounded-[10px] w-full hover:border-blue-120 transition-all duration-100 ease-in-out cursor-pointer"
     >
       <div class="mx-0.5 w-full flex items-center px-3.5 py-2.5 pr-2 relative">
         <div
-          [class.text-black!]="currentLabel()"
+          [class.text-black!]="!!currentLabel()"
           class="mx-0.5 w-full flex items-center text-xs text-raisin-70 leading-[15.48px] absolute"
         >
-          @if (!control().value) { {{ currentLabel() ?? label() }} }
+          @if (inputValue()) { } @else if (control().value) { {{ currentLabel() }} } @else { {{ label() }} }
         </div>
+
         <div class="w-full">
           <input
             #dropEl
-            [formControl]="control()"
+            (input)="inputValue.set($any($event.target).value.length);"
             autocorrect="off"
             autocomplete="off"
             autocapitalize="off"
@@ -34,6 +35,7 @@
           />
         </div>
       </div>
+
       <div class="items-center self-stretch shrink-0 flex justify-center cursor-pointer w-7">
         <svg-icon [src]="selecting() ? '/assets/arrow-up.svg' : '/assets/arrow-down.svg'" />
       </div>
@@ -48,7 +50,7 @@
         @if (selectedCategoryRoute()?.length) {
         <div
           (click)="goHigherInCategory()"
-          class="px-3.5 py-2.5 text-xs block w-full cursor-pointer select-none whitespace-pre-wrap! leading-4.5 hover:text-blue-30 hover:bg-gray-70 transition-all duration-200"
+          class="tbc-bold! font-bold text-sm px-3.5 py-2.5 block w-full cursor-pointer select-none whitespace-pre-wrap! leading-4.5 hover:bg-gray-70 transition-all duration-200"
         >
           <div>Back</div>
         </div>

@@ -5,19 +5,22 @@ import { IHttpService } from '../../interfaces/common/IHttpService'
 import { HttpMethod } from '../../types/enums/HttpMethod'
 import { HttpRequestOptions } from '../../types/HttpRequestOptions'
 import { API_URL } from '../../api/api'
+import qs from 'qs'
 
 export class HttpService {
   protected readonly httpClient = inject(HttpClient)
   protected readonly API_URL = API_URL
 
   protected request<Data, Body = undefined>(options: HttpRequestOptions<Data, Body>): IHttpService<Data> {
-    const { method, endpoint, body, onSuccess, onError, form } = options
+    const { method, endpoint, searchParams, body, onSuccess, onError, form } = options
 
     const loading = signal(false)
     const error = signal<string | null>(null)
     const data = signal<Data | null>(null)
 
-    const url = `${this.API_URL}${endpoint}`
+    const query = searchParams ? qs.stringify(searchParams, { skipNulls: true }) : ''
+    const url = query ? `${this.API_URL}${endpoint}?${query}` : `${this.API_URL}${endpoint}`
+
     let obs$: Observable<Data>
 
     switch (method) {

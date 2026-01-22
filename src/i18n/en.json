@@ -88,6 +88,10 @@
     "sell": "Sell",
     "buy": "Buy",
     "rent": "Rent",
-    "services": "Services"
+    "services": "Services",
+    "used": "Used",
+    "new": "New",
+    "likeNew": "Like new",
+    "forParts": "For parts"
   }
 }

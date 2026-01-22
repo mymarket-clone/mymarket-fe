@@ -1,11 +1,14 @@
-import { Injectable, signal } from '@angular/core'
+import { Injectable, Signal, signal } from '@angular/core'
 import { AbstractControl, FormGroup } from '@angular/forms'
 import { NonNullableProps } from '../types/NonNullableProps'
+import { toSignal } from '@angular/core/rxjs-interop'
 
 @Injectable()
 export class FormService<T extends { [P in keyof T]: AbstractControl }> {
   private _form!: FormGroup<T>
   private _submitted = signal<boolean>(false)
+
+  private controlSignals = new Map<keyof T, Signal<string | number | boolean | null | undefined>>()
 
   public get form(): FormGroup<T> {
     return this._form
@@ -21,6 +24,19 @@ export class FormService<T extends { [P in keyof T]: AbstractControl }> {
 
   public setForm(form: FormGroup<T>): void {
     this._form = form
+
+    Object.keys(form.controls).forEach((key) => {
+      const controlKey = key as keyof T
+      const control = this.getControl(controlKey)
+
+      if (!this.controlSignals.has(controlKey)) {
+        this.controlSignals.set(controlKey, toSignal(control.valueChanges, { initialValue: control.value }))
+      }
+    })
+  }
+
+  public getControlSignal<K extends keyof T>(key: K): Signal<string | number | boolean | null | undefined> {
+    return this.controlSignals.get(key)!
   }
 
   public setError(control: keyof T, errorMessage: string): void {

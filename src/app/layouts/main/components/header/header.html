@@ -1,10 +1,10 @@
 <div *transloco="let t">
-  <div class="border-b border-gray-10">
+  <div class="border-b border-gray-10 bg-white">
     <div
       class="container header-top col-12 px-md-0 relative w-full flex items-center content-between bg-white py-6"
     >
       <div class="flex flex-1 items-center">
-        <div class="flex items-center content-between mr-7">
+        <div class="flex items-center content-between mr-6">
           <a class="min-h-10 w-37.5" routerLink="/">
             <svg-icon src="assets/logo-big.svg" alt="Logo" />
           </a>
@@ -32,7 +32,7 @@
       <ul class="navbar-nav flex items-center ml-1">
         <button
           routerLink="/menu/add-advertisement"
-          class="flex items-center bg-yellow-20 px-6 h-10.5 max-w-34.5 rounded-xl hover:bg-yellow-30 transition-all duration-300 ease-in-out cursor-pointer"
+          class="flex items-center bg-yellow-20 px-6 h-10 max-w-34.5 rounded-xl hover:bg-yellow-30 transition-all duration-300 ease-in-out cursor-pointer"
         >
           <span class="mr-2 shrink w-5.25 h-5.25">
             <svg-icon src="assets/header-add.svg" />
@@ -43,7 +43,7 @@
     </div>
   </div>
 
-  <div class="border-b border-gray-10">
+  <div class="border-b border-gray-10 bg-white">
     <div class="container flex justify-between w-full overflow-hidden">
       <div class="flex items-center justify-between px-4 md:px-0">
         @for (item of navbar?.()?.slice(0,5); track $index) {

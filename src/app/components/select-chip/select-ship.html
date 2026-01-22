@@ -1,0 +1,25 @@
+<div>
+  @if (label()) {
+  <label class="block text-xs tbc-medium leading-4.5! mt-5 mb-2">
+    {{ label() }} @if (required()) {
+    <span class="text-red-500">*</span>
+    }
+  </label>
+  }
+  <div class="flex gap-2.5">
+    @for(item of values(); track $index) {
+    <div
+      class="relative mb-2 flex justify-center items-center bg-gray-60 w-22.5 h-9.5 text-nowrap rounded-[44px]"
+    >
+      <label
+        [class.bg-blue-30]="control().value === item"
+        [class.text-white]="control().value === item"
+        (click)="control().setValue($index + 1)"
+        class="rounded-[44px] cursor-pointer text-sm leading-4.5 px-4 py-2.5 m-0 tbc-regular w-full text-center"
+      >
+        {{ items()?.[item] }}
+      </label>
+    </div>
+    }
+  </div>
+</div>

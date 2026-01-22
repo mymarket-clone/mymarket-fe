@@ -13,6 +13,7 @@ import { IPasswordRecoveryPayload } from '../../interfaces/payload/IPasswordReco
 import { api } from '../../api/api'
 import { ICategoryNode } from '../../interfaces/response/ICategoryNode'
 import { IApiService } from '../../interfaces/common/IApiService'
+import { IGetCategoriesFlatPayload } from '../../interfaces/payload/IGetCategoriesFlatPayload'
 
 @Injectable({ providedIn: 'root' })
 export class ApiService extends HttpService implements IApiService {
@@ -108,10 +109,13 @@ export class ApiService extends HttpService implements IApiService {
     })
   }
 
-  public getFlat(options?: IServiceRequest<void, ICategoryNode[]>): IHttpService<ICategoryNode[]> {
+  public getCategoriesFlat(
+    options?: IServiceRequest<IGetCategoriesFlatPayload, ICategoryNode[]>
+  ): IHttpService<ICategoryNode[]> {
     return this.request({
       method: HttpMethod.GET,
-      endpoint: api.getFlat,
+      searchParams: options?.searchParams,
+      endpoint: api.getCategoriesFlat,
       onSuccess: options?.onSuccess,
       onError: options?.onError,
     })

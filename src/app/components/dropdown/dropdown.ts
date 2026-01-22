@@ -23,6 +23,8 @@ import { ICategoryFlat } from '../../interfaces/response/ICategoryFlat'
 })
 export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
   public dataEndpoint = input.required<keyof ApiService>()
+  public dataFilter = input<string | number | boolean | null | undefined>(null)
+  public inputValue = signal<string>('')
 
   public selecting = signal<boolean>(false)
   public dataState = signal<IHttpService<ICategoryFlat[]> | null>(null)
@@ -39,12 +41,27 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
   ) {
     super()
     effect(() => this.currentData.set(this.dataState()?.data()))
-    effect(() => console.log(this.selectedCategoryRoute()))
-    effect(() => (this.selecting() ? this.resetDropdown() : undefined))
+    effect(() => {
+      const filter = this.dataFilter()
+      const data = this.dataState()?.data()
+
+      if (!data) return
+
+      if (filter === null) {
+        this.currentData.set(data)
+        return
+      }
+
+      const target = filter === 1 || filter === 2 ? 1 : filter === 3 ? 2 : 3
+
+      this.currentData.set(data.filter((i) => i.categoryPostType === target))
+    })
   }
 
   public ngOnInit(): void {
-    this.dataState.set(this.apiService[this.dataEndpoint()]() as IHttpService<ICategoryFlat[]>)
+    if (!this.currentLabel()?.length) {
+      this.dataState.set(this.apiService[this.dataEndpoint()]() as IHttpService<ICategoryFlat[]>)
+    }
   }
 
   public ngAfterViewInit(): void {
@@ -73,11 +90,8 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
     if (!children.length) {
       this.selecting.set(false)
       this.currentLabel.set(this.selectedCategoryRoute()?.join(' -> ') ?? selectedCategory.name)
-      this.currentData.set(
-        this.dataState()
-          ?.data()
-          ?.filter((c) => !c.parentId)
-      )
+
+      this.control().setValue(selectedCategory.id)
       return
     }
 
@@ -104,11 +118,10 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
     this.currentData.set(data.filter((c) => c.parentId === parentId))
   }
 
-  private resetDropdown(): void {
-    const data = this.dataState()?.data()
-    if (!data) return
-
-    this.currentData.set(data.filter((c) => !c.parentId))
-    this.selectedCategoryRoute.set(null)
+  public onDropdownOpen(): void {
+    this.selecting.set(true)
+    if (this.currentLabel()?.length && this.selectedCategoryRoute()?.length !== 0) {
+      this.selectedCategoryRoute()?.pop()
+    }
   }
 }

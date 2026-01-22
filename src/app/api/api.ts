@@ -11,5 +11,5 @@ export const api = {
   verifyPasswordCode: 'auth/verifyPasswordCode',
   getCategories: 'categories',
   getByIdWithChildren: 'categories/getByIdWithChildren',
-  getFlat: 'categories/getFlat',
+  getCategoriesFlat: 'categories/getFlat',
 } as const

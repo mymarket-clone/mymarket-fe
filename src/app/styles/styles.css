@@ -44,20 +44,6 @@ body {
 html {
   overflow-y: scroll;
 
-  ::-webkit-scrollbar {
-    background: none;
-    width: 3px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: #d7dce4;
-    width: 2px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: #fff;
-  }
-
   #dropMenuEl ::-webkit-scrollbar {
     background: none;
     width: 8px;
