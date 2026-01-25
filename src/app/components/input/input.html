@@ -1,3 +1,4 @@
+@switch (variant()) { @case ('dynamic') {
 <div class="flex flex-col relative bg-transparent rounded-lg">
   <div
     [class.border-red-500]="hasError()"
@@ -15,8 +16,9 @@
         placeholder=" "
         autocomplete="off"
         [class.text-raisin-50]="disabled()"
-        class="peer relative top-1.5 h-full w-full placeholder-transparent outline-none autofill:bg-white autofill:shadow-[inset_0_0_0_30px_white] autofill:text-black disabled:text-raisin-50"
+        class="peer relative h-full w-full placeholder-transparent outline-none autofill:bg-white autofill:shadow-[inset_0_0_0_30px_white] autofill:text-black disabled:text-raisin-50"
       />
+      @if (label()) {
       <label
         class="pointer-events-none absolute left-4 top-2 text-xs opacity-70 transition-all duration-200 peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:opacity-100 peer-focus:top-2 peer-focus:text-xs peer-focus:opacity-70 peer-autofill:text-[10px] sm:peer-autofill:text-xs peer-autofill:absolute peer-autofill:top-2 peer-autofill:text-raisin-130 peer-autofill:opacity-50"
       >
@@ -25,10 +27,11 @@
         <span class="text-red-500">*</span>
         }
       </label>
+      }
     </div>
-    @if(trailingContent()){
+    @if (trailingContent()) {
     <ng-container *ngTemplateOutlet="trailingContent(); context: { $implicit: this }"></ng-container>
-    } @if (type() === "password") {
+    } @if (type() === 'password') {
     <button
       type="button"
       class="cursor-pointer rounded-full bg-white hover:bg-raisin-10 flex items-center justify-center size-8 transition-all duration-200 ease-in-out"
@@ -47,4 +50,30 @@
 
 @if (hasError()) {
 <span class="text-red-500 text-xs mt-1 px-2">{{ getError() }}</span>
-}
+} } @case ('static') {
+<div class="m-0">
+  @if (label()) {
+  <label class="text-xs tbc-medium mt-5 mb-2 block">
+    {{ label() }} @if (required()) {
+    <span [class.text-raisin-50]="disabled()" class="text-red-500">*</span>
+    }
+  </label>
+  }
+  <input
+    [type]="type()"
+    [placeholder]="showPlaceholder() ? label() : ''"
+    [formControl]="control()"
+    autocomplete="off"
+    autocorrect="off"
+    spellcheck="false"
+    [class.text-raisin-50]="disabled()"
+    [class.border-red-500]="hasError()"
+    class="bg-white border text-raisin-150! border-gray-70 rounded-[10px] text-sm py-5.75 px-3.5 h-8.75 w-full block disabled:text-raisin-50"
+  />
+</div>
+
+@if (hasError()) {
+<span class="text-red-500 text-xs mt-1 px-2">{{ getError() }}</span>
+} } @default {
+<div>No type provided</div>
+} }

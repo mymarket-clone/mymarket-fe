@@ -14,6 +14,7 @@ import { api } from '../../api/api'
 import { ICategoryNode } from '../../interfaces/response/ICategoryNode'
 import { IApiService } from '../../interfaces/common/IApiService'
 import { IGetCategoriesFlatPayload } from '../../interfaces/payload/IGetCategoriesFlatPayload'
+import { IAddPostPayload } from '../../interfaces/payload/IAddPostPayload'
 
 @Injectable({ providedIn: 'root' })
 export class ApiService extends HttpService implements IApiService {
@@ -116,6 +117,16 @@ export class ApiService extends HttpService implements IApiService {
       method: HttpMethod.GET,
       searchParams: options?.searchParams,
       endpoint: api.getCategoriesFlat,
+      onSuccess: options?.onSuccess,
+      onError: options?.onError,
+    })
+  }
+
+  public addPost(options?: IServiceRequest<IAddPostPayload, unknown>): IHttpService<unknown> {
+    return this.request({
+      method: HttpMethod.POST,
+      searchParams: options?.searchParams,
+      endpoint: api.addPost,
       onSuccess: options?.onSuccess,
       onError: options?.onError,
     })

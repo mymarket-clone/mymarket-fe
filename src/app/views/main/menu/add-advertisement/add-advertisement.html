@@ -1,35 +1,134 @@
-<div class="relative flex flex-nowrap mt-6 gap-6">
-  <div class="lg:max-w-159 w-full shrink">
+<div *transloco="let t" class="relative flex flex-nowrap mt-6 gap-6">
+  <form
+    autocomplete="off"
+    [formGroup]="adForm.form"
+    (submit)="onSubmit()"
+    class="lg:max-w-159 w-full shrink flex flex-col gap-4"
+  >
     <div class="rounded-xl bg-white p-6 md:p-10">
-      <h1 class="text-sm tbc-bold leading-5">Product details</h1>
+      <h1 class="text-sm tbc-bold leading-5">{{ t('addPost.productDetails') }}</h1>
       <select-ship
         [control]="adForm.getControl('postType')"
         [submitted]="adForm.submitted"
         [items]="postTypeItems()"
         [values]="postTypeValues"
-        [required]="true"
+        (onSelect)="adForm.getControl('categoryId').setValue('')"
         label="Advertisement type"
       />
-      <div>
-        <app-dropdown
-          [required]="true"
-          [control]="adForm.getControl('categoryId')"
-          [submitted]="adForm.submitted"
-          [label]="'Choose/type Category'"
-          [dataEndpoint]="'getCategoriesFlat'"
-          [dataFilter]="this.adForm.getControlSignal('postType')()!"
-        />
-      </div>
-      @if (!!adForm.getControl('categoryId').value) {
+      <app-dropdown
+        [required]="true"
+        [control]="adForm.getControl('categoryId')"
+        [submitted]="adForm.submitted"
+        [label]="'Choose/type Category'"
+        [dataEndpoint]="'getCategoriesFlat'"
+        [dataFilter]="this.adForm.getControlSignal('postType')()!"
+      />
+      @if (!!adForm.getControl('categoryId').value && adForm.getControl('postType').value < 3) {
       <select-ship
         [control]="adForm.getControl('conditionType')"
         [submitted]="adForm.submitted"
         [items]="conditionTypeItems()"
         [values]="conditionTypeValues"
-        [required]="true"
         label="Condition of an item"
       />
       }
     </div>
-  </div>
+    <div class="rounded-xl bg-white p-6 md:p-10">
+      <h1 class="text-sm tbc-bold leading-5">{{ t('addPost.productDetails') }}</h1>
+      <ng-container *ngTemplateOutlet="note"></ng-container>
+      <app-input
+        [control]="adForm.getControl('title')"
+        [submitted]="adForm.submitted"
+        [required]="true"
+        [label]="t('addPost.title')"
+        variant="static"
+      />
+      <app-text-editor
+        [control]="adForm.getControl('description')"
+        [submitted]="adForm.submitted"
+        [label]="t('addPost.description')"
+      />
+      <ng-container
+        *ngTemplateOutlet="languageSection; context: {
+          isOpen: isEnglishOpen,
+          toggle: toggleEnglish.bind(this),
+          titleControl: adForm.getControl('title'),
+          descControl: adForm.getControl('description'),
+          label: 'Add Product Description in English'
+        }"
+      />
+      <ng-container
+        *ngTemplateOutlet="languageSection; context: {
+          isOpen: isRussianOpen,
+          toggle: toggleRussian.bind(this),
+          titleControl: adForm.getControl('title'),
+          descControl: adForm.getControl('description'),
+          label: 'Добавить описание продукта на русском'
+        }"
+      />
+      <div class="mt-7 mb-4">
+        <div class="relative mb-2 mr-2 inline-flex items-center">
+          <input
+            id="psn-checkbox"
+            type="checkbox"
+            [formControl]="adForm.getControl('forDisabledPerson')"
+            class="cursor-pointer! z-1 h-5 left-0 opacity-0 absolute w-4 leading-6"
+          />
+          <label
+            for="psn-checkbox"
+            [class.active]="!!adForm.getControl('forDisabledPerson').value"
+            class="cursor-pointer tbc-regular pl-6 text-sm my-auto align-top leading-6"
+          >
+            Adapted for PSN
+          </label>
+        </div>
+      </div>
+      <div class="tbc-regular text-sm mt-4">{{ t('addPost.psnText') }}</div>
+    </div>
+    <div class="rounded-xl bg-white p-6 md:p-10">
+      <h1 class="text-sm tbc-bold leading-5">{{ t('addPost.price') }}</h1>
+    </div>
+
+    <button type="submit">Submit</button>
+  </form>
 </div>
+
+<ng-template #note>
+  <div class="bg-raisin-80 px-4 py-2 flex rounded-2xl items-center mt-6">
+    <div class="mr-4">
+      <svg-icon src="assets/hint-hand.svg" />
+    </div>
+    <div class="text-xs tbc-regular">Add a suitable title and description in Georgian</div>
+  </div>
+</ng-template>
+
+<ng-template
+  #languageSection
+  let-isOpen="isOpen"
+  let-toggle="toggle"
+  let-titleControl="titleControl"
+  let-descControl="descControl"
+  let-label="label"
+>
+  <div class="mt-4" (click)="toggle()">
+    <div class="inline-flex items-center cursor-pointer">
+      <svg-icon
+        class="mr-2"
+        [src]="isOpen() ? '/assets/remove-statement.svg' : '/assets/add-statement.svg'"
+      />
+      <span class="text-sm tbc-regular leading-5.25 relative top-px"> {{ label }} </span>
+    </div>
+  </div>
+
+  @if (isOpen()) {
+  <app-input
+    [control]="titleControl"
+    [submitted]="adForm.submitted"
+    [required]="true"
+    label="Title"
+    variant="static"
+  />
+
+  <app-text-editor [control]="descControl" [submitted]="adForm.submitted" label="Description" />
+  }
+</ng-template>

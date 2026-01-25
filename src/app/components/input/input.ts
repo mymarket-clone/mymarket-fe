@@ -12,6 +12,7 @@ import { ReactiveFormsModule } from '@angular/forms'
 export class Input extends BaseInput {
   public trailingContent = input<TemplateRef<unknown>>()
   public bottomContent = input<TemplateRef<unknown>>()
+  public showPlaceholder = input<boolean>(false)
   public hidden = signal<boolean>(true)
 
   public inputType(): string {

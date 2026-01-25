@@ -48,29 +48,34 @@
             [label]="t('auth.firstName')"
             [control]="registerFormMain.getControl('firstname')"
             [submitted]="registerFormMain.submitted"
+            variant="dynamic"
           />
           <app-input
             [label]="t('auth.lastName')"
             [control]="registerFormMain.getControl('lastname')"
             [submitted]="registerFormMain.submitted"
+            variant="dynamic"
           />
           <app-input
             [label]="t('auth.email')"
             type="email"
             [control]="registerFormMain.getControl('email')"
             [submitted]="registerFormMain.submitted"
+            variant="dynamic"
           />
           <app-input
             [label]="t('auth.password')"
             type="password"
             [control]="registerFormMain.getControl('password')"
             [submitted]="registerFormMain.submitted"
+            variant="dynamic"
           />
           <app-input
             [label]="t('auth.passwordConfirm')"
             type="password"
             [control]="registerFormMain.getControl('passwordConfirm')"
             [submitted]="registerFormMain.submitted"
+            variant="dynamic"
           />
           @if (passwordVisible()) {
           <div
@@ -90,11 +95,13 @@
             [label]="t('auth.birthYear')"
             [control]="registerFormExtra.getControl('birthYear')"
             [submitted]="registerFormExtra.submitted"
+            variant="dynamic"
           />
           <app-input
             [label]="t('auth.phoneNumber')"
             [control]="registerFormExtra.getControl('phoneNumber')"
             [submitted]="registerFormExtra.submitted"
+            variant="dynamic"
           />
           <app-checkbox
             [label]="t('auth.agreeTo')"
@@ -121,11 +128,13 @@
             [disabled]="true"
             [trailingContent]="sendEmail"
             [bottomContent]="bottomText"
+            variant="dynamic"
           />
           <app-input
             [label]="t('auth.oneTimeCode')"
             [control]="registerFormVerification.getControl('code')"
             [submitted]="registerFormVerification.submitted"
+            variant="dynamic"
           />
           }
           <app-button [class.mt-4]="registrationStage() !== 'Main'" [title]="t('auth.continue')" />

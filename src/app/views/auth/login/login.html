@@ -18,12 +18,14 @@
                   [label]="t('auth.emailOrPhone')"
                   [control]="loginFs.getControl('emailOrPhone')"
                   [submitted]="loginFs.submitted"
+                  variant="dynamic"
                 />
                 <app-input
                   [label]="t('auth.password')"
                   type="password"
                   [control]="loginFs.getControl('password')"
                   [submitted]="loginFs.submitted"
+                  variant="dynamic"
                 />
                 <div class="flex justify-end">
                   <a

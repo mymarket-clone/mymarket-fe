@@ -7,8 +7,8 @@ import { BaseInput } from '../../shared/components/base-input'
   templateUrl: './checkbox.html',
 })
 export class Checkbox extends BaseInput<boolean> {
-  public clickableLabel = input.required<string>()
-  public href = input.required<string>()
+  public clickableLabel = input<string | undefined>(undefined)
+  public href = input<string | undefined>(undefined)
 
   public toggle(): void {
     const control = this.control()

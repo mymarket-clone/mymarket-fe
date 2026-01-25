@@ -52,7 +52,8 @@
     "valueAtMost": "Value must be at most {{max}}",
     "onlyLetters": "{{field}} must contain only letters",
     "lengthMustBe": "Length must be {{length}}",
-    "noMatch": "Fields does not match"
+    "noMatch": "Fields does not match",
+    "maxLength": "Field must not exceed {{maxLength}}"
   },
   "navbar": {
     "installments": "Installments",
@@ -83,7 +84,9 @@
     "myAddresses": "My Addresses",
     "myBankAccounts": "My Bank Accounts",
     "editAccount": "Edit Account",
-    "logOut": "Log out",
+    "logOut": "Log out"
+  },
+  "addPost": {
     "home": "Home",
     "sell": "Sell",
     "buy": "Buy",
@@ -92,6 +95,13 @@
     "used": "Used",
     "new": "New",
     "likeNew": "Like new",
-    "forParts": "For parts"
+    "forParts": "For parts",
+    "title": "Title",
+    "description": "Description",
+    "forPsn": "Adapted for PSN",
+    "psnText": "Mark the checkbox if the product/service is meant for or adapted to persons with special needs",
+    "productDetails": "Product details",
+    "mainCharacteristics": "Main characteristics",
+    "price": "Price"
   }
 }

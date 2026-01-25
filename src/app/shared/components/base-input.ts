@@ -13,6 +13,7 @@ export class BaseInput<T = unknown> {
   public submitted = input.required<boolean>()
   public disabled = input<boolean>(false)
   public type = input<InputType>('text')
+  public variant = input<'dynamic' | 'static'>()
 
   public hasError(): boolean {
     const control = this.control()

@@ -4,7 +4,7 @@ import { PostType } from '../../types/enums/PostType'
 import { PromoType } from '../../types/enums/PromoType'
 import { ConditionType } from '../../types/enums/ConditionType'
 
-export interface IAddAdForm {
+export interface IAddPostForm {
   postType: FormControl<PostType>
   categoryId: FormControl<string>
   conditionType: FormControl<ConditionType>

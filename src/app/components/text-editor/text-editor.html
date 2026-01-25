@@ -1,0 +1,35 @@
+<div class="m-0">
+  @if (label()) {
+  <label for="" class="text-xs tbc-medium mt-5 mb-2 block">
+    {{ label() }} @if (required()) {
+    <span [class.text-raisin-50]="disabled()" class="text-red-500">*</span>
+    }
+  </label>
+  }
+  <div class="bg-white border border-gray-70 text-sm p-3.75 relative rounded-[10px]">
+    <div class="text-sm mb-1.25" (mousedown)="$event.preventDefault()">
+      @for (sb of styleButton; track $index) {
+      <span
+        class="cursor-pointer mr-4 px-0.5 inline-block text-[#999] select-none"
+        [class.text-blue]="active()[sb]"
+        (click)="toggle(sb)"
+      >
+        {{ sb }}
+      </span>
+      }
+    </div>
+
+    <div class="border-t border-gray-70 min-h-25 h-full mt-2.5 p-2">
+      <div
+        id="editorEl"
+        #editorEl
+        (click)="focusEditor()"
+        class="w-full min-h-25 outline-none whitespace-pre-wrap cursor-text text-[16px] max-h-125 overflow-auto"
+      ></div>
+    </div>
+
+    <div [class.text-red-500]="!remainingChars" class="text-xs text-right text-raisin-90">
+      {{ remainingChars }}/{{ maxLength }}
+    </div>
+  </div>
+</div>

@@ -42,6 +42,7 @@ body {
 }
 
 html {
+  scroll-behavior: smooth;
   overflow-y: scroll;
 
   #dropMenuEl ::-webkit-scrollbar {
@@ -54,4 +55,54 @@ html {
   li {
     display: none;
   }
+}
+
+#editorEl > div {
+  height: 100%;
+}
+
+#editorEl::-webkit-scrollbar {
+  width: 7px;
+}
+
+#editorEl::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#editorEl::-webkit-scrollbar-thumb {
+  background-color: #c4c4c4;
+  border-radius: 12px;
+}
+
+#editorEl::-webkit-scrollbar-thumb:hover {
+  cursor: default;
+}
+
+label[for='psn-checkbox']::before {
+  content: '';
+  display: block;
+  border-color: #e4e7ed !important;
+  box-shadow: none !important;
+  border: 2px solid #e4e7ed;
+  border-radius: 4px;
+  left: 0;
+  top: 4px;
+  margin-right: -24px;
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+}
+
+label[for='psn-checkbox'].active::before {
+  background-image: url('/assets/checkmark.svg');
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-size: 50% 50%;
+  background-color: #fec900;
+  border: 0 solid #fec900;
 }

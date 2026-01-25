@@ -77,6 +77,14 @@ export class Zod {
     return this.parser(schema)
   }
 
+  public maxLength(
+    max: number,
+    message: string = this.ts.translate('validators.maxLength', { max })
+  ): ValidatorFn {
+    const schema = z.string().refine((value) => value.length <= max, { message })
+    return this.parser(schema)
+  }
+
   public true(): ValidatorFn {
     const schema = z.literal(true, { message: this.ts.translate('validators.requiredField') })
     return this.parser(schema)

@@ -10,8 +10,11 @@
 
     <div class="flex items-center w-full text-sm sm:text-xs">
       <label class="flex items-center gap-1">
-        {{ label() }}
-        <a [href]="href()" target="_blank" class="text-blue-500">{{ clickableLabel() }}</a>
+        {{ label() }} @if(href()) {
+        <a [href]="href()" target="_blank" class="text-blue-500">
+          @if(clickableLabel()) { {{ clickableLabel() }} }
+        </a>
+        }
       </label>
       @if (required()) {
       <span class="text-red-500">*</span>
