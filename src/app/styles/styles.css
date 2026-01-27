@@ -45,10 +45,7 @@ html {
   scroll-behavior: smooth;
   overflow-y: scroll;
 
-  #dropMenuEl ::-webkit-scrollbar {
-    background: none;
-    width: 8px;
-  }
+
 }
 
 .menu-hover {
@@ -57,7 +54,7 @@ html {
   }
 }
 
-#editorEl > div {
+#editorEl>div {
   height: 100%;
 }
 
@@ -105,4 +102,15 @@ label[for='psn-checkbox'].active::before {
   background-size: 50% 50%;
   background-color: #fec900;
   border: 0 solid #fec900;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
 }

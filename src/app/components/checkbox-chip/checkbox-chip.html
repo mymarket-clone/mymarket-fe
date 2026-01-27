@@ -1,0 +1,12 @@
+<div
+  class="select-none relative mb-2 flex justify-center items-center bg-gray-60 h-9.5 text-nowrap rounded-[44px]"
+>
+  <label
+    [class.bg-blue-30]="control().value"
+    [class.text-white]="control().value"
+    (click)="toggle()"
+    class="rounded-[44px] cursor-pointer text-sm leading-4.5 px-4 py-2.5 m-0 tbc-regular w-full text-center transition-all duration-200"
+  >
+    {{ label() }}
+  </label>
+</div>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   AfterViewInit,
   Component,
@@ -15,6 +16,7 @@ import { SvgIconComponent } from 'angular-svg-icon'
 import { ApiService } from '../../services/http/api.service'
 import { IHttpService } from '../../interfaces/common/IHttpService'
 import { ICategoryFlat } from '../../interfaces/response/ICategoryFlat'
+import { DropdownEl } from '../../types/DropdownEl'
 
 @Component({
   selector: 'app-dropdown',
@@ -22,18 +24,21 @@ import { ICategoryFlat } from '../../interfaces/response/ICategoryFlat'
   imports: [ReactiveFormsModule, SvgIconComponent],
 })
 export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
-  public dataEndpoint = input.required<keyof ApiService>()
+  public dataEndpoint = input<keyof ApiService | undefined>(undefined)
   public dataFilter = input<string | number | boolean | null | undefined>(null)
-  public inputValue = signal<string>('')
+  public dataList = input<unknown[] | null>(null)
+  public border = input<boolean>(true)
 
+  public inputValue = signal<string>('')
   public selecting = signal<boolean>(false)
-  public dataState = signal<IHttpService<ICategoryFlat[]> | null>(null)
-  public currentData = signal<ICategoryFlat[] | undefined | null>(null)
-  public selectedCategoryRoute = signal<string[] | null>(null)
+  public dataState = signal<IHttpService<any> | null>(null)
+  public currentData = signal<any | undefined | null>(null)
+  public selectedItemRoute = signal<string[] | null>(null)
   public currentLabel = signal<string | null>(null)
 
   private dropRootEl = viewChild<ElementRef<HTMLElement>>('dropRootEl')
   private dropMenuEl = viewChild<ElementRef<HTMLElement>>('dropMenuEl')
+  private dropEl = viewChild<ElementRef<HTMLInputElement>>('dropEl')
 
   public constructor(
     private readonly apiService: ApiService,
@@ -54,13 +59,22 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
 
       const target = filter === 1 || filter === 2 ? 1 : filter === 3 ? 2 : 3
 
-      this.currentData.set(data.filter((i) => i.categoryPostType === target))
+      this.currentData.set(data.filter((i: any) => i.categoryPostType === target))
+    })
+    effect(() => {
+      const value = this.control()?.value
+      const list = this.dataList()
+
+      if (!value || !list || this.currentLabel()) return
+
+      const match: any = list.find((i: any) => i.id === value)
+      if (match) this.currentLabel.set(match.name)
     })
   }
 
   public ngOnInit(): void {
-    if (!this.currentLabel()?.length) {
-      this.dataState.set(this.apiService[this.dataEndpoint()]() as IHttpService<ICategoryFlat[]>)
+    if (!this.currentLabel()?.length && this.dataEndpoint()) {
+      this.dataState.set(this.apiService[this.dataEndpoint()!]() as IHttpService<ICategoryFlat[]>)
     }
   }
 
@@ -71,9 +85,11 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
 
       const target = event.target as Node
 
-      if (rootEl?.contains(target) || menuEl?.contains(target)) return
-
-      this.selecting.set(false)
+      if (!rootEl?.contains(target) && !menuEl?.contains(target)) {
+        this.selecting.set(false)
+        this.inputValue.set('')
+        this.dropEl()!.nativeElement.value = ''
+      }
     })
   }
 
@@ -81,15 +97,15 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
     const data = this.dataState()?.data()
     if (!data) return
 
-    const selectedCategory = data.find((c) => c.id === id)
+    const selectedCategory = data.find((c: any) => c.id === id)
     if (!selectedCategory) return
 
-    this.selectedCategoryRoute.update((prev) => [...(prev ?? []), selectedCategory.name])
-    const children = data.filter((c) => c.parentId === id)
+    this.selectedItemRoute.update((prev) => [...(prev ?? []), selectedCategory.name])
+    const children = data.filter((c: any) => c.parentId === id)
 
     if (!children.length) {
       this.selecting.set(false)
-      this.currentLabel.set(this.selectedCategoryRoute()?.join(' -> ') ?? selectedCategory.name)
+      this.currentLabel.set(this.selectedItemRoute()?.join(' -> ') ?? selectedCategory.name)
 
       this.control().setValue(selectedCategory.id)
       return
@@ -100,28 +116,40 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
 
   public goHigherInCategory(): void {
     const data = this.dataState()?.data()
-    const route = this.selectedCategoryRoute()
+    const route = this.selectedItemRoute()
 
     if (!data || !route || route.length === 0) return
 
     const newRoute = route.slice(0, -1)
-    this.selectedCategoryRoute.set(newRoute.length > 0 ? newRoute : null)
+    this.selectedItemRoute.set(newRoute.length > 0 ? newRoute : null)
 
     let parentId: number | null = null
 
     if (newRoute && newRoute.length > 0) {
       const lastName = newRoute.at(-1)
-      const lastCategory = data.find((c) => c.name === lastName)
+      const lastCategory = data.find((c: any) => c.name === lastName)
       parentId = lastCategory?.id ?? null
     }
 
-    this.currentData.set(data.filter((c) => c.parentId === parentId))
+    this.currentData.set(data.filter((c: any) => c.parentId === parentId))
+  }
+
+  public setItem(value: any): void {
+    this.currentLabel.set(value.name)
+    this.control().setValue(value.id)
+    this.selecting.set(false)
+    this.inputValue.set('')
+    this.dropEl()!.nativeElement.value = ''
   }
 
   public onDropdownOpen(): void {
     this.selecting.set(true)
-    if (this.currentLabel()?.length && this.selectedCategoryRoute()?.length !== 0) {
-      this.selectedCategoryRoute()?.pop()
+    if (this.currentLabel()?.length && this.selectedItemRoute()?.length !== 0) {
+      this.selectedItemRoute()?.pop()
     }
+  }
+
+  public filterData(data: DropdownEl[], search: string): DropdownEl[] {
+    return data.filter((v) => v.name.trim().toLowerCase().includes(search.trim().toLowerCase()))
   }
 }

@@ -19,9 +19,10 @@
         [required]="true"
         [control]="adForm.getControl('categoryId')"
         [submitted]="adForm.submitted"
-        [label]="'Choose/type Category'"
-        [dataEndpoint]="'getCategoriesFlat'"
         [dataFilter]="this.adForm.getControlSignal('postType')()!"
+        dataEndpoint="getCategoriesFlat"
+        label="Choose/type Category"
+        variant="static"
       />
       @if (!!adForm.getControl('categoryId').value && adForm.getControl('postType').value < 3) {
       <select-ship
@@ -49,22 +50,28 @@
         [label]="t('addPost.description')"
       />
       <ng-container
-        *ngTemplateOutlet="languageSection; context: {
-          isOpen: isEnglishOpen,
-          toggle: toggleEnglish.bind(this),
-          titleControl: adForm.getControl('title'),
-          descControl: adForm.getControl('description'),
-          label: 'Add Product Description in English'
-        }"
+        *ngTemplateOutlet="
+          languageSection;
+          context: {
+            isOpen: isEnglishOpen,
+            toggle: toggleEnglish.bind(this),
+            titleControl: adForm.getControl('title'),
+            descControl: adForm.getControl('description'),
+            label: 'Add Product Description in English',
+          }
+        "
       />
       <ng-container
-        *ngTemplateOutlet="languageSection; context: {
-          isOpen: isRussianOpen,
-          toggle: toggleRussian.bind(this),
-          titleControl: adForm.getControl('title'),
-          descControl: adForm.getControl('description'),
-          label: 'Добавить описание продукта на русском'
-        }"
+        *ngTemplateOutlet="
+          languageSection;
+          context: {
+            isOpen: isRussianOpen,
+            toggle: toggleRussian.bind(this),
+            titleControl: adForm.getControl('title'),
+            descControl: adForm.getControl('description'),
+            label: 'Добавить описание продукта на русском',
+          }
+        "
       />
       <div class="mt-7 mb-4">
         <div class="relative mb-2 mr-2 inline-flex items-center">
@@ -79,7 +86,7 @@
             [class.active]="!!adForm.getControl('forDisabledPerson').value"
             class="cursor-pointer tbc-regular pl-6 text-sm my-auto align-top leading-6"
           >
-            Adapted for PSN
+            {{ t('addPost.forPsn') }}
           </label>
         </div>
       </div>
@@ -87,19 +94,98 @@
     </div>
     <div class="rounded-xl bg-white p-6 md:p-10">
       <h1 class="text-sm tbc-bold leading-5">{{ t('addPost.price') }}</h1>
+      <div class="flex gap-7.5">
+        <app-input
+          [control]="adForm.getControl('price')"
+          [submitted]="adForm.submitted"
+          [required]="true"
+          [disabled]="adForm.getControl('isNegotiable').value"
+          [label]="t('addPost.indicatePrice')"
+          [trailingBorderContent]="currency"
+          placeholder="0"
+          variant="static"
+          class="price"
+        />
+        <app-input
+          [control]="adForm.getControl('salePercentage')"
+          [submitted]="adForm.submitted"
+          [label]="t('addPost.discount')"
+          [trailingBorderContent]="percentage"
+          [disabled]="adForm.getControl('isNegotiable').value"
+          [maxValue]="100"
+          variant="static"
+          type="number"
+          class="sale"
+        />
+      </div>
+      <div class="flex gap-2.5 my-4">
+        <app-checkbox-chip
+          [control]="adForm.getControl('canOfferPrice')"
+          [submitted]="adForm.submitted"
+          [label]="t('addPost.offerPrice')"
+        />
+        <app-checkbox-chip
+          [control]="adForm.getControl('isNegotiable')"
+          [submitted]="adForm.submitted"
+          [label]="t('addPost.priceNegotiable')"
+        />
+      </div>
+    </div>
+    <div class="rounded-xl bg-white p-6 md:p-10">
+      <h1 class="text-sm tbc-bold leading-5 mb-4">{{ t('addPost.contactInfo') }}</h1>
+      <app-dropdown
+        [required]="true"
+        [control]="adForm.getControl('cityId')"
+        [submitted]="adForm.submitted"
+        dataEndpoint="getAllCities"
+        label="Select a location"
+        variant="static"
+      />
+      <div class="flex justify-between gap-7.5 mb-4">
+        <app-input
+          [control]="adForm.getControl('name')"
+          [submitted]="adForm.submitted"
+          [required]="true"
+          [label]="t('addPost.name')"
+          variant="static"
+        />
+        <app-input
+          [control]="adForm.getControl('phoneNumber')"
+          [submitted]="adForm.submitted"
+          [required]="true"
+          [label]="t('addPost.phoneNumber')"
+          variant="static"
+        />
+      </div>
     </div>
 
     <button type="submit">Submit</button>
   </form>
 </div>
 
+<ng-template #currency>
+  <app-dropdown
+    [required]="true"
+    [control]="adForm.getControl('currencyType')"
+    [submitted]="adForm.submitted"
+    [disabled]="adForm.getControl('isNegotiable').value"
+    [dataList]="currencyTypeOptions"
+    [border]="false"
+    variant="static"
+  />
+</ng-template>
+
 <ng-template #note>
   <div class="bg-raisin-80 px-4 py-2 flex rounded-2xl items-center mt-6">
-    <div class="mr-4">
+    <div class="mr-4 min-h-10 min-w-10">
       <svg-icon src="assets/hint-hand.svg" />
     </div>
     <div class="text-xs tbc-regular">Add a suitable title and description in Georgian</div>
   </div>
+</ng-template>
+
+<ng-template #percentage>
+  <div class="py-1.5 px-3 flex items-center text-xs">%</div>
 </ng-template>
 
 <ng-template
@@ -113,7 +199,7 @@
   <div class="mt-4" (click)="toggle()">
     <div class="inline-flex items-center cursor-pointer">
       <svg-icon
-        class="mr-2"
+        class="mr-2 select-none"
         [src]="isOpen() ? '/assets/remove-statement.svg' : '/assets/add-statement.svg'"
       />
       <span class="text-sm tbc-regular leading-5.25 relative top-px"> {{ label }} </span>

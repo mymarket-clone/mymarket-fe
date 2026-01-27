@@ -1,4 +1,4 @@
-<div>
+<div class="select-none">
   @if (label()) {
   <label class="block text-xs tbc-medium leading-4.5! mt-5 mb-2">
     {{ label() }} @if (required()) {
@@ -15,7 +15,7 @@
         [class.bg-blue-30]="control().value === item"
         [class.text-white]="control().value === item"
         (click)="select($index + 1)"
-        class="rounded-[44px] cursor-pointer text-sm leading-4.5 px-4 py-2.5 m-0 tbc-regular w-full text-center"
+        class="rounded-[44px] cursor-pointer text-sm leading-4.5 px-4 py-2.5 m-0 tbc-regular w-full text-center transition-all duration-200"
       >
         {{ items()?.[item] }}
       </label>

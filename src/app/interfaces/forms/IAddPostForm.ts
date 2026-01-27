@@ -16,6 +16,7 @@ export interface IAddPostForm {
   salePercentage: FormControl<number>
   canOfferPrice: FormControl<boolean>
   isNegotiable: FormControl<boolean>
+  cityId: FormControl<string>
   name: FormControl<string>
   phoneNumber: FormControl<string>
   userId: FormControl<number>

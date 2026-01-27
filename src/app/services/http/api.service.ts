@@ -15,6 +15,7 @@ import { ICategoryNode } from '../../interfaces/response/ICategoryNode'
 import { IApiService } from '../../interfaces/common/IApiService'
 import { IGetCategoriesFlatPayload } from '../../interfaces/payload/IGetCategoriesFlatPayload'
 import { IAddPostPayload } from '../../interfaces/payload/IAddPostPayload'
+import { ICity } from '../../interfaces/response/ICity'
 
 @Injectable({ providedIn: 'root' })
 export class ApiService extends HttpService implements IApiService {
@@ -127,6 +128,16 @@ export class ApiService extends HttpService implements IApiService {
       method: HttpMethod.POST,
       searchParams: options?.searchParams,
       endpoint: api.addPost,
+      onSuccess: options?.onSuccess,
+      onError: options?.onError,
+    })
+  }
+
+  public getAllCities(options?: IServiceRequest<void, ICity[]>): IHttpService<ICity[]> {
+    return this.request({
+      method: HttpMethod.GET,
+      searchParams: options?.searchParams,
+      endpoint: api.getAllCities,
       onSuccess: options?.onSuccess,
       onError: options?.onError,
     })

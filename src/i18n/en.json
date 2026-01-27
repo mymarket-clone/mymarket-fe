@@ -53,7 +53,8 @@
     "onlyLetters": "{{field}} must contain only letters",
     "lengthMustBe": "Length must be {{length}}",
     "noMatch": "Fields does not match",
-    "maxLength": "Field must not exceed {{maxLength}}"
+    "maxLength": "Field must not exceed {{maxLength}}",
+    "nothingFound": "Nothing found"
   },
   "navbar": {
     "installments": "Installments",
@@ -102,6 +103,14 @@
     "psnText": "Mark the checkbox if the product/service is meant for or adapted to persons with special needs",
     "productDetails": "Product details",
     "mainCharacteristics": "Main characteristics",
-    "price": "Price"
+    "price": "Price",
+    "contactInfo": "Contact info",
+    "selectLocation": "Select a location",
+    "name": "Name",
+    "phoneNumber": "Phone number",
+    "indicatePrice": "Indicate the price of the item",
+    "discount": "Discount",
+    "offerPrice": "Offer price",
+    "priceNegotiable": "Price negotiable"
   }
 }

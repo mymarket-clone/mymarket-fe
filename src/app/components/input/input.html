@@ -8,7 +8,7 @@
   >
     <div
       [class.pointer-events-none]="disabled()"
-      class="flex-1 relative h-full py-2.5 px-4 peer w-full rounded-lg"
+      class="input-parent flex-1 relative h-full py-2.5 px-4 peer w-full rounded-lg"
     >
       <input
         [type]="inputType()"
@@ -16,7 +16,7 @@
         placeholder=" "
         autocomplete="off"
         [class.text-raisin-50]="disabled()"
-        class="peer relative h-full w-full placeholder-transparent outline-none autofill:bg-white autofill:shadow-[inset_0_0_0_30px_white] autofill:text-black disabled:text-raisin-50"
+        class="peer relative h-full w-full placeholder-transparent outline-none hover:border-blue-120 autofill:bg-white autofill:shadow-[inset_0_0_0_30px_white] autofill:text-black disabled:text-raisin-50"
       />
       @if (label()) {
       <label
@@ -51,7 +51,7 @@
 @if (hasError()) {
 <span class="text-red-500 text-xs mt-1 px-2">{{ getError() }}</span>
 } } @case ('static') {
-<div class="m-0">
+<div [class.cursor-not-allowed!]="disabled()" class="m-0">
   @if (label()) {
   <label class="text-xs tbc-medium mt-5 mb-2 block">
     {{ label() }} @if (required()) {
@@ -59,17 +59,40 @@
     }
   </label>
   }
-  <input
-    [type]="type()"
-    [placeholder]="showPlaceholder() ? label() : ''"
-    [formControl]="control()"
-    autocomplete="off"
-    autocorrect="off"
-    spellcheck="false"
-    [class.text-raisin-50]="disabled()"
-    [class.border-red-500]="hasError()"
-    class="bg-white border text-raisin-150! border-gray-70 rounded-[10px] text-sm py-5.75 px-3.5 h-8.75 w-full block disabled:text-raisin-50"
-  />
+  <div
+    #parent
+    [class.pointer-events-none!]="disabled()"
+    [class.bg-raisin-10!]="disabled()"
+    [class.border-blue-120!]="isFocused() || isHovered()"
+    class="flex border border-gray-70 rounded-[10px] transition-all duration-200 ease-in-out"
+  >
+    <input
+      #inp
+      (keydown)="onKeyDown($event)"
+      (input)="onInput($event)"
+      [type]="type()"
+      [placeholder]="placeholder() ? placeholder() : showPlaceholder() ? label() : ''"
+      [formControl]="control()"
+      [class.bg-raisin-10!]="disabled()"
+      [class.text-raisin-50!]="disabled()"
+      [class.border-red-500]="hasError()"
+      autocomplete="off"
+      autocorrect="off"
+      spellcheck="false"
+      class="bg-white text-raisin-150 rounded-[10px] text-sm py-6 px-3.5 h-8.75 w-full block disabled:text-raisin-50 transition-all duration-200"
+    />
+
+    @if (trailingContent()) {
+    <ng-container *ngTemplateOutlet="trailingContent(); context: { $implicit: this }"></ng-container>
+    } @if (trailingBorderContent()) {
+    <div
+      [class.border-blue-120!]="isFocused() || isHovered()"
+      class="border-l border-gray-70 transition-all duration-200 ease-in-out flex"
+    >
+      <ng-container *ngTemplateOutlet="trailingBorderContent(); context: { $implicit: this }"></ng-container>
+    </div>
+    }
+  </div>
 </div>
 
 @if (hasError()) {

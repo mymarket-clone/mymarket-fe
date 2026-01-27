@@ -1,3 +1,4 @@
+import { Dropdown } from './../../../../components/dropdown/dropdown'
 import { Zod } from '../../../../utils/Zod'
 import { Component, signal } from '@angular/core'
 import { FormService } from '../../../../services/form.service'
@@ -7,13 +8,13 @@ import { PostType } from '../../../../types/enums/PostType'
 import { CurrencyType } from '../../../../types/enums/CurrencyType'
 import { PromoType } from '../../../../types/enums/PromoType'
 import { TranslocoService, TranslocoDirective } from '@jsverse/transloco'
-import { Dropdown } from '../../../../components/dropdown/dropdown'
 import { ConditionType } from '../../../../types/enums/ConditionType'
 import { SelectChipM } from '../../../../components/select-chip/select-ship'
 import { SvgIconComponent } from 'angular-svg-icon'
 import { Input } from '../../../../components/input/input'
 import { NgTemplateOutlet } from '@angular/common'
 import { TextEditor } from '../../../../components/text-editor/text-editor'
+import { CheckboxChip } from '../../../../components/checkbox-chip/checkbox-chip'
 
 @Component({
   selector: 'add-advertisement',
@@ -28,14 +29,49 @@ import { TextEditor } from '../../../../components/text-editor/text-editor'
     TextEditor,
     ReactiveFormsModule,
     TranslocoDirective,
+    CheckboxChip,
   ],
-  styles: [``],
+  styles: [
+    `
+      .sale ::ng-deep {
+        width: 225px;
+      }
+
+      /* .price ::ng-deep > .border-gray-70:last-child {
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+      }
+
+      .price ::ng-deep .focus-within:border-blue-120 {
+        border-right: none !important;
+        border-top-right-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+      }
+
+      .price ::ng-deep app-dropdown .border-gray-70 {
+        border: none !important;
+        border-left: 1px solid #e4e7ed !important;
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+      }
+
+      .price:hover ::ng-deep app-dropdown .border-gray-70 {
+      }
+
+      ::ng-deep .flex.hover:border-blue-120:hover app-dropdown .border-gray-70 {
+        border-left-color: #9aadfc !important;
+      } */
+    `,
+  ],
 })
 export class AddAdvertisement {
   public postTypeItems = signal<Record<PostType, string> | null>(null)
   public postTypeValues = Object.values(PostType).filter((v) => typeof v === 'number')
   public conditionTypeItems = signal<Record<ConditionType, string> | null>(null)
   public conditionTypeValues = Object.values(ConditionType).filter((v) => typeof v === 'number')
+  public currencyTypeOptions = Object.values(CurrencyType)
+    .filter((v): v is number => typeof v === 'number')
+    .map((id) => ({ id, name: CurrencyType[id] }))
   public isEnglishOpen = signal<boolean>(false)
   public isRussianOpen = signal<boolean>(false)
 
@@ -105,6 +141,10 @@ export class AddAdvertisement {
           validators: zod.required(),
         }),
         name: new FormControl('', {
+          nonNullable: true,
+          validators: zod.required(),
+        }),
+        cityId: new FormControl('', {
           nonNullable: true,
           validators: zod.required(),
         }),

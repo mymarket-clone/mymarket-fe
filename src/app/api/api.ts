@@ -13,4 +13,5 @@ export const api = {
   getByIdWithChildren: 'categories/getByIdWithChildren',
   getCategoriesFlat: 'categories/getFlat',
   addPost: 'categories/posts',
+  getAllCities: 'cities/getAll',
 } as const
