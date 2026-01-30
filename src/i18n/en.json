@@ -111,6 +111,19 @@
     "indicatePrice": "Indicate the price of the item",
     "discount": "Discount",
     "offerPrice": "Offer price",
-    "priceNegotiable": "Price negotiable"
+    "priceNegotiable": "Price negotiable",
+    "promoServices": "Promo Services",
+    "vipLabel": "Show your product before any free listing",
+    "vipPlusLabel": "Show your product in VIP+ carousel, on the main page",
+    "vipPlusLabel2": "Show your product before any free or VIP listing",
+    "vipSuperLabel": "Show your product in SUPER VIP carousel, on the main page",
+    "vipSuperLabel2": "Show your product before ANY listing",
+    "chooseDaysNumber": "Choose the number of days",
+    "days": {
+      "one": "{{count}} Day",
+      "other": "{{count}} Days"
+    },
+    "dayRange": "{{from}} - {{to}} Day Day: {{price}} GEL",
+    "chooseDays": "Choose days"
   }
 }

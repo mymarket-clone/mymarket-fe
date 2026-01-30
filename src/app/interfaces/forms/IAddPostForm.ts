@@ -21,6 +21,10 @@ export interface IAddPostForm {
   phoneNumber: FormControl<string>
   userId: FormControl<number>
   promoType: FormControl<PromoType | null>
+  promoDays: FormControl<number | string>
   isColored: FormControl<boolean>
+  colorDays: FormControl<number>
   autoRenewal: FormControl<boolean>
+  autoRenewalOnceIn: FormControl<number>
+  autoRenewalAtTime: FormControl<number>
 }

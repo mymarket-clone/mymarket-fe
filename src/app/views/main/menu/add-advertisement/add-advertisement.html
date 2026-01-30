@@ -22,7 +22,8 @@
         [dataFilter]="this.adForm.getControlSignal('postType')()!"
         dataEndpoint="getCategoriesFlat"
         label="Choose/type Category"
-        variant="static"
+        placeholder="Choose/type Category"
+        variant="dynamic"
       />
       @if (!!adForm.getControl('categoryId').value && adForm.getControl('postType').value < 3) {
       <select-ship
@@ -115,7 +116,7 @@
           [maxValue]="100"
           variant="static"
           type="number"
-          class="sale"
+          class="w-56.25"
         />
       </div>
       <div class="flex gap-2.5 my-4">
@@ -158,7 +159,77 @@
         />
       </div>
     </div>
+    <div class="rounded-xl bg-white py-6">
+      <h1 class="text-sm tbc-bold leading-5 px-6 md:px-10">{{ t('addPost.promoServices') }}</h1>
+      <div class="w-full p-6 bg-blue-10 rounded-b-2xl">
+        <div class="flex gap-4 md:gap-3 flex-wrap md:flex-nowrap">
+          @for (item of promoService(); track $index) {
+          <div
+            (click)="onCardSelect(item.type)"
+            [class.outline-green-10!]="adForm.getControl('promoType').value === item.type"
+            [class.outline!]="adForm.getControl('promoType').value === item.type"
+            [class.hover:outline!]="adForm.getControl('promoType').value !== item.type"
+            [class.hover:outline-raisin-30!]="adForm.getControl('promoType').value !== item.type"
+            class="select-none relative outline-1 p-2.5 w-full rounded-2xl cursor-pointer flex flex-col bg-white justify-between"
+          >
+            <div>
+              @if ($last) {
+              <div
+                class="bg-green-10 text-[10px] absolute top-0 left-0 right-0 h-5.5 flex items-center justify-center z-1 text-white rounded-t-2xl"
+              >
+                Recommended
+              </div>
+              }
+              <div [class.pt-4]="$last" class="flex justify-between mb-4 w-full">
+                <div [class]="item.color" class="tbc-bold text-[16px]">{{ item.title }}</div>
+                <div
+                  [style.background]="item.bg"
+                  class="h-9 w-9 flex items-center justify-center rounded-[10px]"
+                >
+                  <svg-icon class="h-5.5 w-5.5" [src]="item.iconSrc" />
+                </div>
+              </div>
+              <div class="flex flex-col text-xs mb-4 leading-4 gap-y-1.5">
+                @for (feature of item.features; track $index) {
+                <div class="flex">
+                  <span class="inline-block mr-1 mt-0.5">
+                    <svg-icon src="assets/check-circle.svg" />
+                  </span>
+                  {{ feature }}
+                </div>
+                }
+              </div>
+            </div>
+            <div>
+              <div class="w-full h-px bg-gray-90 mb-4"></div>
+              <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                  <span class="tbc-bold text-sm text-nowrap text-black-20">9₾</span>
+                  <span class="text-xs tbc-medium text-nowrap text-gray-110">/1 Day</span>
+                </div>
 
+                <div>
+                  <span
+                    [class.border-green-10!]="adForm.getControl('promoType').value === item.type"
+                    [class.border-[6px]!]="adForm.getControl('promoType').value === item.type"
+                    class="flex shrink w-4.5 h-4.5 rounded-full border-2 border-raisin-30"
+                  ></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+        @if (!!adForm.getControl('promoType').value && !!totalPrice().length) {
+        <div class="flex md:flex justify-between items-center bg-white px-4 py-3.5 mt-6 rounded-[14px]">
+          <div class="text-sm">{{ t('addPost.chooseDaysNumber') }}</div>
+          <div class="flex items-center gap-6">
+            <div class="sm:ml-4 sm:basis-25 grow sm:grow-0"></div>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
     <button type="submit">Submit</button>
   </form>
 </div>

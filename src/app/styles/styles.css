@@ -29,6 +29,10 @@
   font-family: 'TBCXBold', sans-serif;
 }
 
+input {
+  user-select: none;
+}
+
 *,
 ::backdrop,
 :after,
@@ -44,8 +48,6 @@ body {
 html {
   scroll-behavior: smooth;
   overflow-y: scroll;
-
-
 }
 
 .menu-hover {
