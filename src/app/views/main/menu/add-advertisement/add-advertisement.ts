@@ -1,6 +1,6 @@
 import { Dropdown } from './../../../../components/dropdown/dropdown'
 import { Zod } from '../../../../utils/Zod'
-import { Component, signal } from '@angular/core'
+import { Component, computed, signal } from '@angular/core'
 import { FormService } from '../../../../services/form.service'
 import { IAddPostForm } from '../../../../interfaces/forms/IAddPostForm'
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
@@ -173,7 +173,7 @@ export class AddAdvertisement {
           validators: zod.required(),
         }),
 
-        promoType: new FormControl(PromoType.VIP, {
+        promoType: new FormControl(null, {
           validators: zod.required(),
         }),
 
@@ -296,4 +296,32 @@ export class AddAdvertisement {
       ...this.days(17, 30),
     ]
   }
+
+  private determinePromoType(): number {
+    const promoType = this.adForm.getControl('promoType').value
+
+    switch (promoType) {
+      case PromoType.VIP:
+        return 1
+      case PromoType.VIP_PLUS:
+        return 2
+      case PromoType.SUPER_VIP:
+        return 3
+      default:
+        return 0
+    }
+  }
+
+  public promoDaysList = computed(() => {
+    switch (this.determinePromoType()) {
+      case 1:
+        return this.vipDays()
+      case 2:
+        return this.vipPlusDays()
+      case 3:
+        return this.superVipDays()
+      default:
+        return []
+    }
+  })
 }

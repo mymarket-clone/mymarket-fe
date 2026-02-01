@@ -1,12 +1,13 @@
 <div>
   @if (label()) {
-  <label class="flex items-center text-xs tbc-medium">
-    <span class="block tbc-medium pt-3 pb-2">
-      {{ label() }} @if (required()) {
-      <span class="text-red-500">*</span>
-      }
-    </span>
-  </label>
+    <label class="flex items-center text-xs tbc-medium">
+      <span class="block tbc-medium pt-3 pb-2">
+        {{ label() }}
+        @if (required()) {
+          <span class="text-red-500">*</span>
+        }
+      </span>
+    </label>
   }
   <div [class.cursor-not-allowed!]="disabled()" class="relative">
     <div
@@ -26,7 +27,14 @@
           [class.text-black!]="!!currentLabel()"
           class="mx-0.5 w-full flex items-center text-xs text-raisin-70 leading-[15.48px] absolute"
         >
-          @if (inputValue()) { } @else if (control().value) { {{ currentLabel() }} } @else { {{ label() }} }
+          @if (inputValue()) {
+          } @else if (currentLabel()) {
+            {{ currentLabel() }}
+          } @else if (defaultLabel()) {
+            {{ defaultLabel() }}
+          } @else {
+            {{ label() }}
+          }
         </div>
 
         <div class="w-full">
@@ -46,37 +54,52 @@
       </div>
     </div>
     @if (selecting()) {
-    <div
-      #dropMenuEl
-      id="dropMenuEl"
-      class="absolute bg-white top-[calc(100%+5px)] z-9999 rounded-[10px] border-gray-70 shadow-[0_2px_6px_0_rgba(39,42,55,0.1)] w-full overflow-hidden"
-    >
-      <div class="max-h-75 overflow-y-auto relative py-1 whitespace-pre-wrap!">
-        @switch (variant()) { @case ('dynamic') { @if (selectedItemRoute()?.length) {
+      <div
+        #dropMenuEl
+        id="dropMenuEl"
+        [style.width.px]="contentWidth()"
+        class="absolute bg-white top-[calc(100%+5px)] z-9999 rounded-[10px] border-gray-70 shadow-[0_2px_6px_0_rgba(39,42,55,0.1)] w-full overflow-hidden"
+      >
         <div
-          (click)="goHigherInCategory()"
-          class="tbc-bold! font-bold text-sm px-3.5 py-2.5 block w-full cursor-pointer select-none whitespace-pre-wrap! leading-4.5 hover:bg-gray-70 transition-all duration-200"
+          [class.py-0!]="!filterData(dataList() ?? currentData(), dropEl.value)[0].value"
+          class="scrollable-area max-h-75 overflow-y-auto relative py-1 whitespace-pre-wrap!"
         >
-          <div>Back</div>
+          @switch (variant()) {
+            @case ('dynamic') {
+              @if (selectedItemRoute()?.length) {
+                <div
+                  (click)="goHigherInCategory()"
+                  class="tbc-bold! font-bold text-sm px-3.5 py-2.5 block w-full cursor-pointer select-none whitespace-pre-wrap! leading-4.5 hover:bg-gray-70 transition-all duration-200"
+                >
+                  <div>Back</div>
+                </div>
+              }
+              @for (item of dataList() ?? currentData(); track $index) {
+                <div
+                  (click)="goDeepInCategory(item.id)"
+                  class="px-3.5 py-2.5 text-xs block w-full cursor-pointer select-none whitespace-pre-wrap! leading-4.5 hover:text-blue-30 hover:bg-gray-70 transition-all duration-200"
+                >
+                  <div>{{ item.name }}</div>
+                </div>
+              }
+            }
+            @case ('static') {
+              @for (item of filterData(dataList() ?? currentData(), dropEl.value); track $index) {
+                <div
+                  (click)="setItem(item)"
+                  [class.bg-gray-90]="!item.value"
+                  [class.px-3!]="itemStyle() === 'small'"
+                  [class.py-2!]="itemStyle() === 'small'"
+                  [class.pointer-events-none!]="!item.value && itemStyle() === 'small'"
+                  class="px-3.5 py-2.5 text-xs block w-full cursor-pointer select-none whitespace-pre-wrap! leading-4.5 hover:text-blue-30 hover:bg-gray-70 transition-all duration-200"
+                >
+                  <div>{{ item.name }}</div>
+                </div>
+              }
+            }
+          }
         </div>
-        } @for (item of dataList() ?? currentData(); track $index) {
-        <div
-          (click)="goDeepInCategory(item.id)"
-          class="px-3.5 py-2.5 text-xs block w-full cursor-pointer select-none whitespace-pre-wrap! leading-4.5 hover:text-blue-30 hover:bg-gray-70 transition-all duration-200"
-        >
-          <div>{{ item.name }}</div>
-        </div>
-        } } @case ('static') { @for (item of filterData(dataList() ?? currentData(), dropEl.value); track
-        $index) {
-        <div
-          (click)="setItem(item)"
-          class="px-3.5 py-2.5 text-xs block w-full cursor-pointer select-none whitespace-pre-wrap! leading-4.5 hover:text-blue-30 hover:bg-gray-70 transition-all duration-200"
-        >
-          <div>{{ item.name }}</div>
-        </div>
-        } } }
       </div>
-    </div>
     }
   </div>
 </div>

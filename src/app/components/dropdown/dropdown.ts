@@ -22,12 +22,25 @@ import { DropdownEl } from '../../types/DropdownEl'
   selector: 'app-dropdown',
   templateUrl: './dropdown.html',
   imports: [ReactiveFormsModule, SvgIconComponent],
+  styles: [
+    `
+      .scrollable-area {
+        overflow: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #9ca3af #f1f1f1;
+        scroll-padding: 0px;
+      }
+    `,
+  ],
 })
 export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
   public dataEndpoint = input<keyof ApiService | undefined>(undefined)
   public dataFilter = input<string | number | boolean | null | undefined>(null)
   public dataList = input<unknown[] | null>(null)
   public border = input<boolean>(true)
+  public contentWidth = input<number | null>(null)
+  public defaultLabel = input<string | null>(null)
+  public itemStyle = input<'small' | 'normal'>('normal')
 
   public inputValue = signal<string>('')
   public selecting = signal<boolean>(false)
