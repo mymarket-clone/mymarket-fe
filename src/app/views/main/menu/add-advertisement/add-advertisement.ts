@@ -1,6 +1,6 @@
 import { Dropdown } from './../../../../components/dropdown/dropdown'
 import { Zod } from '../../../../utils/Zod'
-import { Component, computed, signal } from '@angular/core'
+import { Component, computed, effect, signal } from '@angular/core'
 import { FormService } from '../../../../services/form.service'
 import { IAddPostForm } from '../../../../interfaces/forms/IAddPostForm'
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
@@ -16,7 +16,9 @@ import { NgTemplateOutlet } from '@angular/common'
 import { TextEditor } from '../../../../components/text-editor/text-editor'
 import { CheckboxChip } from '../../../../components/checkbox-chip/checkbox-chip'
 import { PromoService } from '../../../../types/PromoService'
-import { DropdownEl } from '../../../../types/DropdownEl'
+import { DropdownEl, WithName } from '../../../../types/DropdownEl'
+import { Checkbox } from '../../../../components/checkbox/checkbox'
+import { mapEnumToDropdown } from '../../../../helpers/mapEnumToDropdown'
 
 @Component({
   selector: 'add-advertisement',
@@ -32,16 +34,10 @@ import { DropdownEl } from '../../../../types/DropdownEl'
     ReactiveFormsModule,
     TranslocoDirective,
     CheckboxChip,
+    Checkbox,
   ],
 })
 export class AddAdvertisement {
-  public postTypeItems = signal<Record<PostType, string> | null>(null)
-  public postTypeValues = Object.values(PostType).filter((v) => typeof v === 'number')
-  public conditionTypeItems = signal<Record<ConditionType, string> | null>(null)
-  public conditionTypeValues = Object.values(ConditionType).filter((v) => typeof v === 'number')
-  public currencyTypeOptions = Object.values(CurrencyType)
-    .filter((v): v is number => typeof v === 'number')
-    .map((id) => ({ id, name: CurrencyType[id] }))
   public promoService = signal<PromoService[] | null>(null)
   public isEnglishOpen = signal<boolean>(false)
   public isRussianOpen = signal<boolean>(false)
@@ -52,20 +48,6 @@ export class AddAdvertisement {
     public readonly adForm: FormService<IAddPostForm>,
     public readonly ts: TranslocoService
   ) {
-    this.postTypeItems.set({
-      [PostType.Sell]: this.ts.translate('addPost.sell'),
-      [PostType.Buy]: this.ts.translate('addPost.buy'),
-      [PostType.Rent]: this.ts.translate('addPost.rent'),
-      [PostType.Service]: this.ts.translate('addPost.services'),
-    })
-
-    this.conditionTypeItems.set({
-      [ConditionType.Used]: this.ts.translate('addPost.used'),
-      [ConditionType.New]: this.ts.translate('addPost.new'),
-      [ConditionType.LikeNew]: this.ts.translate('addPost.likeNew'),
-      [ConditionType.ForParts]: this.ts.translate('addPost.forParts'),
-    })
-
     this.promoService.set([
       {
         type: PromoType.VIP,
@@ -123,6 +105,18 @@ export class AddAdvertisement {
           validators: [zod.required(), zod.maxLength(4000)],
         }),
 
+        titleEn: new FormControl('', {
+          nonNullable: true,
+        }),
+
+        descriptionEn: new FormControl(null, {
+          validators: zod.maxLength(4000),
+        }),
+
+        titleRu: new FormControl(null),
+
+        descriptionRu: new FormControl(null),
+
         forDisabledPerson: new FormControl(false, {
           nonNullable: true,
           validators: zod.required(),
@@ -153,54 +147,37 @@ export class AddAdvertisement {
           validators: zod.required(),
         }),
 
-        cityId: new FormControl('', {
-          nonNullable: true,
+        cityId: new FormControl(null, {
           validators: zod.required(),
         }),
 
-        name: new FormControl('', {
-          nonNullable: true,
+        name: new FormControl(null, {
           validators: zod.required(),
         }),
 
-        phoneNumber: new FormControl('', {
-          nonNullable: true,
+        phoneNumber: new FormControl(null, {
           validators: zod.required(),
         }),
 
-        userId: new FormControl(0, {
-          nonNullable: true,
-          validators: zod.required(),
-        }),
+        userId: new FormControl(null),
 
-        promoType: new FormControl(null, {
-          validators: zod.required(),
-        }),
+        promoType: new FormControl(null),
 
-        promoDays: new FormControl('Choose day', {
-          nonNullable: true,
-          validators: zod.required(),
-        }),
+        promoDays: new FormControl(null),
 
         isColored: new FormControl(false, {
           nonNullable: true,
           validators: zod.required(),
         }),
 
-        colorDays: new FormControl(0, {
-          nonNullable: true,
-          validators: zod.required(),
-        }),
+        colorDays: new FormControl(null),
 
         autoRenewal: new FormControl(false, {
           nonNullable: true,
           validators: zod.required(),
         }),
 
-        autoRenewalOnceIn: new FormControl(1, {
-          nonNullable: true,
-          validators: zod.required(),
-        }),
+        autoRenewalOnceIn: new FormControl(null),
 
         autoRenewalAtTime: new FormControl(0, {
           nonNullable: true,
@@ -208,6 +185,11 @@ export class AddAdvertisement {
         }),
       })
     )
+
+    effect(() => this.syncColoredDaysToColored())
+    effect(() => this.syncColoredToDays())
+    effect(() => this.syncAutoRenewalToAutoRenewalOnceIn())
+    effect(() => this.syncAutoRenewalOnceInToAutoRenewal())
   }
 
   public toggleEnglish(): void {
@@ -219,8 +201,10 @@ export class AddAdvertisement {
   }
 
   public onSubmit(): void {
+    console.log(this.adForm.form)
     this.adForm.submit(() => {
       console.log(this.adForm.getValues())
+      console.log(this.adForm.form.value)
     })
   }
 
@@ -235,10 +219,169 @@ export class AddAdvertisement {
     const startPrice = this.promoService()?.find((v) => v.type === index)?.price[0]
     if (!startPrice) return
 
-    this.totalPrice()[0] = startPrice
+    this.totalPrice.update((tp) => [startPrice, tp[1]])
 
     control.setValue(index)
   }
+
+  public calculatePrice(
+    selectedValue: number,
+    fullList: DropdownEl[]
+  ): { finalPrice: number; salePrice: number } | null {
+    if (selectedValue == null) return null
+
+    const matched = fullList.find(
+      (item): item is WithName & { value: number; id: number } =>
+        'value' in item &&
+        typeof item.value === 'number' &&
+        'id' in item &&
+        typeof item.id === 'number' &&
+        item.value === selectedValue
+    )
+
+    if (!matched) return null
+
+    const finalPricePerDay = matched.id
+    const salePricePerDay = Number((fullList[1] as WithName).id)
+
+    const finalPrice = finalPricePerDay * selectedValue
+    const salePrice = salePricePerDay * selectedValue
+
+    return { finalPrice, salePrice }
+  }
+
+  public get finalPrice(): number | undefined {
+    return Number(
+      this.calculatePrice(
+        this.adForm.getControl('promoDays').value!,
+        this.promoDaysList()
+      )?.finalPrice?.toFixed(2)
+    )
+  }
+
+  public get salePrice(): number | undefined {
+    return Number(
+      this.calculatePrice(
+        this.adForm.getControl('promoDays').value!,
+        this.promoDaysList()
+      )?.salePrice?.toFixed(2)
+    )
+  }
+
+  public get colorPrice(): number | undefined {
+    return Number(
+      this.calculatePrice(this.adForm.getControl('colorDays').value!, this.color)?.salePrice?.toFixed(2)
+    )
+  }
+
+  public get autoRenewalPrice(): number | undefined {
+    return Number(
+      this.calculatePrice(this.adForm.getControl('autoRenewalOnceIn').value!, this.color)?.salePrice?.toFixed(
+        2
+      )
+    )
+  }
+
+  public get currencyTypeOptions(): DropdownEl[] {
+    return mapEnumToDropdown(CurrencyType)
+  }
+
+  public get postTypeItems(): Record<PostType, string> {
+    return {
+      [PostType.Sell]: this.ts.translate('addPost.sell'),
+      [PostType.Buy]: this.ts.translate('addPost.buy'),
+      [PostType.Rent]: this.ts.translate('addPost.rent'),
+      [PostType.Service]: this.ts.translate('addPost.services'),
+    }
+  }
+
+  public get postTypeValues(): PostType[] {
+    return Object.values(PostType).filter((v) => typeof v === 'number') as PostType[]
+  }
+
+  public get conditionTypeItems(): Record<ConditionType, string> {
+    return {
+      [ConditionType.Used]: this.ts.translate('addPost.used'),
+      [ConditionType.New]: this.ts.translate('addPost.new'),
+      [ConditionType.LikeNew]: this.ts.translate('addPost.likeNew'),
+      [ConditionType.ForParts]: this.ts.translate('addPost.forParts'),
+    }
+  }
+
+  public get conditionTypeValues(): ConditionType[] {
+    return Object.values(ConditionType).filter((v) => typeof v === 'number') as ConditionType[]
+  }
+
+  public get vipDays(): DropdownEl[] {
+    return [
+      {
+        value: null,
+        labeledProp: this.rangeLabel(1, 30, 2.5),
+      },
+      ...this.days(1, 30, 2.5),
+    ]
+  }
+
+  public get vipPlusDays(): DropdownEl[] {
+    return [
+      { value: null, labeledProp: this.rangeLabel(1, 4, 4) },
+      ...this.days(1, 4, 4),
+      { value: null, labeledProp: this.rangeLabel(5, 8, 3.5) },
+      ...this.days(5, 8, 3.5),
+      { value: null, labeledProp: this.rangeLabel(9, 16, 3.15) },
+      ...this.days(9, 16, 3.15),
+      { value: null, labeledProp: this.rangeLabel(17, 30, 3) },
+      ...this.days(17, 30, 3),
+    ]
+  }
+
+  public get superVipDays(): DropdownEl[] {
+    return [
+      { value: null, labeledProp: this.rangeLabel(1, 4, 9) },
+      ...this.days(1, 4, 9),
+      { value: null, labeledProp: this.rangeLabel(5, 8, 8) },
+      ...this.days(5, 8, 8.5),
+      { value: null, labeledProp: this.rangeLabel(9, 16, 7.5) },
+      ...this.days(9, 16, 7.5),
+      { value: null, labeledProp: this.rangeLabel(17, 30, 7.1) },
+      ...this.days(17, 30, 7),
+    ]
+  }
+
+  public get color(): DropdownEl[] {
+    return [
+      { value: null, labeledProp: this.rangeLabel(1, 8, 0.3) },
+      ...this.days(1, 8, 0.3),
+      { value: null, labeledProp: this.rangeLabel(9, 16, 0.27) },
+      ...this.days(9, 16, 0.27),
+      { value: null, labeledProp: this.rangeLabel(17, 30, 0.25) },
+      ...this.days(17, 30, 0.25),
+    ]
+  }
+
+  public get renewal(): DropdownEl[] {
+    return [{ value: null, labeledProp: this.rangeLabel(1, 30, 0.25) }, ...this.days(1, 30, 0.25)]
+  }
+
+  public get time(): DropdownEl[] {
+    return Array.from({ length: 24 }, (_, hour) => ({
+      value: hour,
+      name: `${hour.toString().padStart(2, '0')}:00`,
+    }))
+  }
+
+  public promoDaysList = computed(() => {
+    switch (this.adForm.getControlSignal('promoType')()) {
+      case PromoType.VIP:
+        return this.vipDays
+      case PromoType.VIP_PLUS:
+        return this.vipPlusDays
+      case PromoType.SUPER_VIP:
+        return this.superVipDays
+      default:
+        return []
+    }
+  })
 
   private dayLabel(count: number): string {
     if (count === 1) {
@@ -247,54 +390,19 @@ export class AddAdvertisement {
     return this.ts.translate('addPost.days.other', { count })
   }
 
-  private days(from: number, to: number): DropdownEl[] {
+  private days(from: number, to: number, price: number): DropdownEl[] {
     return Array.from({ length: to - from + 1 }, (_, i) => {
       const count = from + i
       return {
         value: count,
         name: this.dayLabel(count),
+        id: price,
       }
     })
   }
 
   private rangeLabel(from: number, to: number, price: number): string {
     return this.ts.translate('addPost.dayRange', { from, to, price })
-  }
-
-  public vipDays(): DropdownEl[] {
-    return [
-      {
-        value: null,
-        name: this.rangeLabel(1, 30, 2.5),
-      },
-      ...this.days(1, 30),
-    ]
-  }
-
-  public vipPlusDays(): DropdownEl[] {
-    return [
-      { value: null, name: this.rangeLabel(1, 4, 4) },
-      ...this.days(1, 4),
-      { value: null, name: this.rangeLabel(5, 8, 3.5) },
-      ...this.days(5, 8),
-      { value: null, name: this.rangeLabel(9, 16, 3.15) },
-      ...this.days(9, 16),
-      { value: null, name: this.rangeLabel(17, 30, 3) },
-      ...this.days(17, 30),
-    ]
-  }
-
-  public superVipDays(): DropdownEl[] {
-    return [
-      { value: null, name: this.rangeLabel(1, 4, 9) },
-      ...this.days(1, 4),
-      { value: null, name: this.rangeLabel(5, 8, 8.5) },
-      ...this.days(5, 8),
-      { value: null, name: this.rangeLabel(9, 16, 7.5) },
-      ...this.days(9, 16),
-      { value: null, name: this.rangeLabel(17, 30, 7) },
-      ...this.days(17, 30),
-    ]
   }
 
   private determinePromoType(): number {
@@ -312,16 +420,31 @@ export class AddAdvertisement {
     }
   }
 
-  public promoDaysList = computed(() => {
-    switch (this.determinePromoType()) {
-      case 1:
-        return this.vipDays()
-      case 2:
-        return this.vipPlusDays()
-      case 3:
-        return this.superVipDays()
-      default:
-        return []
+  private syncColoredToDays(): void {
+    if (this.adForm.getControlSignal('isColored')()) {
+      this.adForm.getControl('colorDays').setValue(1)
+    } else {
+      this.adForm.getControl('colorDays').setValue(null)
     }
-  })
+  }
+
+  private syncColoredDaysToColored(): void {
+    if (this.adForm.getControlSignal('colorDays')()) {
+      this.adForm.getControl('isColored').setValue(true)
+    }
+  }
+
+  private syncAutoRenewalToAutoRenewalOnceIn(): void {
+    if (this.adForm.getControlSignal('autoRenewal')()) {
+      this.adForm.getControl('autoRenewalOnceIn').setValue(1)
+    } else {
+      this.adForm.getControl('autoRenewalOnceIn').setValue(null)
+    }
+  }
+
+  private syncAutoRenewalOnceInToAutoRenewal(): void {
+    if (this.adForm.getControlSignal('autoRenewalOnceIn')()) {
+      this.adForm.getControl('autoRenewal').setValue(true)
+    }
+  }
 }

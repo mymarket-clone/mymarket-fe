@@ -16,7 +16,7 @@ import { SvgIconComponent } from 'angular-svg-icon'
 import { ApiService } from '../../services/http/api.service'
 import { IHttpService } from '../../interfaces/common/IHttpService'
 import { ICategoryFlat } from '../../interfaces/response/ICategoryFlat'
-import { DropdownEl } from '../../types/DropdownEl'
+import { DropdownEl, WithName } from '../../types/DropdownEl'
 
 @Component({
   selector: 'app-dropdown',
@@ -47,7 +47,7 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
   public dataState = signal<IHttpService<any> | null>(null)
   public currentData = signal<any | undefined | null>(null)
   public selectedItemRoute = signal<string[] | null>(null)
-  public currentLabel = signal<string | null>(null)
+  public currentLabel = signal<string | undefined>(undefined)
 
   private dropRootEl = viewChild<ElementRef<HTMLElement>>('dropRootEl')
   private dropMenuEl = viewChild<ElementRef<HTMLElement>>('dropMenuEl')
@@ -58,31 +58,10 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
     private readonly renderer: Renderer2
   ) {
     super()
-    effect(() => this.currentData.set(this.dataState()?.data()))
-    effect(() => {
-      const filter = this.dataFilter()
-      const data = this.dataState()?.data()
-
-      if (!data) return
-
-      if (filter === null) {
-        this.currentData.set(data)
-        return
-      }
-
-      const target = filter === 1 || filter === 2 ? 1 : filter === 3 ? 2 : 3
-
-      this.currentData.set(data.filter((i: any) => i.categoryPostType === target))
-    })
-    effect(() => {
-      const value = this.control()?.value
-      const list = this.dataList()
-
-      if (!value || !list || this.currentLabel()) return
-
-      const match: any = list.find((i: any) => i.id === value)
-      if (match) this.currentLabel.set(match.name)
-    })
+    effect(() => this.updateCurrentDataFromState())
+    effect(() => this.applyDataFilter())
+    effect(() => this.syncLabelWithControl())
+    effect(() => this.resetSelectionOnFilterChange())
   }
 
   public ngOnInit(): void {
@@ -147,9 +126,9 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
     this.currentData.set(data.filter((c: any) => c.parentId === parentId))
   }
 
-  public setItem(value: any): void {
-    this.currentLabel.set(value.name)
-    this.control().setValue(value.id)
+  public setItem(element: DropdownEl): void {
+    this.currentLabel.set(element.name)
+    this.control().setValue(element.value ?? (element as WithName).id)
     this.selecting.set(false)
     this.inputValue.set('')
     this.dropEl()!.nativeElement.value = ''
@@ -162,7 +141,57 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
     }
   }
 
-  public filterData(data: DropdownEl[], search: string): DropdownEl[] {
-    return data.filter((v) => v.name.trim().toLowerCase().includes(search.trim().toLowerCase()))
+  public filterData(data: DropdownEl[], search: string | null): DropdownEl[] {
+    if (!search?.trim()) return data
+    const query = search.trim().toLowerCase()
+    return data.filter((v) => typeof v.name === 'string' && v.name.toLowerCase().includes(query))
+  }
+
+  private updateCurrentDataFromState(): void {
+    const data = this.dataState()?.data()
+    if (data) this.currentData.set(data)
+  }
+
+  private applyDataFilter(): void {
+    const filter = this.dataFilter()
+    const data = this.dataState()?.data()
+    if (!data) return
+
+    if (filter === null) {
+      this.currentData.set(data)
+      return
+    }
+
+    const target = filter === 1 || filter === 2 ? 1 : filter === 3 ? 2 : 3
+    this.currentData.set(data.filter((i: any) => i.categoryPostType === target))
+  }
+
+  private syncLabelWithControl(): void {
+    const value = this.control()?.value
+    const list = this.dataList()
+    if (!list) return
+
+    if (value === null || value === undefined) {
+      this.currentLabel.set(undefined)
+      return
+    }
+
+    const match: any = list.find((i: any) => i.value === value)
+    if (match) {
+      this.currentLabel.set(match.name)
+    } else {
+      this.currentLabel.set(undefined)
+    }
+  }
+
+  private resetSelectionOnFilterChange(): void {
+    this.dataFilter()
+
+    this.currentLabel.set(undefined)
+    this.selectedItemRoute.set(null)
+    this.inputValue.set('')
+
+    const el = this.dropEl()?.nativeElement
+    if (el) el.value = ''
   }
 }

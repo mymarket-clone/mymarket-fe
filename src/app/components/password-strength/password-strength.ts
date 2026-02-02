@@ -11,17 +11,7 @@ export class PasswordStrength {
   public passwordStrength = signal<number>(0)
 
   public constructor(private readonly ts: TranslocoService) {
-    effect(() => {
-      const pwd = this.password() ?? ''
-      const strength = [
-        z.string().min(9),
-        z.string().regex(/\d/),
-        z.string().regex(/[a-z]/),
-        z.string().regex(/[A-Z]/),
-        z.string().regex(/[\W_]/),
-      ].filter((r) => r.safeParse(pwd).success).length
-      this.passwordStrength.set(strength)
-    })
+    this.initializePasswordStrengthEffect()
   }
 
   public getBarColor(index: number): string {
@@ -46,5 +36,21 @@ export class PasswordStrength {
     if (strength === 2) return '#fcc000'
     if (strength === 3) return '#3c74ff'
     return '#1aba6b'
+  }
+
+  private initializePasswordStrengthEffect(): void {
+    effect(() => {
+      const pwd = this.password() ?? ''
+      const strengthRules = [
+        z.string().min(9),
+        z.string().regex(/\d/),
+        z.string().regex(/[a-z]/),
+        z.string().regex(/[A-Z]/),
+        z.string().regex(/[\W_]/),
+      ]
+
+      const strength = strengthRules.filter((rule) => rule.safeParse(pwd).success).length
+      this.passwordStrength.set(strength)
+    })
   }
 }

@@ -10,9 +10,9 @@
       <select-ship
         [control]="adForm.getControl('postType')"
         [submitted]="adForm.submitted"
-        [items]="postTypeItems()"
+        [items]="postTypeItems"
         [values]="postTypeValues"
-        (onSelect)="adForm.getControl('categoryId').setValue('')"
+        (onSelect)="adForm.getControl('categoryId').reset()"
         label="Advertisement type"
       />
       <app-dropdown
@@ -26,13 +26,13 @@
         variant="dynamic"
       />
       @if (!!adForm.getControl('categoryId').value && adForm.getControl('postType').value < 3) {
-        <select-ship
-          [control]="adForm.getControl('conditionType')"
-          [submitted]="adForm.submitted"
-          [items]="conditionTypeItems()"
-          [values]="conditionTypeValues"
-          label="Condition of an item"
-        />
+      <select-ship
+        [control]="adForm.getControl('conditionType')"
+        [submitted]="adForm.submitted"
+        [items]="conditionTypeItems"
+        [values]="conditionTypeValues"
+        label="Condition of an item"
+      />
       }
     </div>
     <div class="rounded-xl bg-white p-6 md:p-10">
@@ -56,7 +56,7 @@
           context: {
             isOpen: isEnglishOpen,
             toggle: toggleEnglish.bind(this),
-            titleControl: adForm.getControl('title'),
+            titleControl: adForm.getControl('titleRu'),
             descControl: adForm.getControl('description'),
             label: 'Add Product Description in English',
           }
@@ -160,84 +160,177 @@
       </div>
     </div>
     <div class="rounded-xl bg-white py-6">
-      <h1 class="text-sm tbc-bold leading-5 px-6 md:px-10">{{ t('addPost.promoServices') }}</h1>
+      <h1 class="text-sm tbc-bold leading-5 px-6 md:px-10 mb-6">{{ t('addPost.promoServices') }}</h1>
       <div class="w-full p-6 bg-blue-10 rounded-b-2xl">
         <div class="flex gap-4 md:gap-3 flex-wrap md:flex-nowrap">
           @for (item of promoService(); track $index) {
-            <div
-              (click)="onCardSelect(item.type)"
-              [class.outline-green-10!]="adForm.getControl('promoType').value === item.type"
-              [class.outline!]="adForm.getControl('promoType').value === item.type"
-              [class.hover:outline!]="adForm.getControl('promoType').value !== item.type"
-              [class.hover:outline-raisin-30!]="adForm.getControl('promoType').value !== item.type"
-              class="select-none relative outline-1 p-2.5 w-full rounded-2xl cursor-pointer flex flex-col bg-white justify-between"
-            >
-              <div>
-                @if ($last) {
-                  <div
-                    class="bg-green-10 text-[10px] absolute top-0 left-0 right-0 h-5.5 flex items-center justify-center z-1 text-white rounded-t-2xl"
-                  >
-                    Recommended
-                  </div>
-                }
-                <div [class.pt-4]="$last" class="flex justify-between mb-4 w-full">
-                  <div [class]="item.color" class="tbc-bold text-[16px]">{{ item.title }}</div>
-                  <div
-                    [style.background]="item.bg"
-                    class="h-9 w-9 flex items-center justify-center rounded-[10px]"
-                  >
-                    <svg-icon class="h-5.5 w-5.5" [src]="item.iconSrc" />
-                  </div>
-                </div>
-                <div class="flex flex-col text-xs mb-4 leading-4 gap-y-1.5">
-                  @for (feature of item.features; track $index) {
-                    <div class="flex">
-                      <span class="inline-block mr-1 mt-0.5">
-                        <svg-icon src="assets/check-circle.svg" />
-                      </span>
-                      {{ feature }}
-                    </div>
-                  }
+          <div
+            (click)="onCardSelect(item.type)"
+            [class.outline-green-10!]="adForm.getControl('promoType').value === item.type"
+            [class.outline!]="adForm.getControl('promoType').value === item.type"
+            [class.hover:outline!]="adForm.getControl('promoType').value !== item.type"
+            [class.hover:outline-raisin-30!]="adForm.getControl('promoType').value !== item.type"
+            class="select-none relative outline-1 p-2.5 w-full rounded-2xl cursor-pointer flex flex-col bg-white justify-between"
+          >
+            <div>
+              @if ($last) {
+              <div
+                class="bg-green-10 text-[10px] absolute top-0 left-0 right-0 h-5.5 flex items-center justify-center z-1 text-white rounded-t-2xl"
+              >
+                Recommended
+              </div>
+              }
+              <div [class.pt-4]="$last" class="flex justify-between mb-4 w-full">
+                <div [class]="item.color" class="tbc-bold text-[16px]">{{ item.title }}</div>
+                <div
+                  [style.background]="item.bg"
+                  class="h-9 w-9 flex items-center justify-center rounded-[10px]"
+                >
+                  <svg-icon class="h-5.5 w-5.5" [src]="item.iconSrc" />
                 </div>
               </div>
-              <div>
-                <div class="w-full h-px bg-gray-90 mb-4"></div>
-                <div class="flex justify-between items-center">
-                  <div class="flex items-center">
-                    <span class="tbc-bold text-sm text-nowrap text-black-20">9₾</span>
-                    <span class="text-xs tbc-medium text-nowrap text-gray-110">/1 Day</span>
-                  </div>
-
-                  <div>
-                    <span
-                      [class.border-green-10!]="adForm.getControl('promoType').value === item.type"
-                      [class.border-[6px]!]="adForm.getControl('promoType').value === item.type"
-                      class="flex shrink w-4.5 h-4.5 rounded-full border-2 border-raisin-30"
-                    ></span>
-                  </div>
+              <div class="flex flex-col text-xs mb-4 leading-4 gap-y-1.5">
+                @for (feature of item.features; track $index) {
+                <div class="flex">
+                  <span class="inline-block mr-1 mt-0.5">
+                    <svg-icon src="assets/check-circle.svg" />
+                  </span>
+                  {{ feature }}
                 </div>
+                }
               </div>
             </div>
-          }
-        </div>
-        @if (!!adForm.getControl('promoType').value && !!totalPrice().length) {
-          <div class="flex md:flex justify-between items-center bg-white px-4 py-3.5 mt-6 rounded-[14px]">
-            <div class="text-sm">{{ t('addPost.chooseDaysNumber') }}</div>
-            <div class="flex items-center gap-6">
-              <div class="sm:ml-4 sm:basis-25 grow sm:grow-0">
-                <app-dropdown
-                  [control]="adForm.getControl('promoDays')"
-                  [submitted]="adForm.submitted"
-                  [dataList]="promoDaysList()"
-                  variant="static"
-                  itemStyle="small"
-                  defaultLabel="Choose"
-                  [contentWidth]="210"
-                />
+            <div>
+              <div class="w-full h-px bg-gray-90 mb-4"></div>
+              <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                  <span class="tbc-bold text-sm text-nowrap text-black-20">{{ item.price[0] }}₾</span>
+                  <span class="text-xs tbc-medium text-nowrap text-gray-110">/1 {{ t('addPost.day') }}</span>
+                </div>
+
+                <div>
+                  <span
+                    [class.border-green-10!]="adForm.getControl('promoType').value === item.type"
+                    [class.border-[6px]!]="adForm.getControl('promoType').value === item.type"
+                    class="flex shrink w-4.5 h-4.5 rounded-full border-2 border-raisin-30"
+                  ></span>
+                </div>
               </div>
             </div>
           </div>
+          }
+        </div>
+        @if (!!adForm.getControl('promoType').value && !!totalPrice().length) {
+        <div class="flex md:flex justify-between items-center bg-white px-4 py-3.5 mt-6 rounded-[14px]">
+          <div class="text-sm">{{ t('addPost.chooseDaysNumber') }}</div>
+          <div class="flex items-center gap-6">
+            <div class="sm:ml-4 sm:basis-25 grow sm:grow-0">
+              <app-dropdown
+                [control]="adForm.getControl('promoDays')"
+                [submitted]="adForm.submitted"
+                [dataList]="promoDaysList()"
+                variant="static"
+                itemStyle="small"
+                defaultLabel="Choose"
+                [contentWidth]="210"
+              />
+            </div>
+            <div class="ml-auto flex justify-center items-center">
+              @if (finalPrice && salePrice) { @if (salePrice > finalPrice) {
+              <span class="tbc-bold text-sm text-nowrap mr-1.5 text-red-500 leading-5 relative top-px">
+                {{ finalPrice }} ₾
+              </span>
+              <span>
+                <span class="tbc-medium text-sm line-through text-gray-110"> {{ salePrice }} </span>
+                <span class="text-nowrap text-xs text-gray-110"> ₾/Total</span>
+              </span>
+              } @else {
+              <span>
+                <span class="tbc-medium text-sm text-gray-110"> {{ finalPrice }} </span>
+                <span class="text-nowrap text-xs text-gray-110"> ₾/Total</span>
+              </span>
+              } }
+            </div>
+          </div>
+        </div>
         }
+      </div>
+      <div class="tbc-medium text-xs mb-3 mt-6 mx-6 rounded-2xl text-gray-120">
+        {{ t('addPost.addService') }}
+      </div>
+      <div class="border border-gray-90 mx-6 rounded-2xl">
+        <div class="p-4 border-b border-gray-90">
+          <div class="flex items-center justify-between w-full cursor-pointer mb-3 md:mb-0">
+            <div class="flex item-center">
+              <app-checkbox
+                [control]="adForm.getControl('isColored')"
+                [submitted]="adForm.submitted"
+                size="small"
+                class="flex self-center"
+              />
+              <div class="w-9 h-9 relative rounded-[10px] flex items-center justify-center bg-green-30">
+                <svg-icon src="assets/color.svg" />
+              </div>
+              <div class="ml-3 text-sm tbc-medium w-22.5 flex self-center">{{ t('addPost.color') }}</div>
+            </div>
+
+            <div class="flex items-center gap-6">
+              <app-dropdown
+                [control]="adForm.getControl('colorDays')"
+                [submitted]="adForm.submitted"
+                [dataList]="color"
+                [contentWidth]="210"
+                variant="static"
+                itemStyle="small"
+                defaultLabel="Choose"
+                class="max-w-25"
+              />
+
+              <ng-container *ngTemplateOutlet="priceSection; context: { price: colorPrice }" />
+            </div>
+          </div>
+        </div>
+        <div class="p-4">
+          <div class="flex items-center justify-between w-full cursor-pointer mb-3 md:mb-0">
+            <div class="flex item-center">
+              <app-checkbox
+                [control]="adForm.getControl('autoRenewal')"
+                [submitted]="adForm.submitted"
+                size="small"
+                class="flex self-center"
+              />
+              <div class="w-9 h-9 relative rounded-[10px] flex items-center justify-center bg-blue-90">
+                <svg-icon src="assets/refresh.svg" />
+              </div>
+              <div class="ml-3 text-sm tbc-medium w-22.5 flex self-center">
+                {{ t('addPost.autoRenewal') }}
+              </div>
+            </div>
+            <div class="flex">
+              <app-dropdown
+                [control]="adForm.getControl('autoRenewalOnceIn')"
+                [submitted]="adForm.submitted"
+                [dataList]="renewal"
+                [contentWidth]="210"
+                variant="static"
+                itemStyle="small"
+                defaultLabel="Choose"
+                class="max-w-25"
+              />
+              <app-dropdown
+                [control]="adForm.getControl('autoRenewalAtTime')"
+                [submitted]="adForm.submitted"
+                [dataList]="time"
+                variant="static"
+                itemStyle="small"
+                class="ml-2 max-w-20"
+              />
+              <span class="inline-flex items-center ml-6">
+                <ng-container *ngTemplateOutlet="priceSection; context: { price: autoRenewalPrice }" />
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <button type="submit">Submit</button>
@@ -288,14 +381,29 @@
   </div>
 
   @if (isOpen()) {
-    <app-input
-      [control]="titleControl"
-      [submitted]="adForm.submitted"
-      [required]="true"
-      label="Title"
-      variant="static"
-    />
+  <app-input
+    [control]="titleControl"
+    [submitted]="adForm.submitted"
+    [required]="true"
+    label="Title"
+    variant="static"
+  />
 
-    <app-text-editor [control]="descControl" [submitted]="adForm.submitted" label="Description" />
+  <app-text-editor [control]="descControl" [submitted]="adForm.submitted" label="Description" />
   }
+</ng-template>
+
+<ng-template #priceSection let-price="price">
+  <span *transloco="let t">
+    @if (price) {
+    <span class="tbc-bold text-sm pr-0.5">{{ price.toFixed(2) }} ₾</span>
+    <span class="text-nowrap text-xs text-gray-110">/Total</span>
+    } @else {
+    <span class="tbc-bold text-sm">
+      <span class="tbc-bold pr-0.5 inline-block">0.00</span>
+      ₾
+    </span>
+    <span class="text-nowrap text-xs text-gray-110">/1 {{ t('addPost.day') }}</span>
+    }
+  </span>
 </ng-template>

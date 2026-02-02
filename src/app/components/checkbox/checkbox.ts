@@ -9,6 +9,7 @@ import { BaseInput } from '../../shared/components/base-input'
 export class Checkbox extends BaseInput<boolean> {
   public clickableLabel = input<string | undefined>(undefined)
   public href = input<string | undefined>(undefined)
+  public size = input<'small' | 'default'>('default')
 
   public toggle(): void {
     const control = this.control()
