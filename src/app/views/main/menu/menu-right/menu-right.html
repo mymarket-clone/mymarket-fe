@@ -1,0 +1,15 @@
+<div class="rounded-xl pt-23 flex w-60 relative top-0 left-auto right-0">
+  <div class="rounded-xl relative top-0 w-full bg-white">
+    <div class="w-full flex-col items-center justify-center overflow-hidden rounded-3xl">
+      <div class="p-4 pb-8 rounded-xl">
+        <img
+          [src]="addAd.mainImageUrl ?? 'assets/no-image.png'"
+          alt="img"
+          class="object-cover w-52 h-52 rounded-xl"
+        />
+        <div class="line-clamp-2 wrap-break-word overflow-hidden text-sm mt-4 w-full">{{ addAd.title }}</div>
+        <div class="bg-blue-gray h-0.5 w-12 my-3 mx-auto"></div>
+      </div>
+    </div>
+  </div>
+</div>

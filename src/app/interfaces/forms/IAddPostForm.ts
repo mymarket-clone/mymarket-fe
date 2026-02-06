@@ -6,16 +6,18 @@ import { ConditionType } from '../../types/enums/ConditionType'
 
 export interface IAddPostForm {
   postType: FormControl<PostType>
-  categoryId: FormControl<string>
+  categoryId: FormControl<string | null>
   conditionType: FormControl<ConditionType>
-  title: FormControl<string>
-  description: FormControl<string>
+  images: FormControl<File[] | null>
+  mainImage: FormControl<File | null>
+  title: FormControl<string | null>
+  description: FormControl<string | null>
   titleRu: FormControl<string | null>
   descriptionRu: FormControl<string | null>
   titleEn: FormControl<string | null>
   descriptionEn: FormControl<string | null>
   forDisabledPerson: FormControl<boolean>
-  price: FormControl<number>
+  price: FormControl<number | null>
   currencyType: FormControl<CurrencyType>
   salePercentage: FormControl<number>
   canOfferPrice: FormControl<boolean>

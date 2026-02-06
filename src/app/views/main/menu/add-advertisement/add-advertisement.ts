@@ -1,3 +1,4 @@
+import { AddAdvertisementService } from './../../../../services/views/add-advertisement.service'
 import { Dropdown } from './../../../../components/dropdown/dropdown'
 import { Zod } from '../../../../utils/Zod'
 import { Component, computed, effect, signal } from '@angular/core'
@@ -19,6 +20,7 @@ import { PromoService } from '../../../../types/PromoService'
 import { DropdownEl, WithName } from '../../../../types/DropdownEl'
 import { Checkbox } from '../../../../components/checkbox/checkbox'
 import { mapEnumToDropdown } from '../../../../helpers/mapEnumToDropdown'
+import { ApiService } from '../../../../services/http/api.service'
 
 @Component({
   selector: 'add-advertisement',
@@ -38,147 +40,101 @@ import { mapEnumToDropdown } from '../../../../helpers/mapEnumToDropdown'
   ],
 })
 export class AddAdvertisement {
-  public promoService = signal<PromoService[] | null>(null)
   public isEnglishOpen = signal<boolean>(false)
   public isRussianOpen = signal<boolean>(false)
   public totalPrice = signal<number[]>([0, 0])
+  public firstInvalidControl = signal<string | null>(null)
+  public files = signal<File[] | null>(null)
+
+  public addPostState?: ReturnType<ApiService['addPost']>
+
+  public isBelowMd = computed(() => window.innerWidth < 768)
 
   public constructor(
     private readonly zod: Zod,
+    private readonly apiService: ApiService,
+    private readonly addAd: AddAdvertisementService,
     public readonly adForm: FormService<IAddPostForm>,
     public readonly ts: TranslocoService
   ) {
-    this.promoService.set([
-      {
-        type: PromoType.VIP,
-        title: 'VIP',
-        features: [this.ts.translate('addPost.vipLabel')],
-        price: [2.5],
-        iconSrc: 'assets/vip.svg',
-        color: 'bg-blue-gradient',
-        bg: 'rgb(0, 106, 255)',
-      },
-      {
-        type: PromoType.VIP_PLUS,
-        title: 'VIP+',
-        features: [this.ts.translate('addPost.vipPlusLabel'), this.ts.translate('addPost.vipPlusLabel2')],
-        price: [4, 3.5, 3.15],
-        iconSrc: 'assets/vip-plus.svg',
-        color: 'bg-yellow-gradient',
-        bg: 'rgb(254, 201, 0)',
-      },
-      {
-        type: PromoType.SUPER_VIP,
-        title: 'SUPER VIP',
-        features: [this.ts.translate('addPost.vipSuperLabel'), this.ts.translate('addPost.vipSuperLabel2')],
-        price: [9, 8, 7.5],
-        iconSrc: 'assets/super-vip.svg',
-        color: 'bg-orange-gradient',
-        bg: 'rgb(253, 65, 0)',
-      },
-    ])
-
     this.adForm.setForm(
       new FormGroup<IAddPostForm>({
         postType: new FormControl(PostType.Sell, {
           nonNullable: true,
           validators: zod.required(),
         }),
-
-        categoryId: new FormControl('', {
-          nonNullable: true,
+        categoryId: new FormControl(null, {
           validators: zod.required(),
         }),
-
         conditionType: new FormControl(ConditionType.Used, {
           nonNullable: true,
           validators: zod.required(),
         }),
-
-        title: new FormControl('', {
-          nonNullable: true,
+        images: new FormControl(null, {
           validators: zod.required(),
         }),
-
-        description: new FormControl('', {
-          nonNullable: true,
-          validators: [zod.required(), zod.maxLength(4000)],
+        mainImage: new FormControl(null, {
+          validators: zod.required(),
         }),
-
-        titleEn: new FormControl('', {
-          nonNullable: true,
+        title: new FormControl(null, {
+          validators: zod.required(),
         }),
-
+        description: new FormControl(null, {
+          validators: zod.maxLength(4000),
+        }),
+        titleEn: new FormControl(null),
         descriptionEn: new FormControl(null, {
           validators: zod.maxLength(4000),
         }),
-
         titleRu: new FormControl(null),
-
-        descriptionRu: new FormControl(null),
-
+        descriptionRu: new FormControl(null, {
+          validators: zod.maxLength(4000),
+        }),
         forDisabledPerson: new FormControl(false, {
           nonNullable: true,
           validators: zod.required(),
         }),
-
-        price: new FormControl(0, {
-          nonNullable: true,
+        price: new FormControl(null, {
           validators: zod.required(),
         }),
-
         currencyType: new FormControl(CurrencyType.GEL, {
           nonNullable: true,
           validators: zod.required(),
         }),
-
         salePercentage: new FormControl(0, {
           nonNullable: true,
           validators: zod.required(),
         }),
-
         canOfferPrice: new FormControl(false, {
           nonNullable: true,
           validators: zod.required(),
         }),
-
         isNegotiable: new FormControl(false, {
           nonNullable: true,
           validators: zod.required(),
         }),
-
         cityId: new FormControl(null, {
           validators: zod.required(),
         }),
-
         name: new FormControl(null, {
           validators: zod.required(),
         }),
-
         phoneNumber: new FormControl(null, {
           validators: zod.required(),
         }),
-
         userId: new FormControl(null),
-
         promoType: new FormControl(null),
-
         promoDays: new FormControl(null),
-
         isColored: new FormControl(false, {
           nonNullable: true,
           validators: zod.required(),
         }),
-
         colorDays: new FormControl(null),
-
         autoRenewal: new FormControl(false, {
           nonNullable: true,
           validators: zod.required(),
         }),
-
         autoRenewalOnceIn: new FormControl(null),
-
         autoRenewalAtTime: new FormControl(0, {
           nonNullable: true,
           validators: zod.required(),
@@ -190,6 +146,9 @@ export class AddAdvertisement {
     effect(() => this.syncColoredToDays())
     effect(() => this.syncAutoRenewalToAutoRenewalOnceIn())
     effect(() => this.syncAutoRenewalOnceInToAutoRenewal())
+    effect(() => this.syncPriceToPriceNegotiable())
+    effect(() => this.dynamicTitleValidators())
+    effect(() => (this.addAd.title = this.adForm.getControlSignal('title')() as string))
   }
 
   public toggleEnglish(): void {
@@ -201,10 +160,15 @@ export class AddAdvertisement {
   }
 
   public onSubmit(): void {
-    console.log(this.adForm.form)
     this.adForm.submit(() => {
       console.log(this.adForm.getValues())
       console.log(this.adForm.form.value)
+
+      this.addPostState = this.apiService.addPost({
+        form: this.adForm.form,
+        formData: this.adForm.getFormData(),
+        onSuccess: () => {},
+      })
     })
   }
 
@@ -216,11 +180,10 @@ export class AddAdvertisement {
       return
     }
 
-    const startPrice = this.promoService()?.find((v) => v.type === index)?.price[0]
+    const startPrice = this.promoService?.find((v) => v.type === index)?.price[0]
     if (!startPrice) return
 
     this.totalPrice.update((tp) => [startPrice, tp[1]])
-
     control.setValue(index)
   }
 
@@ -250,6 +213,44 @@ export class AddAdvertisement {
     return { finalPrice, salePrice }
   }
 
+  public handleDeleteImage(index: number): void {
+    this.files.update((current) => {
+      if (!current) return null
+
+      const updated = current.filter((_, i) => i !== index)
+      const mainImage = this.adForm.getControl('mainImage').value
+      if (mainImage && index === current.indexOf(mainImage)) {
+        this.adForm.getControl('mainImage').setValue(null)
+        this.addAd.mainImage = null
+
+        if (updated.length > 0) {
+          this.adForm.getControl('mainImage').setValue(updated[0])
+          this.addAd.mainImage = updated[0]
+        }
+      }
+
+      this.adForm.getControl('images').setValue(updated)
+
+      return updated.length > 0 ? updated : null
+    })
+  }
+
+  public handleMainImage(index: number): void {
+    this.files.update((current) => {
+      if (!current || index >= current.length) return current
+
+      const clickedImage = current[index]
+
+      const updated = [clickedImage, ...current.filter((_, i) => i !== index)]
+
+      this.adForm.getControl('mainImage').setValue(clickedImage)
+      this.addAd.mainImage = clickedImage
+      this.adForm.getControl('images').setValue(updated)
+
+      return updated
+    })
+  }
+
   public get finalPrice(): number | undefined {
     return Number(
       this.calculatePrice(
@@ -272,6 +273,38 @@ export class AddAdvertisement {
     return Number(
       this.calculatePrice(this.adForm.getControl('colorDays').value!, this.color)?.salePrice?.toFixed(2)
     )
+  }
+
+  public get promoService(): PromoService[] {
+    return [
+      {
+        type: PromoType.VIP,
+        title: 'VIP',
+        features: [this.ts.translate('addPost.vipLabel')],
+        price: [2.5],
+        iconSrc: 'assets/vip.svg',
+        color: 'bg-blue-gradient',
+        bg: 'rgb(0, 106, 255)',
+      },
+      {
+        type: PromoType.VIP_PLUS,
+        title: 'VIP+',
+        features: [this.ts.translate('addPost.vipPlusLabel'), this.ts.translate('addPost.vipPlusLabel2')],
+        price: [4, 3.5, 3.15],
+        iconSrc: 'assets/vip-plus.svg',
+        color: 'bg-yellow-gradient',
+        bg: 'rgb(254, 201, 0)',
+      },
+      {
+        type: PromoType.SUPER_VIP,
+        title: 'SUPER VIP',
+        features: [this.ts.translate('addPost.vipSuperLabel'), this.ts.translate('addPost.vipSuperLabel2')],
+        price: [9, 8, 7.5],
+        iconSrc: 'assets/super-vip.svg',
+        color: 'bg-orange-gradient',
+        bg: 'rgb(253, 65, 0)',
+      },
+    ]
   }
 
   public get autoRenewalPrice(): number | undefined {
@@ -383,10 +416,32 @@ export class AddAdvertisement {
     }
   })
 
-  private dayLabel(count: number): string {
-    if (count === 1) {
-      return this.ts.translate('addPost.days.one', { count })
+  public onFilesSelected(event: Event): void {
+    const input = event.target as HTMLInputElement
+    if (!input.files || input.files.length === 0) return
+
+    const newFiles = Array.from(input.files)
+
+    if (!this.adForm.getControl('mainImage').value) {
+      this.adForm.getControl('mainImage').setValue(newFiles[0])
+      this.addAd.mainImage = newFiles[0]
     }
+
+    const currentFiles = this.files() ?? []
+    const allFiles = [...currentFiles, ...newFiles]
+
+    this.files.set(allFiles)
+    this.adForm.getControl('images').setValue(allFiles)
+
+    input.value = ''
+  }
+
+  public getFilePath(src: Blob): string {
+    return URL.createObjectURL(src)
+  }
+
+  private dayLabel(count: number): string {
+    if (count === 1) return this.ts.translate('addPost.days.one', { count })
     return this.ts.translate('addPost.days.other', { count })
   }
 
@@ -403,21 +458,6 @@ export class AddAdvertisement {
 
   private rangeLabel(from: number, to: number, price: number): string {
     return this.ts.translate('addPost.dayRange', { from, to, price })
-  }
-
-  private determinePromoType(): number {
-    const promoType = this.adForm.getControl('promoType').value
-
-    switch (promoType) {
-      case PromoType.VIP:
-        return 1
-      case PromoType.VIP_PLUS:
-        return 2
-      case PromoType.SUPER_VIP:
-        return 3
-      default:
-        return 0
-    }
   }
 
   private syncColoredToDays(): void {
@@ -446,5 +486,46 @@ export class AddAdvertisement {
     if (this.adForm.getControlSignal('autoRenewalOnceIn')()) {
       this.adForm.getControl('autoRenewal').setValue(true)
     }
+  }
+
+  private syncPriceToPriceNegotiable(): void {
+    const price = this.adForm.getControl('price')
+    const isNegotiable = this.adForm.getControlSignal('isNegotiable')()
+
+    if (isNegotiable) {
+      price.clearValidators()
+      price.setValue(null)
+      price.setErrors(null)
+    } else {
+      price.setValidators(this.zod.required())
+    }
+
+    price.updateValueAndValidity({ emitEvent: false })
+  }
+
+  private dynamicTitleValidators(): void {
+    const titleEn = this.adForm.getControl('titleEn')!
+    const descriptionEn = this.adForm.getControl('descriptionEn')!
+    const titleRu = this.adForm.getControl('titleRu')!
+    const descriptionRu = this.adForm.getControl('descriptionRu')!
+
+    if (this.isEnglishOpen()) {
+      titleEn.setValidators(this.zod.required())
+    } else {
+      titleEn.clearValidators()
+      titleEn.setValue(null)
+      descriptionEn.setValue(null)
+    }
+
+    if (this.isRussianOpen()) {
+      titleRu.setValidators(this.zod.required())
+    } else {
+      titleRu.clearValidators()
+      titleRu.setValue(null)
+      descriptionRu.setValue(null)
+    }
+
+    titleEn.updateValueAndValidity({ emitEvent: false })
+    titleRu.updateValueAndValidity({ emitEvent: false })
   }
 }

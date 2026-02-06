@@ -14,4 +14,5 @@ export const api = {
   getCategoriesFlat: 'categories/getFlat',
   addPost: 'categories/posts',
   getAllCities: 'cities/getAll',
+  image: 'images',
 } as const

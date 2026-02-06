@@ -3,7 +3,7 @@
     autocomplete="off"
     [formGroup]="adForm.form"
     (submit)="onSubmit()"
-    class="lg:max-w-159 w-full shrink flex flex-col gap-4"
+    class="w-full shrink flex flex-col gap-4"
   >
     <div class="rounded-xl bg-white p-6 md:p-10">
       <h1 class="text-sm tbc-bold leading-5">{{ t('addPost.productDetails') }}</h1>
@@ -12,6 +12,7 @@
         [submitted]="adForm.submitted"
         [items]="postTypeItems"
         [values]="postTypeValues"
+        [hightlightLabel]="true"
         (onSelect)="adForm.getControl('categoryId').reset()"
         label="Advertisement type"
       />
@@ -20,6 +21,7 @@
         [control]="adForm.getControl('categoryId')"
         [submitted]="adForm.submitted"
         [dataFilter]="this.adForm.getControlSignal('postType')()!"
+        [hightlightLabel]="true"
         dataEndpoint="getCategoriesFlat"
         label="Choose/type Category"
         placeholder="Choose/type Category"
@@ -36,13 +38,128 @@
       }
     </div>
     <div class="rounded-xl bg-white p-6 md:p-10">
-      <h1 class="text-sm tbc-bold leading-5">{{ t('addPost.productDetails') }}</h1>
-      <ng-container *ngTemplateOutlet="note"></ng-container>
+      <ng-container
+        *ngTemplateOutlet="
+          note;
+          context: {
+            text: t('addPost.morePeopleInterested'),
+            required: true,
+          }
+        "
+      />
+      @if (!adForm.getControl('images').value) {
+      <div
+        (click)="filesInput.click()"
+        class="mt-6 flex items-center justify-start w-full border-dashed border-2 rounded-3xl border-yellow"
+      >
+        <div class="flex flex-row flex-1 -mx-1">
+          <div class="w-full">
+            <div class="outline-0 cursor-pointer rounded-3xl mb-0 md:p-8 w-full">
+              <div class="mx-auto py-6 lg:py-0">
+                <input
+                  (input)="onFilesSelected($event)"
+                  #filesInput
+                  multiple
+                  hidden
+                  type="file"
+                  accept="image/jpeg,.jpeg,.jpg,image/png,image/heic,.heic,image/heif,.heif,image/webp"
+                />
+                <div class="w-full text-center">
+                  <span class="flex justify-center">
+                    <svg-icon src="assets/camera.svg" />
+                  </span>
+                  <span class="tbc-bold text-sm flex justify-center mt-2">
+                    {{ t('addPost.uploadPhoto') }}
+                  </span>
+                  <span class="tbc-bold text-xs flex justify-center mt-2 text-blue-gray">
+                    {{ t('addPost.maxPhoto') }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      } @else {
+      <div class="flex flex-1 -mx-1 mt-6 flex-wrap">
+        <div
+          (click)="filesInput.click()"
+          class="cursor-pointer mb-2 w-32.5 h-32.5 flex items-center justify-start border-dashed border-2 rounded-3xl border-yellow"
+        >
+          <div class="flex justify-center items-center w-full">
+            <input
+              (input)="onFilesSelected($event)"
+              #filesInput
+              multiple
+              hidden
+              type="file"
+              accept="image/jpeg,.jpeg,.jpg,image/png,image/heic,.heic,image/heif,.heif,image/webp"
+            />
+            <div class="w-full text-center">
+              <span class="flex justify-center">
+                <svg-icon src="assets/camera-2.svg" />
+              </span>
+            </div>
+          </div>
+        </div>
+        @for (item of files(); track $index) {
+        <div class="relative group h-32.5 w-32.5 mb-2 mx-1">
+          <img
+            class="object-cover w-full h-full rounded-2xl transition-all duration-300 group-hover:brightness-50"
+            [src]="getFilePath(item)"
+            alt="img"
+          />
+
+          @if ($first) {
+          <div
+            class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"
+          >
+            <button
+              (click)="handleDeleteImage($index)"
+              class="cursor-pointer h-12 w-12 flex items-center justify-center rounded-xl hover:bg-[rgba(137,150,174,0.4)] transition-colors duration-500"
+            >
+              <svg-icon src="assets/img-delete.svg" class="w-6 h-6 text-white" />
+            </button>
+          </div>
+          } @else {
+          <div
+            class="absolute inset-0 flex items-center justify-center gap-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"
+          >
+            <button
+              (click)="handleMainImage($index)"
+              class="cursor-pointer h-12 w-12 flex items-center justify-center rounded-xl hover:bg-[rgba(137,150,174,0.4)] transition-colors duration-500"
+            >
+              <svg-icon src="assets/camera-2.svg" class="w-8 h-8 text-white" />
+            </button>
+            <button
+              (click)="handleDeleteImage($index)"
+              class="cursor-pointer h-12 w-12 flex items-center justify-center rounded-xl hover:bg-[rgba(137,150,174,0.4)] transition-colors duration-500"
+            >
+              <svg-icon src="assets/img-delete.svg" class="w-6 h-6 text-white" />
+            </button>
+          </div>
+          }
+        </div>
+        }
+      </div>
+      }
+    </div>
+    <div class="rounded-xl bg-white p-6 md:p-10">
+      <h1 class="text-sm tbc-bold leading-5 mb-6">{{ t('addPost.productDetails') }}</h1>
+      <ng-container
+        *ngTemplateOutlet="
+          note;
+          context: {
+            text: t('addPost.suitableTitle'),
+          }
+        "
+      />
       <app-input
         [control]="adForm.getControl('title')"
         [submitted]="adForm.submitted"
         [required]="true"
         [label]="t('addPost.title')"
+        [hightlightLabel]="true"
         variant="static"
       />
       <app-text-editor
@@ -95,7 +212,7 @@
     </div>
     <div class="rounded-xl bg-white p-6 md:p-10">
       <h1 class="text-sm tbc-bold leading-5">{{ t('addPost.price') }}</h1>
-      <div class="flex gap-7.5">
+      <div class="md:flex flex-col gap-7.5">
         <app-input
           [control]="adForm.getControl('price')"
           [submitted]="adForm.submitted"
@@ -103,8 +220,10 @@
           [disabled]="adForm.getControl('isNegotiable').value"
           [label]="t('addPost.indicatePrice')"
           [trailingBorderContent]="currency"
+          [hightlightLabel]="true"
           placeholder="0"
           variant="static"
+          type="number"
           class="price"
         />
         <app-input
@@ -114,6 +233,7 @@
           [trailingBorderContent]="percentage"
           [disabled]="adForm.getControl('isNegotiable').value"
           [maxValue]="100"
+          [hightlightLabel]="true"
           variant="static"
           type="number"
           class="w-56.25"
@@ -138,16 +258,18 @@
         [required]="true"
         [control]="adForm.getControl('cityId')"
         [submitted]="adForm.submitted"
+        [hightlightLabel]="true"
         dataEndpoint="getAllCities"
         label="Select a location"
         variant="static"
       />
-      <div class="flex justify-between gap-7.5 mb-4">
+      <div class="lg:flex flex-col justify-between gap-7.5 mb-4">
         <app-input
           [control]="adForm.getControl('name')"
           [submitted]="adForm.submitted"
           [required]="true"
           [label]="t('addPost.name')"
+          [hightlightLabel]="true"
           variant="static"
         />
         <app-input
@@ -155,6 +277,7 @@
           [submitted]="adForm.submitted"
           [required]="true"
           [label]="t('addPost.phoneNumber')"
+          [hightlightLabel]="true"
           variant="static"
         />
       </div>
@@ -163,7 +286,7 @@
       <h1 class="text-sm tbc-bold leading-5 px-6 md:px-10 mb-6">{{ t('addPost.promoServices') }}</h1>
       <div class="w-full p-6 bg-blue-10 rounded-b-2xl">
         <div class="flex gap-4 md:gap-3 flex-wrap md:flex-nowrap">
-          @for (item of promoService(); track $index) {
+          @for (item of promoService; track $index) {
           <div
             (click)="onCardSelect(item.type)"
             [class.outline-green-10!]="adForm.getControl('promoType').value === item.type"
@@ -177,7 +300,7 @@
               <div
                 class="bg-green-10 text-[10px] absolute top-0 left-0 right-0 h-5.5 flex items-center justify-center z-1 text-white rounded-t-2xl"
               >
-                Recommended
+                {{ t('addPost.recommended') }}
               </div>
               }
               <div [class.pt-4]="$last" class="flex justify-between mb-4 w-full">
@@ -191,7 +314,7 @@
               </div>
               <div class="flex flex-col text-xs mb-4 leading-4 gap-y-1.5">
                 @for (feature of item.features; track $index) {
-                <div class="flex">
+                <div class="flex text-wrap">
                   <span class="inline-block mr-1 mt-0.5">
                     <svg-icon src="assets/check-circle.svg" />
                   </span>
@@ -229,6 +352,7 @@
                 [control]="adForm.getControl('promoDays')"
                 [submitted]="adForm.submitted"
                 [dataList]="promoDaysList()"
+                [hightlightLabel]="true"
                 variant="static"
                 itemStyle="small"
                 defaultLabel="Choose"
@@ -260,8 +384,10 @@
       </div>
       <div class="border border-gray-90 mx-6 rounded-2xl">
         <div class="p-4 border-b border-gray-90">
-          <div class="flex items-center justify-between w-full cursor-pointer mb-3 md:mb-0">
-            <div class="flex item-center">
+          <div
+            class="flex flex-col md:flex-row items-center justify-between w-full cursor-pointer mb-3 md:mb-0"
+          >
+            <div class="flex item-center w-full md:w-auto">
               <app-checkbox
                 [control]="adForm.getControl('isColored')"
                 [submitted]="adForm.submitted"
@@ -272,27 +398,34 @@
                 <svg-icon src="assets/color.svg" />
               </div>
               <div class="ml-3 text-sm tbc-medium w-22.5 flex self-center">{{ t('addPost.color') }}</div>
+              <span class="md:hidden flex items-center ml-auto">
+                <ng-container *ngTemplateOutlet="priceSection; context: { price: colorPrice }" />
+              </span>
             </div>
 
-            <div class="flex items-center gap-6">
+            <div class="flex items-center gap-6 w-full md:w-auto">
               <app-dropdown
                 [control]="adForm.getControl('colorDays')"
                 [submitted]="adForm.submitted"
                 [dataList]="color"
-                [contentWidth]="210"
+                [contentWidth]="isBelowMd() ? null : 210"
+                [hightlightLabel]="true"
                 variant="static"
                 itemStyle="small"
                 defaultLabel="Choose"
-                class="max-w-25"
+                class="md:max-w-25 w-full mt-3 md:mt-0"
               />
-
-              <ng-container *ngTemplateOutlet="priceSection; context: { price: colorPrice }" />
+              <span class="hidden md:flex">
+                <ng-container *ngTemplateOutlet="priceSection; context: { price: colorPrice }" />
+              </span>
             </div>
           </div>
         </div>
         <div class="p-4">
-          <div class="flex items-center justify-between w-full cursor-pointer mb-3 md:mb-0">
-            <div class="flex item-center">
+          <div
+            class="flex flex-col md:flex-row items-center justify-between w-full cursor-pointer mb-3 md:mb-0"
+          >
+            <div class="flex item-center w-full md:w-auto">
               <app-checkbox
                 [control]="adForm.getControl('autoRenewal')"
                 [submitted]="adForm.submitted"
@@ -305,27 +438,32 @@
               <div class="ml-3 text-sm tbc-medium w-22.5 flex self-center">
                 {{ t('addPost.autoRenewal') }}
               </div>
+              <span class="md:hidden flex items-center ml-auto">
+                <ng-container *ngTemplateOutlet="priceSection; context: { price: colorPrice }" />
+              </span>
             </div>
-            <div class="flex">
+            <div class="flex justify-between mt-3 w-full md:w-auto">
               <app-dropdown
                 [control]="adForm.getControl('autoRenewalOnceIn')"
                 [submitted]="adForm.submitted"
                 [dataList]="renewal"
-                [contentWidth]="210"
+                [contentWidth]="isBelowMd() ? null : 210"
+                [hightlightLabel]="true"
                 variant="static"
                 itemStyle="small"
                 defaultLabel="Choose"
-                class="max-w-25"
+                class="md:max-w-25 w-full"
               />
               <app-dropdown
                 [control]="adForm.getControl('autoRenewalAtTime')"
                 [submitted]="adForm.submitted"
                 [dataList]="time"
+                [hightlightLabel]="true"
                 variant="static"
                 itemStyle="small"
-                class="ml-2 max-w-20"
+                class="ml-2 md:max-w-20 w-full"
               />
-              <span class="inline-flex items-center ml-6">
+              <span class="hidden md:inline-flex items-center ml-6">
                 <ng-container *ngTemplateOutlet="priceSection; context: { price: autoRenewalPrice }" />
               </span>
             </div>
@@ -344,17 +482,21 @@
     [submitted]="adForm.submitted"
     [disabled]="adForm.getControl('isNegotiable').value"
     [dataList]="currencyTypeOptions"
+    [hightlightLabel]="true"
     [border]="false"
     variant="static"
   />
 </ng-template>
 
-<ng-template #note>
-  <div class="bg-raisin-80 px-4 py-2 flex rounded-2xl items-center mt-6">
+<ng-template #note let-text="text" let-required="required">
+  <div class="bg-raisin-80 px-4 py-2 flex rounded-2xl items-center">
     <div class="mr-4 min-h-10 min-w-10">
       <svg-icon src="assets/hint-hand.svg" />
     </div>
-    <div class="text-xs tbc-regular">Add a suitable title and description in Georgian</div>
+    <div class="text-xs tbc-regular">{{ text }}</div>
+    @if (required) {
+    <span class="text-red-500 ml-1">*</span>
+    }
   </div>
 </ng-template>
 
@@ -385,6 +527,7 @@
     [control]="titleControl"
     [submitted]="adForm.submitted"
     [required]="true"
+    [hightlightLabel]="true"
     label="Title"
     variant="static"
   />

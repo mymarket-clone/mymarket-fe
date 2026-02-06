@@ -12,7 +12,7 @@ export class HttpService {
   protected readonly API_URL = API_URL
 
   protected request<Data, Body = undefined>(options: HttpRequestOptions<Data, Body>): IHttpService<Data> {
-    const { method, endpoint, searchParams, body, onSuccess, onError, form } = options
+    const { method, endpoint, searchParams, body, formData, onSuccess, onError, form } = options
 
     const loading = signal(false)
     const error = signal<string | null>(null)
@@ -23,18 +23,20 @@ export class HttpService {
 
     let obs$: Observable<Data>
 
+    const payload = formData ?? body
+
     switch (method) {
       case HttpMethod.GET:
         obs$ = this.httpClient.get<Data>(url)
         break
       case HttpMethod.POST:
-        obs$ = this.httpClient.post<Data>(url, body)
+        obs$ = this.httpClient.post<Data>(url, payload)
         break
       case HttpMethod.PUT:
-        obs$ = this.httpClient.put<Data>(url, body)
+        obs$ = this.httpClient.put<Data>(url, payload)
         break
       case HttpMethod.PATCH:
-        obs$ = this.httpClient.patch<Data>(url, body)
+        obs$ = this.httpClient.patch<Data>(url, payload)
         break
       case HttpMethod.DELETE:
         obs$ = this.httpClient.delete<Data>(url)

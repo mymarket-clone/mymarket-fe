@@ -1,6 +1,6 @@
 <div>
   @if (label()) {
-  <label class="flex items-center text-xs tbc-medium">
+  <label [class.text-red-500!]="hasError() && hightlightLabel()" class="flex items-center text-xs tbc-medium">
     <span class="block tbc-medium pt-3 pb-2">
       {{ label() }} @if (required()) {
       <span class="text-red-500">*</span>
@@ -18,6 +18,7 @@
       [class.border]="border()"
       [class.hover:border-blue-120]="border()"
       [class.border-gray-70]="border()"
+      [class.border-red-500!]="hasError() && !hightlightLabel()"
       [class.h-10!]="itemStyle() === 'small'"
       class="flex bg-transparent h-12 min-h-9.5 rounded-[10px] w-full transition-all duration-100 ease-in-out cursor-pointer"
     >
@@ -93,4 +94,8 @@
     </div>
     }
   </div>
+
+  @if (hasError() && !hightlightLabel()) {
+  <span class="text-red-500 text-xs mt-1 px-2">{{ getError() }}</span>
+  }
 </div>

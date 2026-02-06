@@ -7,6 +7,7 @@ export interface IAddPostPayload {
   postType: PostType
   categoryId: string
   conditionType: ConditionType
+  images: File[]
   title: string
   description: string
   forDisabledPerson: boolean

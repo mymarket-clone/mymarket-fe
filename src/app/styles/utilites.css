@@ -11,7 +11,13 @@
   @media (min-width: 768px) {
     .container {
       max-width: calc(1240px + 16px * 2);
-      margin-inline: auto
+      margin-inline: auto;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      max-width: unset
     }
   }
 

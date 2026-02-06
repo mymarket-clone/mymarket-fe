@@ -1,15 +1,16 @@
 import { Component, signal } from '@angular/core'
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router'
 import { UserStore } from '../../../stores/user.store'
-import { TranslocoDirective, TranslocoService } from '@jsverse/transloco'
+import { TranslocoService } from '@jsverse/transloco'
 import { filter } from 'rxjs'
 import { MenuItem } from '../../../types/MenuItem'
 import { MenuTitle } from './menu-title/menu-title'
 import { MenuAside } from './menu-aside/menu-aside'
+import { MenuRight } from './menu-right/menu-right'
 
 @Component({
   selector: 'app-menu',
-  imports: [RouterOutlet, TranslocoDirective, MenuTitle, MenuAside],
+  imports: [RouterOutlet, MenuTitle, MenuAside, MenuRight],
   templateUrl: './menu.html',
 })
 export class Menu {

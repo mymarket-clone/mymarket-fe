@@ -60,4 +60,25 @@ export class FormService<T extends { [P in keyof T]: AbstractControl }> {
   public getValues(): NonNullableProps<T> {
     return this.form.getRawValue() as NonNullableProps<T>
   }
+
+  public getFormData(): FormData {
+    const fd = new FormData()
+    const values = this.getValues()
+
+    Object.entries(values).forEach(([key, value]) => {
+      if (value === null || value === undefined) return
+
+      if (Array.isArray(value) && value[0] instanceof File) {
+        value.forEach((file) => fd.append(key, file))
+      } else if (value instanceof File) {
+        fd.append(key, value)
+      } else if (typeof value === 'object') {
+        fd.append(key, JSON.stringify(value))
+      } else {
+        fd.append(key, String(value))
+      }
+    })
+
+    return fd
+  }
 }

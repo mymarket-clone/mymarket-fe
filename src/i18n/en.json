@@ -128,6 +128,11 @@
     "chooseDays": "Choose days",
     "addService": "Add service",
     "color": "Color",
-    "autoRenewal": "Automatic renewal"
+    "autoRenewal": "Automatic renewal",
+    "suitableTitle": "Add a suitable title and description in Georgian",
+    "morePeopleInterested": "More people will be interested in properly selected photos",
+    "uploadPhoto": "Upload photo",
+    "maxPhoto": "Max 12 photo",
+    "recommended": "Recommended"
   }
 }

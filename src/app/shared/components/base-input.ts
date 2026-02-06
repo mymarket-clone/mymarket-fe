@@ -15,6 +15,7 @@ export class BaseInput<T = unknown> {
   public type = input<InputType>('text')
   public placeholder = input<string | undefined>(undefined)
   public variant = input<'dynamic' | 'static'>()
+  public hightlightLabel = input<boolean>(false)
 
   private parent = viewChild<ElementRef<HTMLElement>>('parent')
 
