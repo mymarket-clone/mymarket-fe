@@ -55,26 +55,28 @@ export class Login {
   }
 
   public onSubmit(): void {
-    this.loginFs.submit(() => {
-      this.loginState = this.authService.loginUser({
-        body: this.loginFs.getValues(),
-        form: this.loginFs.form,
-        onSuccess: (response) => {
-          this.userStore.setUser(response as unknown as User)
-          this.router.navigate(['/'])
-        },
-        onError: (_, record) => {
-          if (
-            record &&
-            record.status == HttpStatus.Unauthorized &&
-            record.code == HttpErrorCodes.EmailNotVerified
-          ) {
-            this.router.navigate(['/user/register'], {
-              queryParams: { email: record.email },
-            })
-          }
-        },
-      })
+    this.loginFs.submit({
+      onSuccess: () => {
+        this.loginState = this.authService.loginUser({
+          body: this.loginFs.getValues(),
+          form: this.loginFs.form,
+          onSuccess: (response) => {
+            this.userStore.setUser(response as unknown as User)
+            this.router.navigate(['/'])
+          },
+          onError: (_, record) => {
+            if (
+              record &&
+              record.status == HttpStatus.Unauthorized &&
+              record.code == HttpErrorCodes.EmailNotVerified
+            ) {
+              this.router.navigate(['/user/register'], {
+                queryParams: { email: record.email },
+              })
+            }
+          },
+        })
+      },
     })
   }
 }

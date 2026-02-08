@@ -8,6 +8,7 @@ export class Button {
   public handler = output()
   public title = input.required()
   public disabled = input<boolean>(false)
+  public iclass = input<string | null>(null)
 
   public onHandler(): void {
     this.handler.emit()

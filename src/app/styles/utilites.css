@@ -17,11 +17,11 @@
 
   @media (max-width: 768px) {
     .container {
-      max-width: unset
+      max-width: unset;
     }
   }
 
-  .bg-blue-gradient {
+  .text-blue-gradient {
     display: inline-block;
     -webkit-text-fill-color: transparent;
     background: linear-gradient(180deg, #006aff, #38f);
@@ -29,8 +29,7 @@
     -webkit-background-clip: text;
   }
 
-
-  .bg-yellow-gradient {
+  .text-yellow-gradient {
     display: inline-block;
     -webkit-text-fill-color: transparent;
     background: linear-gradient(180deg, #fcc000, #fdcd33);
@@ -38,11 +37,15 @@
     -webkit-background-clip: text;
   }
 
-  .bg-orange-gradient {
+  .text-orange-gradient {
     display: inline-block;
     -webkit-text-fill-color: transparent;
     background: linear-gradient(80deg, #fd4100 32.85%, #ff6b00 98.7%);
     background-clip: text;
     -webkit-background-clip: text;
+  }
+
+  .bg-yellow-gradient {
+    background: linear-gradient(180deg, #fcc000, #fdcd33) !important;
   }
 }

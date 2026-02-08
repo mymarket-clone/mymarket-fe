@@ -1,15 +1,62 @@
-<div class="rounded-xl pt-23 flex w-60 relative top-0 left-auto right-0">
+<div *transloco="let t" class="rounded-xl flex w-60 left-auto right-0">
   <div class="rounded-xl relative top-0 w-full bg-white">
     <div class="w-full flex-col items-center justify-center overflow-hidden rounded-3xl">
       <div class="p-4 pb-8 rounded-xl">
         <img
-          [src]="addAd.mainImageUrl ?? 'assets/no-image.png'"
+          [src]="addAd.mainImageUrl() ?? 'assets/no-image.png'"
           alt="img"
           class="object-cover w-52 h-52 rounded-xl"
         />
         <div class="line-clamp-2 wrap-break-word overflow-hidden text-sm mt-4 w-full">{{ addAd.title }}</div>
         <div class="bg-blue-gray h-0.5 w-12 my-3 mx-auto"></div>
+        <ul class="flex flex-col gap-4 w-full mt-2">
+          <ng-container
+            *ngTemplateOutlet="stat; context: {
+            label: t('addPost.views'),
+            icon: 'assets/eye.svg',
+            percentage: addAd.calcViews(),
+          }"
+          />
+          <ng-container
+            *ngTemplateOutlet="stat; context: {
+            label: t('addPost.calls'),
+            icon: 'assets/phone.svg',
+            percentage: addAd.calcCalls(),
+          }"
+          />
+          <ng-container
+            *ngTemplateOutlet="stat; context: {
+            label: t('addPost.favourites'),
+            icon: 'assets/favourite.svg',
+            percentage: addAd.calcFavourites(),
+          }"
+          />
+        </ul>
       </div>
     </div>
   </div>
 </div>
+
+<ng-template #stat let-label="label" let-icon="icon" let-percentage="percentage">
+  <li class="flex items-start w-full flex-col gap-1">
+    <div class="flex items-center gap-1 justify-between min-h-4.5 w-full">
+      <div class="flex items-center gap-1">
+        <svg-icon class="min-w-3.5" [src]="icon" />
+        <p class="tbc-medium text-[10px] text-gray-120 mb-0">{{ label }}</p>
+      </div>
+      @if (percentage > 10) {
+      <div class="flex items-center gap-0.75">
+        <svg-icon src="assets/double-arrow.svg" />
+        <p class="tbc-bold text-raisin-150 text-xs mb-0">{{ percentage * 10 }}%</p>
+      </div>
+      }
+    </div>
+    <div class="w-full h-1.25 bg-gray-130 rounded-[2.5px] overflow-hidden">
+      <div
+        [style.width.%]="percentage + 10"
+        [style.background-color]="determineColor()"
+        class="h-full rounded-[2.5px] transition-all duration-800 ease-in-out origin-[left_center]"
+      ></div>
+    </div>
+  </li>
+</ng-template>

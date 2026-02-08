@@ -12,7 +12,7 @@ export const api = {
   getCategories: 'categories',
   getByIdWithChildren: 'categories/getByIdWithChildren',
   getCategoriesFlat: 'categories/getFlat',
-  addPost: 'categories/posts',
+  addPost: 'posts',
   getAllCities: 'cities/getAll',
   image: 'images',
 } as const

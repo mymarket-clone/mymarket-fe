@@ -1,13 +1,22 @@
-import { Injectable, Signal, signal } from '@angular/core'
+import {
+  afterNextRender,
+  EnvironmentInjector,
+  inject,
+  Injectable,
+  runInInjectionContext,
+  Signal,
+  signal,
+} from '@angular/core'
 import { AbstractControl, FormGroup } from '@angular/forms'
 import { NonNullableProps } from '../types/NonNullableProps'
 import { toSignal } from '@angular/core/rxjs-interop'
+import { SubmitHandlers } from '../types/SubmitCallbacks'
 
 @Injectable()
 export class FormService<T extends { [P in keyof T]: AbstractControl }> {
+  private readonly injector = inject(EnvironmentInjector)
   private _form!: FormGroup<T>
   private _submitted = signal<boolean>(false)
-
   private controlSignals = new Map<keyof T, Signal<string | number | boolean | null | undefined>>()
 
   public get form(): FormGroup<T> {
@@ -51,10 +60,17 @@ export class FormService<T extends { [P in keyof T]: AbstractControl }> {
     this._submitted.set(false)
   }
 
-  public submit(handler: () => void): void {
+  public submit(callbacks: SubmitHandlers): void {
     this.setSubmitted()
-    if (this._form.valid) handler()
-    else console.warn('Invalid form')
+    if (this._form.valid) callbacks.onSuccess()
+    else {
+      console.warn('Invalid form')
+      runInInjectionContext(this.injector, () => {
+        afterNextRender(() => {
+          callbacks.onFailure?.()
+        })
+      })
+    }
   }
 
   public getValues(): NonNullableProps<T> {

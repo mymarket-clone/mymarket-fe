@@ -137,14 +137,16 @@ export class Register implements OnInit {
   }
 
   public validateMain(): void {
-    this.registerFormMain.submit(() => {
-      this.proceedToStage('Extra')
+    this.registerFormMain.submit({
+      onSuccess: () => {
+        this.proceedToStage('Extra')
+      },
     })
   }
 
   public registerUser(): void {
-    this.registerFormExtra.submit(() => {
-      if (this.registerFormExtra.form.valid) {
+    this.registerFormExtra.submit({
+      onSuccess: () => {
         this.registerState = this.authService.registerUser({
           body: {
             ...this.registerFormMain.getValues(),
@@ -164,7 +166,7 @@ export class Register implements OnInit {
             console.error(err)
           },
         })
-      }
+      },
     })
   }
 

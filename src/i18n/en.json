@@ -133,6 +133,15 @@
     "morePeopleInterested": "More people will be interested in properly selected photos",
     "uploadPhoto": "Upload photo",
     "maxPhoto": "Max 12 photo",
-    "recommended": "Recommended"
+    "recommended": "Recommended",
+    "youtubeVideo": "Youtube video",
+    "views": "Views",
+    "calls": "Calls",
+    "favourites": "Favourites",
+    "imageRequired": "Image upload is required",
+    "total": "Total",
+    "totalPrice": "Total price",
+    "cancel": "Cancel",
+    "publish": "Publish"
   }
 }

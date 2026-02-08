@@ -10,6 +10,7 @@ export interface IAddPostForm {
   conditionType: FormControl<ConditionType>
   images: FormControl<File[] | null>
   mainImage: FormControl<File | null>
+  youtubeLink: FormControl<string | null>
   title: FormControl<string | null>
   description: FormControl<string | null>
   titleRu: FormControl<string | null>

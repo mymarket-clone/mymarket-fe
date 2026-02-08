@@ -100,29 +100,33 @@ export class PasswordRecovery {
   }
 
   public verifyCode(): void {
-    this.sendPasswordRecoveryFs.submit(() => {
-      this.verifyPasswordCodeState = this.authService.verifyPasswordCode({
-        body: this.sendPasswordRecoveryFs.getValues(),
-        form: this.sendPasswordRecoveryFs.form,
-        onSuccess: () => {
-          this.passwordEnterFs
-            .getControl('code')
-            .setValue(this.sendPasswordRecoveryFs.getControl('code').value)
-          this.passwordRecoveryStage.set('Password')
-        },
-        onError: (err) => console.error(err),
-      })
+    this.sendPasswordRecoveryFs.submit({
+      onSuccess: () => {
+        this.verifyPasswordCodeState = this.authService.verifyPasswordCode({
+          body: this.sendPasswordRecoveryFs.getValues(),
+          form: this.sendPasswordRecoveryFs.form,
+          onSuccess: () => {
+            this.passwordEnterFs
+              .getControl('code')
+              .setValue(this.sendPasswordRecoveryFs.getControl('code').value)
+            this.passwordRecoveryStage.set('Password')
+          },
+          onError: (err) => console.error(err),
+        })
+      },
     })
   }
 
   public changePassword(): void {
-    this.passwordEnterFs.submit(() => {
-      this.passwordRecoveryState = this.authService.passwordRecovery({
-        body: this.passwordEnterFs.getValues(),
-        form: this.passwordEnterFs.form,
-        onSuccess: () => this.router.navigate(['/user/login']),
-        onError: (err) => console.error(err),
-      })
+    this.passwordEnterFs.submit({
+      onSuccess: () => {
+        this.passwordRecoveryState = this.authService.passwordRecovery({
+          body: this.passwordEnterFs.getValues(),
+          form: this.passwordEnterFs.form,
+          onSuccess: () => this.router.navigate(['/user/login']),
+          onError: (err) => console.error(err),
+        })
+      },
     })
   }
 }

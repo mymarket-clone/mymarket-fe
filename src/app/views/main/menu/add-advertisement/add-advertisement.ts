@@ -1,7 +1,7 @@
 import { AddAdvertisementService } from './../../../../services/views/add-advertisement.service'
 import { Dropdown } from './../../../../components/dropdown/dropdown'
 import { Zod } from '../../../../utils/Zod'
-import { Component, computed, effect, signal } from '@angular/core'
+import { Component, computed, effect, OnDestroy, signal } from '@angular/core'
 import { FormService } from '../../../../services/form.service'
 import { IAddPostForm } from '../../../../interfaces/forms/IAddPostForm'
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
@@ -21,6 +21,11 @@ import { DropdownEl, WithName } from '../../../../types/DropdownEl'
 import { Checkbox } from '../../../../components/checkbox/checkbox'
 import { mapEnumToDropdown } from '../../../../helpers/mapEnumToDropdown'
 import { ApiService } from '../../../../services/http/api.service'
+import { Button } from '../../../../components/button/button'
+import { Router } from '@angular/router'
+import { scrollToFirstElement } from '../../../../utils/ScrollToFirstElement'
+
+type PreviewFile = { file: File; url: string }
 
 @Component({
   selector: 'add-advertisement',
@@ -37,14 +42,15 @@ import { ApiService } from '../../../../services/http/api.service'
     TranslocoDirective,
     CheckboxChip,
     Checkbox,
+    Button,
   ],
 })
-export class AddAdvertisement {
+export class AddAdvertisement implements OnDestroy {
   public isEnglishOpen = signal<boolean>(false)
   public isRussianOpen = signal<boolean>(false)
   public totalPrice = signal<number[]>([0, 0])
   public firstInvalidControl = signal<string | null>(null)
-  public files = signal<File[] | null>(null)
+  public files = signal<PreviewFile[] | null>(null)
 
   public addPostState?: ReturnType<ApiService['addPost']>
 
@@ -53,7 +59,8 @@ export class AddAdvertisement {
   public constructor(
     private readonly zod: Zod,
     private readonly apiService: ApiService,
-    private readonly addAd: AddAdvertisementService,
+    private readonly router: Router,
+    public readonly addAd: AddAdvertisementService,
     public readonly adForm: FormService<IAddPostForm>,
     public readonly ts: TranslocoService
   ) {
@@ -76,6 +83,7 @@ export class AddAdvertisement {
         mainImage: new FormControl(null, {
           validators: zod.required(),
         }),
+        youtubeLink: new FormControl(null),
         title: new FormControl(null, {
           validators: zod.required(),
         }),
@@ -148,7 +156,13 @@ export class AddAdvertisement {
     effect(() => this.syncAutoRenewalOnceInToAutoRenewal())
     effect(() => this.syncPriceToPriceNegotiable())
     effect(() => this.dynamicTitleValidators())
+    effect(() => this.syncColor())
+    effect(() => this.syncPromoTypeToDays())
     effect(() => (this.addAd.title = this.adForm.getControlSignal('title')() as string))
+  }
+
+  public ngOnDestroy(): void {
+    this.addAd.reset()
   }
 
   public toggleEnglish(): void {
@@ -160,15 +174,15 @@ export class AddAdvertisement {
   }
 
   public onSubmit(): void {
-    this.adForm.submit(() => {
-      console.log(this.adForm.getValues())
-      console.log(this.adForm.form.value)
-
-      this.addPostState = this.apiService.addPost({
-        form: this.adForm.form,
-        formData: this.adForm.getFormData(),
-        onSuccess: () => {},
-      })
+    this.adForm.submit({
+      onSuccess: () => {
+        this.addPostState = this.apiService.addPost({
+          form: this.adForm.form,
+          formData: this.adForm.getFormData(),
+          onSuccess: () => this.router.navigate(['/']),
+        })
+      },
+      onFailure: () => scrollToFirstElement('.has-error'),
     })
   }
 
@@ -177,8 +191,11 @@ export class AddAdvertisement {
 
     if (control.value === index) {
       control.setValue(null)
+      this.addAd.selectedService = null
       return
     }
+
+    this.addAd.selectedService = index
 
     const startPrice = this.promoService?.find((v) => v.type === index)?.price[0]
     if (!startPrice) return
@@ -195,11 +212,7 @@ export class AddAdvertisement {
 
     const matched = fullList.find(
       (item): item is WithName & { value: number; id: number } =>
-        'value' in item &&
-        typeof item.value === 'number' &&
-        'id' in item &&
-        typeof item.id === 'number' &&
-        item.value === selectedValue
+        typeof item.value === 'number' && item.value === selectedValue
     )
 
     if (!matched) return null
@@ -213,23 +226,54 @@ export class AddAdvertisement {
     return { finalPrice, salePrice }
   }
 
+  public onFilesSelected(event: Event): void {
+    const input = event.target as HTMLInputElement
+    if (!input.files || input.files.length === 0) return
+
+    const newFiles = Array.from(input.files)
+    const newPreviews: PreviewFile[] = newFiles.map((f) => ({ file: f, url: URL.createObjectURL(f) }))
+
+    const current = this.files() ?? []
+    const all = [...current, ...newPreviews]
+
+    // keep form controls working with raw File[]
+    this.adForm.getControl('images').setValue(all.map((p) => p.file))
+
+    if (!this.adForm.getControl('mainImage').value) {
+      this.adForm.getControl('mainImage').setValue(all[0].file)
+      this.addAd.mainImage = all[0].file
+    }
+
+    this.files.set(all)
+    input.value = ''
+  }
+
   public handleDeleteImage(index: number): void {
     this.files.update((current) => {
       if (!current) return null
 
+      const removed = current[index]
+      // revoke URL
+      try {
+        URL.revokeObjectURL(removed.url)
+      } catch {
+        /* ignore */
+      }
+
       const updated = current.filter((_, i) => i !== index)
-      const mainImage = this.adForm.getControl('mainImage').value
-      if (mainImage && index === current.indexOf(mainImage)) {
+
+      const mainImage = this.adForm.getControl('mainImage').value as File | null
+      if (mainImage && index === current.findIndex((p) => p.file === mainImage)) {
         this.adForm.getControl('mainImage').setValue(null)
         this.addAd.mainImage = null
 
         if (updated.length > 0) {
-          this.adForm.getControl('mainImage').setValue(updated[0])
-          this.addAd.mainImage = updated[0]
+          this.adForm.getControl('mainImage').setValue(updated[0].file)
+          this.addAd.mainImage = updated[0].file
         }
       }
 
-      this.adForm.getControl('images').setValue(updated)
+      this.adForm.getControl('images').setValue(updated.map((p) => p.file))
 
       return updated.length > 0 ? updated : null
     })
@@ -239,13 +283,12 @@ export class AddAdvertisement {
     this.files.update((current) => {
       if (!current || index >= current.length) return current
 
-      const clickedImage = current[index]
+      const clicked = current[index]
+      const updated = [clicked, ...current.filter((_, i) => i !== index)]
 
-      const updated = [clickedImage, ...current.filter((_, i) => i !== index)]
-
-      this.adForm.getControl('mainImage').setValue(clickedImage)
-      this.addAd.mainImage = clickedImage
-      this.adForm.getControl('images').setValue(updated)
+      this.adForm.getControl('mainImage').setValue(clicked.file)
+      this.addAd.mainImage = clicked.file
+      this.adForm.getControl('images').setValue(updated.map((p) => p.file))
 
       return updated
     })
@@ -271,7 +314,7 @@ export class AddAdvertisement {
 
   public get colorPrice(): number | undefined {
     return Number(
-      this.calculatePrice(this.adForm.getControl('colorDays').value!, this.color)?.salePrice?.toFixed(2)
+      this.calculatePrice(this.adForm.getControl('colorDays').value!, this.color)?.finalPrice?.toFixed(2)
     )
   }
 
@@ -283,7 +326,7 @@ export class AddAdvertisement {
         features: [this.ts.translate('addPost.vipLabel')],
         price: [2.5],
         iconSrc: 'assets/vip.svg',
-        color: 'bg-blue-gradient',
+        color: 'text-blue-gradient',
         bg: 'rgb(0, 106, 255)',
       },
       {
@@ -292,7 +335,7 @@ export class AddAdvertisement {
         features: [this.ts.translate('addPost.vipPlusLabel'), this.ts.translate('addPost.vipPlusLabel2')],
         price: [4, 3.5, 3.15],
         iconSrc: 'assets/vip-plus.svg',
-        color: 'bg-yellow-gradient',
+        color: 'text-yellow-gradient',
         bg: 'rgb(254, 201, 0)',
       },
       {
@@ -301,7 +344,7 @@ export class AddAdvertisement {
         features: [this.ts.translate('addPost.vipSuperLabel'), this.ts.translate('addPost.vipSuperLabel2')],
         price: [9, 8, 7.5],
         iconSrc: 'assets/super-vip.svg',
-        color: 'bg-orange-gradient',
+        color: 'text-orange-gradient',
         bg: 'rgb(253, 65, 0)',
       },
     ]
@@ -309,9 +352,10 @@ export class AddAdvertisement {
 
   public get autoRenewalPrice(): number | undefined {
     return Number(
-      this.calculatePrice(this.adForm.getControl('autoRenewalOnceIn').value!, this.color)?.salePrice?.toFixed(
-        2
-      )
+      this.calculatePrice(
+        this.adForm.getControl('autoRenewalOnceIn').value!,
+        this.color
+      )?.finalPrice?.toFixed(2)
     )
   }
 
@@ -373,7 +417,7 @@ export class AddAdvertisement {
       { value: null, labeledProp: this.rangeLabel(1, 4, 9) },
       ...this.days(1, 4, 9),
       { value: null, labeledProp: this.rangeLabel(5, 8, 8) },
-      ...this.days(5, 8, 8.5),
+      ...this.days(5, 8, 8),
       { value: null, labeledProp: this.rangeLabel(9, 16, 7.5) },
       ...this.days(9, 16, 7.5),
       { value: null, labeledProp: this.rangeLabel(17, 30, 7.1) },
@@ -403,6 +447,38 @@ export class AddAdvertisement {
     }))
   }
 
+  public showPriceFinal = computed(() => {
+    const promoDays = Number(this.adForm.getControlSignal('promoDays')())
+    const colorDays = Number(this.adForm.getControlSignal('colorDays')())
+    const renewalDays = Number(this.adForm.getControlSignal('autoRenewalOnceIn')())
+
+    const promo = Number.isFinite(promoDays) ? this.calculatePrice(promoDays, this.promoDaysList()) : null
+    const color = Number.isFinite(colorDays) ? this.calculatePrice(colorDays, this.color) : null
+    const renewal = Number.isFinite(renewalDays) ? this.calculatePrice(renewalDays, this.color) : null
+
+    const promoPrice = promo?.finalPrice ?? 0
+    const colorPrice = color?.finalPrice ?? 0
+    const renewalPrice = renewal?.finalPrice ?? 0
+
+    return promoPrice + colorPrice + renewalPrice
+  })
+
+  public showPriceSale = computed(() => {
+    const promoDays = Number(this.adForm.getControlSignal('promoDays')())
+    const colorDays = Number(this.adForm.getControlSignal('colorDays')())
+    const renewalDays = Number(this.adForm.getControlSignal('autoRenewalOnceIn')())
+
+    const promo = Number.isFinite(promoDays) ? this.calculatePrice(promoDays, this.promoDaysList()) : null
+    const color = Number.isFinite(colorDays) ? this.calculatePrice(colorDays, this.color) : null
+    const renewal = Number.isFinite(renewalDays) ? this.calculatePrice(renewalDays, this.color) : null
+
+    const promoPrice = promo?.salePrice ?? 0
+    const colorPrice = color?.salePrice ?? 0
+    const renewalPrice = renewal?.salePrice ?? 0
+
+    return promoPrice + colorPrice + renewalPrice
+  })
+
   public promoDaysList = computed(() => {
     switch (this.adForm.getControlSignal('promoType')()) {
       case PromoType.VIP:
@@ -416,28 +492,25 @@ export class AddAdvertisement {
     }
   })
 
-  public onFilesSelected(event: Event): void {
-    const input = event.target as HTMLInputElement
-    if (!input.files || input.files.length === 0) return
-
-    const newFiles = Array.from(input.files)
-
-    if (!this.adForm.getControl('mainImage').value) {
-      this.adForm.getControl('mainImage').setValue(newFiles[0])
-      this.addAd.mainImage = newFiles[0]
+  public determineColor(): string {
+    switch (this.addAd.selectedService) {
+      case 1: {
+        return 'rgb(74, 108, 250)'
+      }
+      case 2: {
+        return 'rgb(254, 201, 0)'
+      }
+      case 3: {
+        return 'rgb(255, 100, 31)'
+      }
+      default: {
+        return 'rgb(147, 149, 155)'
+      }
     }
-
-    const currentFiles = this.files() ?? []
-    const allFiles = [...currentFiles, ...newFiles]
-
-    this.files.set(allFiles)
-    this.adForm.getControl('images').setValue(allFiles)
-
-    input.value = ''
   }
 
-  public getFilePath(src: Blob): string {
-    return URL.createObjectURL(src)
+  public cancel(): void {
+    this.router.navigate(['/'])
   }
 
   private dayLabel(count: number): string {
@@ -462,7 +535,7 @@ export class AddAdvertisement {
 
   private syncColoredToDays(): void {
     if (this.adForm.getControlSignal('isColored')()) {
-      this.adForm.getControl('colorDays').setValue(1)
+      this.adForm.getControl('colorDays').setValue(this.adForm.getControl('colorDays').value ?? 1)
     } else {
       this.adForm.getControl('colorDays').setValue(null)
     }
@@ -476,7 +549,9 @@ export class AddAdvertisement {
 
   private syncAutoRenewalToAutoRenewalOnceIn(): void {
     if (this.adForm.getControlSignal('autoRenewal')()) {
-      this.adForm.getControl('autoRenewalOnceIn').setValue(1)
+      this.adForm
+        .getControl('autoRenewalOnceIn')
+        .setValue(this.adForm.getControl('autoRenewalOnceIn').value ?? 1)
     } else {
       this.adForm.getControl('autoRenewalOnceIn').setValue(null)
     }
@@ -503,6 +578,15 @@ export class AddAdvertisement {
     price.updateValueAndValidity({ emitEvent: false })
   }
 
+  private syncPromoTypeToDays(): void {
+    const promoType = this.adForm.getControlSignal('promoType')()
+    if (promoType != null) {
+      this.adForm.getControl('promoDays').setValue(this.adForm.getControl('promoDays').value ?? 1)
+    } else {
+      this.adForm.getControl('promoDays').setValue(null)
+    }
+  }
+
   private dynamicTitleValidators(): void {
     const titleEn = this.adForm.getControl('titleEn')!
     const descriptionEn = this.adForm.getControl('descriptionEn')!
@@ -527,5 +611,15 @@ export class AddAdvertisement {
 
     titleEn.updateValueAndValidity({ emitEvent: false })
     titleRu.updateValueAndValidity({ emitEvent: false })
+  }
+
+  private syncColor(): void {
+    const isColored = this.adForm.getControlSignal('isColored')()
+
+    if (isColored) {
+      this.addAd._colorSelected.set(true)
+    } else {
+      this.addAd._colorSelected.set(false)
+    }
   }
 }

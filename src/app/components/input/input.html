@@ -16,6 +16,7 @@
         placeholder=" "
         autocomplete="off"
         [class.text-raisin-50]="disabled()"
+        [class.has-error]="hasError()"
         class="peer relative h-full w-full placeholder-transparent outline-none hover:border-blue-120 autofill:bg-white autofill:shadow-[inset_0_0_0_30px_white] autofill:text-black disabled:text-raisin-50"
       />
       @if (label()) {
@@ -79,10 +80,11 @@
       [class.bg-raisin-10!]="disabled()"
       [class.text-raisin-50!]="disabled()"
       [class.border-red-500]="hasError()"
+      [class.has-error]="hasError()"
       autocomplete="off"
       autocorrect="off"
       spellcheck="false"
-      class="bg-white text-raisin-150 rounded-[10px] text-sm py-6 px-3.5 h-8.75 w-full block disabled:text-raisin-50 transition-all duration-200"
+      class="bg-white text-raisin-150 rounded-[10px] text-sm py-6 px-3.5 h-8.75 w-full block disabled:text-raisin-50 transition-all duration-200 placeholder:text-xs!"
     />
 
     @if (trailingContent()) {
@@ -101,5 +103,5 @@
 @if (hasError() && !hightlightLabel()) {
 <span class="text-red-500 text-xs mt-1 px-2">{{ getError() }}</span>
 } } @default {
-<div>No type provided</div>
+<div>No variant provided</div>
 } }
