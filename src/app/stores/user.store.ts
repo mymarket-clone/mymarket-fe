@@ -19,6 +19,14 @@ export class UserStore {
     return this.user()
   }
 
+  public get accessToken(): string | null {
+    return this.user()?.accessToken ?? null
+  }
+
+  public get refreshToken(): string | null {
+    return this.user()?.refreshToken ?? null
+  }
+
   public getUserId(): number | null {
     return this.user()?.user.id ?? null
   }
