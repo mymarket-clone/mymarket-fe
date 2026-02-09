@@ -16,7 +16,8 @@ import { IApiService } from '../../interfaces/common/IApiService'
 import { IGetCategoriesFlatPayload } from '../../interfaces/payload/IGetCategoriesFlatPayload'
 import { IAddPostPayload } from '../../interfaces/payload/IAddPostPayload'
 import { ICity } from '../../interfaces/response/ICity'
-import { IRefreshUserPayload } from '../../interfaces/payload/IRefreshUserPayload'
+import { Observable } from 'rxjs'
+import { User } from '../../types/User'
 
 @Injectable({ providedIn: 'root' })
 export class ApiService extends HttpService implements IApiService {
@@ -103,15 +104,8 @@ export class ApiService extends HttpService implements IApiService {
     })
   }
 
-  public refreshUser(options?: IServiceRequest<IRefreshUserPayload, ILoginUser>): IHttpService<ILoginUser> {
-    return this.request({
-      method: HttpMethod.POST,
-      endpoint: api.refreshUser,
-      body: options?.body,
-      form: options?.form,
-      onSuccess: options?.onSuccess,
-      onError: options?.onError,
-    })
+  public refreshUser(options?: { accessToken: string; refreshToken: string }): Observable<User> {
+    return this.httpClient.post<User>(`${this.API_URL}auth/refreshUser`, options)
   }
 
   public getCategories(options?: IServiceRequest<void, ICategoryNode[]>): IHttpService<ICategoryNode[]> {

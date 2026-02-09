@@ -24,10 +24,10 @@ export class PasswordStrength {
 
   public getStrengthLabel(): string {
     const strength = this.passwordStrength()
-    if (strength <= 1) return this.ts.translate('weak')
-    if (strength === 2) return this.ts.translate('average')
-    if (strength === 3) return this.ts.translate('good')
-    return this.ts.translate('strong')
+    if (strength <= 1) return this.ts.translate('auth.weak')
+    if (strength === 2) return this.ts.translate('auth.average')
+    if (strength === 3) return this.ts.translate('auth.good')
+    return this.ts.translate('auth.strong')
   }
 
   public getStrengthColor(): string {
