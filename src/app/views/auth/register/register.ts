@@ -176,7 +176,7 @@ export class Register implements OnInit {
       form: this.registerFormVerification.form,
       onSuccess: (response) => {
         this.userStore.logout()
-        this.userStore.setUser(response as unknown as User)
+        this.userStore.setUser(response)
         this.router.navigate(['/'])
       },
     })

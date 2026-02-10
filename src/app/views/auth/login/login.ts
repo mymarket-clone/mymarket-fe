@@ -61,7 +61,7 @@ export class Login {
           body: this.loginFs.getValues(),
           form: this.loginFs.form,
           onSuccess: (response) => {
-            this.userStore.setUser(response as unknown as User)
+            this.userStore.setUser(response)
             this.router.navigate(['/'])
           },
           onError: (_, record) => {

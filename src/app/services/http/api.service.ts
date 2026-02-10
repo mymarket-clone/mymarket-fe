@@ -4,7 +4,6 @@ import { HttpMethod } from '../../types/enums/HttpMethod'
 import { IHttpService } from '../../interfaces/common/IHttpService'
 import { IServiceRequest } from '../../interfaces/common/IServiceRequest'
 import { ILoginPayload } from '../../interfaces/payload/ILoginPayload'
-import { ILoginUser } from '../../interfaces/response/ILoginUser'
 import { ISendEmailVerificationPayload } from '../../interfaces/payload/IEmailVerificationPayload'
 import { IRegisterPayload } from '../../interfaces/payload/IRegisterPayload'
 import { IVerifyPasswordCodePayload } from '../../interfaces/payload/IVerifyPasswordCodePayload'
@@ -21,7 +20,7 @@ import { User } from '../../types/User'
 
 @Injectable({ providedIn: 'root' })
 export class ApiService extends HttpService implements IApiService {
-  public loginUser(options?: IServiceRequest<ILoginPayload, ILoginUser>): IHttpService<ILoginUser> {
+  public loginUser(options?: IServiceRequest<ILoginPayload, User>): IHttpService<User> {
     return this.request({
       method: HttpMethod.POST,
       endpoint: api.loginUser,
@@ -56,9 +55,7 @@ export class ApiService extends HttpService implements IApiService {
     })
   }
 
-  public verifyEmailCode(
-    options?: IServiceRequest<IVerifyPasswordCodePayload, ILoginUser>
-  ): IHttpService<ILoginUser> {
+  public verifyEmailCode(options?: IServiceRequest<IVerifyPasswordCodePayload, User>): IHttpService<User> {
     return this.request({
       method: HttpMethod.POST,
       endpoint: api.verifyEmailCode,
