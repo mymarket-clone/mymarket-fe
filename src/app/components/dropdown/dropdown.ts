@@ -38,7 +38,7 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
   public dataFilter = input<string | number | boolean | null | undefined>(null)
   public dataList = input<unknown[] | null>(null)
   public border = input<boolean>(true)
-  public contentWidth = input<number | null>(null)
+  public contentWidth = input<boolean>(false)
   public defaultLabel = input<string | null>(null)
   public itemStyle = input<'small' | 'normal'>('normal')
 

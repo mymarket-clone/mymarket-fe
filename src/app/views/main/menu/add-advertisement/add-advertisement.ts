@@ -54,8 +54,6 @@ export class AddAdvertisement implements OnDestroy {
 
   public addPostState?: ReturnType<ApiService['addPost']>
 
-  public isBelowMd = computed(() => window.innerWidth > 768)
-
   public constructor(
     private readonly zod: Zod,
     private readonly apiService: ApiService,
@@ -236,7 +234,6 @@ export class AddAdvertisement implements OnDestroy {
     const current = this.files() ?? []
     const all = [...current, ...newPreviews]
 
-    // keep form controls working with raw File[]
     this.adForm.getControl('images').setValue(all.map((p) => p.file))
 
     if (!this.adForm.getControl('mainImage').value) {
