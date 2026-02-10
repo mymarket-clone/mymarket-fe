@@ -123,7 +123,17 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
       parentId = lastCategory?.id ?? null
     }
 
-    this.currentData.set(data.filter((c: any) => c.parentId === parentId))
+    const filteredData = data.filter((c: any) => c.parentId === parentId)
+    const finalData =
+      this.dataFilter() !== null
+        ? filteredData.filter((i: any) => {
+            const filter = this.dataFilter()
+            const target = filter === 1 || filter === 2 ? 1 : filter === 3 ? 2 : 3
+            return i.categoryPostType === target
+          })
+        : filteredData
+
+    this.currentData.set(finalData)
   }
 
   public setItem(element: DropdownEl): void {
