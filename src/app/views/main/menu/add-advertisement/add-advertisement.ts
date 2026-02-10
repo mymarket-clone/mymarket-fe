@@ -54,7 +54,7 @@ export class AddAdvertisement implements OnDestroy {
 
   public addPostState?: ReturnType<ApiService['addPost']>
 
-  public isBelowMd = computed(() => window.innerWidth < 768)
+  public isBelowMd = computed(() => window.innerWidth > 768)
 
   public constructor(
     private readonly zod: Zod,
