@@ -3,7 +3,6 @@ import { BaseInput } from '../../shared/components/base-input'
 import { ReactiveFormsModule } from '@angular/forms'
 import { Editor } from '@tiptap/core'
 import StarterKit from '@tiptap/starter-kit'
-import Underline from '@tiptap/extension-underline'
 import CharacterCount from '@tiptap/extension-character-count'
 
 @Component({
@@ -28,7 +27,6 @@ export class TextEditor extends BaseInput implements AfterViewInit, OnDestroy {
       element: this.editorEl()?.nativeElement,
       extensions: [
         StarterKit,
-        Underline,
         CharacterCount.configure({
           limit: this.maxLength,
         }),
