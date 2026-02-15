@@ -11,7 +11,6 @@ export const api = {
   refreshUser: 'auth/refreshUser',
   verifyPasswordCode: 'auth/verifyPasswordCode',
   getCategories: 'categories',
-  getByIdWithChildren: 'categories/getByIdWithChildren',
   getCategoriesFlat: 'categories/getFlat',
   addPost: 'posts',
   getAllCities: 'cities/getAll',

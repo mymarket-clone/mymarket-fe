@@ -105,15 +105,6 @@ export class ApiService extends HttpService implements IApiService {
     return this.httpClient.post<User>(`${this.API_URL}auth/refreshUser`, options)
   }
 
-  public getCategories(options?: IServiceRequest<void, ICategoryNode[]>): IHttpService<ICategoryNode[]> {
-    return this.request({
-      method: HttpMethod.GET,
-      endpoint: api.getCategories,
-      onSuccess: options?.onSuccess,
-      onError: options?.onError,
-    })
-  }
-
   public getCategoriesFlat(
     options?: IServiceRequest<IGetCategoriesFlatPayload, ICategoryNode[]>
   ): IHttpService<ICategoryNode[]> {

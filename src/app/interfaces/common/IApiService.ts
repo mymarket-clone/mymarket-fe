@@ -22,7 +22,6 @@ export interface IApiService {
   verifyPasswordCode: (options: IServiceRequest<IVerifyPasswordCodePayload, void>) => IHttpService<void>
   sendPasswordRecovery: (options: IServiceRequest<ISendPasswordRecoveryPayload, void>) => IHttpService<void>
   passwordRecovery: (options: IServiceRequest<IPasswordRecoveryPayload, void>) => IHttpService<void>
-  getCategories: (options: IServiceRequest<void, ICategoryNode[]>) => IHttpService<ICategoryNode[]>
   getCategoriesFlat: (
     options?: IServiceRequest<IGetCategoriesFlatPayload, ICategoryNode[]>
   ) => IHttpService<ICategoryNode[]>
