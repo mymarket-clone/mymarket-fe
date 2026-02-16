@@ -11,8 +11,8 @@ export const api = {
   refreshUser: 'auth/refreshUser',
   verifyPasswordCode: 'auth/verifyPasswordCode',
   getCategories: 'categories',
-  getCategoriesFlat: 'categories/getFlat',
   addPost: 'posts',
   getAllCities: 'cities/getAll',
   image: 'images',
+  getCategoryAttributeById: 'categoryAttributes',
 } as const

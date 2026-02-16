@@ -167,13 +167,14 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
     const data = this.dataState()?.data()
     if (!data) return
 
-    if (filter === null) {
-      this.currentData.set(data)
-      return
+    let targetData = data.filter((c: any) => c.parentId === null)
+
+    if (filter !== null) {
+      const target = filter === 1 || filter === 2 ? 1 : filter === 3 ? 2 : 3
+      targetData = targetData.filter((i: any) => i.categoryPostType === target)
     }
 
-    const target = filter === 1 || filter === 2 ? 1 : filter === 3 ? 2 : 3
-    this.currentData.set(data.filter((i: any) => i.categoryPostType === target))
+    this.currentData.set(targetData)
   }
 
   private syncLabelWithControl(): void {

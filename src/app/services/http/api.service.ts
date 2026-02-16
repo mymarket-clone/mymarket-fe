@@ -12,11 +12,13 @@ import { IPasswordRecoveryPayload } from '../../interfaces/payload/IPasswordReco
 import { api } from '../../api/api'
 import { ICategoryNode } from '../../interfaces/response/ICategoryNode'
 import { IApiService } from '../../interfaces/common/IApiService'
-import { IGetCategoriesFlatPayload } from '../../interfaces/payload/IGetCategoriesFlatPayload'
+import { IGetCategoriesPayload } from '../../interfaces/payload/IGetCategoriesPayload'
 import { IAddPostPayload } from '../../interfaces/payload/IAddPostPayload'
 import { ICity } from '../../interfaces/response/ICity'
 import { Observable } from 'rxjs'
 import { User } from '../../types/User'
+import { IGetCategoryAttributeByIdPayload } from '../../interfaces/payload/IGetCategoryAttributeByIdPayload'
+import { ICategoryAttribute } from '../../interfaces/response/ICategoryAttribute'
 
 @Injectable({ providedIn: 'root' })
 export class ApiService extends HttpService implements IApiService {
@@ -105,13 +107,13 @@ export class ApiService extends HttpService implements IApiService {
     return this.httpClient.post<User>(`${this.API_URL}auth/refreshUser`, options)
   }
 
-  public getCategoriesFlat(
-    options?: IServiceRequest<IGetCategoriesFlatPayload, ICategoryNode[]>
+  public getCategories(
+    options?: IServiceRequest<IGetCategoriesPayload, ICategoryNode[]>
   ): IHttpService<ICategoryNode[]> {
     return this.request({
       method: HttpMethod.GET,
       searchParams: options?.searchParams,
-      endpoint: api.getCategoriesFlat,
+      endpoint: api.getCategories,
       onSuccess: options?.onSuccess,
       onError: options?.onError,
     })
@@ -133,6 +135,18 @@ export class ApiService extends HttpService implements IApiService {
       method: HttpMethod.GET,
       searchParams: options?.searchParams,
       endpoint: api.getAllCities,
+      onSuccess: options?.onSuccess,
+      onError: options?.onError,
+    })
+  }
+
+  public getCategoryAttributeById(
+    options?: IServiceRequest<IGetCategoryAttributeByIdPayload, ICategoryAttribute[]>
+  ): IHttpService<ICategoryAttribute[]> {
+    return this.request({
+      method: HttpMethod.GET,
+      searchParams: options?.searchParams,
+      endpoint: api.getCategoryAttributeById,
       onSuccess: options?.onSuccess,
       onError: options?.onError,
     })

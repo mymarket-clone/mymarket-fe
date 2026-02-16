@@ -53,6 +53,7 @@ export class AddAdvertisement implements OnDestroy {
   public files = signal<PreviewFile[] | null>(null)
 
   public addPostState?: ReturnType<ApiService['addPost']>
+  public getCategoryAttributeById?: ReturnType<ApiService['getCategoryAttributeById']>
 
   public constructor(
     private readonly zod: Zod,
@@ -157,6 +158,15 @@ export class AddAdvertisement implements OnDestroy {
     effect(() => this.syncColor())
     effect(() => this.syncPromoTypeToDays())
     effect(() => (this.addAd.title = this.adForm.getControlSignal('title')() as string))
+  }
+
+  public ngAfterViewInit(): void {
+    alert(1)
+    this.getCategoryAttributeById = this.apiService.getCategoryAttributeById({
+      searchParams: {
+        id: 1,
+      },
+    })
   }
 
   public ngOnDestroy(): void {

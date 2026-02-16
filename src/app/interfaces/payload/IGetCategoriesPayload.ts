@@ -1,5 +1,5 @@
 import { PostType } from '../../types/enums/PostType'
 
-export interface IGetCategoriesFlatPayload {
+export interface IGetCategoriesPayload {
   postType?: PostType
 }

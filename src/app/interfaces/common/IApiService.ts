@@ -1,7 +1,7 @@
 import { User } from '../../types/User'
 import { IAddPostPayload } from '../payload/IAddPostPayload'
 import { ISendEmailVerificationPayload } from '../payload/IEmailVerificationPayload'
-import { IGetCategoriesFlatPayload } from '../payload/IGetCategoriesFlatPayload'
+import { IGetCategoriesPayload } from '../payload/IGetCategoriesPayload'
 import { ILoginPayload } from '../payload/ILoginPayload'
 import { IPasswordRecoveryPayload } from '../payload/IPasswordRecoveryPayload'
 import { IRegisterPayload } from '../payload/IRegisterPayload'
@@ -22,8 +22,8 @@ export interface IApiService {
   verifyPasswordCode: (options: IServiceRequest<IVerifyPasswordCodePayload, void>) => IHttpService<void>
   sendPasswordRecovery: (options: IServiceRequest<ISendPasswordRecoveryPayload, void>) => IHttpService<void>
   passwordRecovery: (options: IServiceRequest<IPasswordRecoveryPayload, void>) => IHttpService<void>
-  getCategoriesFlat: (
-    options?: IServiceRequest<IGetCategoriesFlatPayload, ICategoryNode[]>
+  getCategories: (
+    options?: IServiceRequest<IGetCategoriesPayload, ICategoryNode[]>
   ) => IHttpService<ICategoryNode[]>
   addPost: (options?: IServiceRequest<IAddPostPayload, unknown>) => IHttpService<unknown>
   getAllCities: (options?: IServiceRequest<void, ICity[]>) => IHttpService<ICity[]>
