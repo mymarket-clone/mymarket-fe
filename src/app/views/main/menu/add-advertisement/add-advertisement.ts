@@ -160,11 +160,10 @@ export class AddAdvertisement implements OnDestroy {
     effect(() => (this.addAd.title = this.adForm.getControlSignal('title')() as string))
   }
 
-  public ngAfterViewInit(): void {
-    alert(1)
+  public getMainCharacteristics = async (): Promise<void> => {
     this.getCategoryAttributeById = this.apiService.getCategoryAttributeById({
       searchParams: {
-        id: 1,
+        id: this.adForm.getControlSignal('categoryId')(),
       },
     })
   }
@@ -260,12 +259,7 @@ export class AddAdvertisement implements OnDestroy {
       if (!current) return null
 
       const removed = current[index]
-      // revoke URL
-      try {
-        URL.revokeObjectURL(removed.url)
-      } catch {
-        /* ignore */
-      }
+      URL.revokeObjectURL(removed.url)
 
       const updated = current.filter((_, i) => i !== index)
 

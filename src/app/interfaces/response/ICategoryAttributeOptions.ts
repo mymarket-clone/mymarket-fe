@@ -1,0 +1,17 @@
+import { AttributeType } from './../../types/enums/AttributeType'
+
+export interface ICategoryAttributeOptions {
+  id: number
+  categoryId: number
+  attributeId: number
+  attributeName: string
+  attributeType: AttributeType
+  isRequired: boolean
+  order: number
+  name: string
+  options: {
+    id: number
+    name: string
+    order: number
+  }[]
+}

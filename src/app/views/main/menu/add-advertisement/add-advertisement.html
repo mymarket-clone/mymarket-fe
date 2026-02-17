@@ -22,6 +22,7 @@
         [submitted]="adForm.submitted"
         [dataFilter]="this.adForm.getControlSignal('postType')()!"
         [hightlightLabel]="true"
+        (triggerParentOnDeepestSelect)="getMainCharacteristics()"
         dataEndpoint="getCategories"
         label="Choose/type Category"
         placeholder="Choose/type Category"

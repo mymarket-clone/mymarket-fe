@@ -1,3 +1,4 @@
+import { ICategoryAttributeOptions } from './../../interfaces/response/ICategoryAttributeOptions'
 import { Injectable } from '@angular/core'
 import { HttpService } from './http.service'
 import { HttpMethod } from '../../types/enums/HttpMethod'
@@ -18,7 +19,6 @@ import { ICity } from '../../interfaces/response/ICity'
 import { Observable } from 'rxjs'
 import { User } from '../../types/User'
 import { IGetCategoryAttributeByIdPayload } from '../../interfaces/payload/IGetCategoryAttributeByIdPayload'
-import { ICategoryAttribute } from '../../interfaces/response/ICategoryAttribute'
 
 @Injectable({ providedIn: 'root' })
 export class ApiService extends HttpService implements IApiService {
@@ -141,8 +141,8 @@ export class ApiService extends HttpService implements IApiService {
   }
 
   public getCategoryAttributeById(
-    options?: IServiceRequest<IGetCategoryAttributeByIdPayload, ICategoryAttribute[]>
-  ): IHttpService<ICategoryAttribute[]> {
+    options?: IServiceRequest<IGetCategoryAttributeByIdPayload, ICategoryAttributeOptions[]>
+  ): IHttpService<ICategoryAttributeOptions[]> {
     return this.request({
       method: HttpMethod.GET,
       searchParams: options?.searchParams,
