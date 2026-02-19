@@ -5,7 +5,7 @@ import { SearchParams } from '../../types/SearchParams'
 export interface IServiceRequest<Body, Response> {
   body?: Body
   searchParams?: SearchParams
-  form?: FormGroup
+  form?: FormGroup | FormGroup[]
   formData?: FormData
   onSuccess?: (response: Response) => void
   onError?: (errors: Record<string, string[]> | string, record?: IBaseError) => void

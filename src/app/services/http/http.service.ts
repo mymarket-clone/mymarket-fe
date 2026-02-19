@@ -6,6 +6,7 @@ import { HttpMethod } from '../../types/enums/HttpMethod'
 import { HttpRequestOptions } from '../../types/HttpRequestOptions'
 import { API_URL } from '../../api/api'
 import qs from 'qs'
+import { FormGroup } from '@angular/forms'
 
 export class HttpService {
   protected readonly httpClient = inject(HttpClient)
@@ -20,6 +21,8 @@ export class HttpService {
 
     const query = searchParams ? qs.stringify(searchParams, { skipNulls: true }) : ''
     const url = query ? `${this.API_URL}${endpoint}?${query}` : `${this.API_URL}${endpoint}`
+
+    const normalizedForms: FormGroup[] = form ? (Array.isArray(form) ? form : [form]) : []
 
     let obs$: Observable<Data>
 
@@ -58,10 +61,17 @@ export class HttpService {
         loading.set(false)
         onError?.(serverErrors || 'Unknown error', errors.error)
 
-        if (form && serverErrors && typeof serverErrors === 'object') {
+        if (normalizedForms.length && serverErrors && typeof serverErrors === 'object') {
           Object.entries(serverErrors).forEach(([field, messages]) => {
             const normalizedField = field.charAt(0).toLowerCase() + field.slice(1)
-            form.get(normalizedField)?.setErrors({ server: messages })
+
+            for (const f of normalizedForms) {
+              const control = f.get(normalizedField)
+              if (control) {
+                control.setErrors({ server: messages })
+                break
+              }
+            }
           })
         }
       },

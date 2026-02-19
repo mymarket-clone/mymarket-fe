@@ -19,6 +19,7 @@ import { ReactiveFormsModule } from '@angular/forms'
 export class Input extends BaseInput {
   public trailingContent = input<TemplateRef<unknown>>()
   public trailingBorderContent = input<TemplateRef<unknown>>()
+  public trailingBorderContext = input<unknown>()
   public bottomContent = input<TemplateRef<unknown>>()
   public showPlaceholder = input<boolean>(false)
   public maxValue = input<number | null>(null)

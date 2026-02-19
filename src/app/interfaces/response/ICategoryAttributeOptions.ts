@@ -6,6 +6,7 @@ export interface ICategoryAttributeOptions {
   attributeId: number
   attributeName: string
   attributeType: AttributeType
+  unitName: string
   isRequired: boolean
   order: number
   name: string

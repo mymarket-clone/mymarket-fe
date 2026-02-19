@@ -4,13 +4,13 @@ import { Zod } from '../../../../utils/Zod'
 import { Component, computed, effect, OnDestroy, signal } from '@angular/core'
 import { FormService } from '../../../../services/form.service'
 import { IAddPostForm } from '../../../../interfaces/forms/IAddPostForm'
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
 import { PostType } from '../../../../types/enums/PostType'
 import { CurrencyType } from '../../../../types/enums/CurrencyType'
 import { PromoType } from '../../../../types/enums/PromoType'
 import { TranslocoService, TranslocoDirective } from '@jsverse/transloco'
 import { ConditionType } from '../../../../types/enums/ConditionType'
-import { SelectChipM } from '../../../../components/select-chip/select-ship'
+import { SelectChip } from '../../../../components/select-chip/select-ship'
 import { SvgIconComponent } from 'angular-svg-icon'
 import { Input } from '../../../../components/input/input'
 import { NgTemplateOutlet } from '@angular/common'
@@ -24,6 +24,8 @@ import { ApiService } from '../../../../services/http/api.service'
 import { Button } from '../../../../components/button/button'
 import { Router } from '@angular/router'
 import { scrollToFirstElement } from '../../../../utils/ScrollToFirstElement'
+import { DynamicFormService } from '../../../../services/dynamic-form.service'
+import { YesNo } from '../../../../types/enums/YesNo'
 
 type PreviewFile = { file: File; url: string }
 
@@ -33,7 +35,7 @@ type PreviewFile = { file: File; url: string }
   providers: [FormService],
   imports: [
     Dropdown,
-    SelectChipM,
+    SelectChip,
     SvgIconComponent,
     NgTemplateOutlet,
     Input,
@@ -53,14 +55,16 @@ export class AddAdvertisement implements OnDestroy {
   public files = signal<PreviewFile[] | null>(null)
 
   public addPostState?: ReturnType<ApiService['addPost']>
-  public getCategoryAttributeById?: ReturnType<ApiService['getCategoryAttributeById']>
+  public mainCharacteristicsState?: ReturnType<ApiService['getCategoryAttributeById']>
 
   public constructor(
     private readonly zod: Zod,
     private readonly apiService: ApiService,
     private readonly router: Router,
+    private readonly fb: FormBuilder,
     public readonly addAd: AddAdvertisementService,
     public readonly adForm: FormService<IAddPostForm>,
+    public readonly mainCharacteristicsForm: DynamicFormService,
     public readonly ts: TranslocoService
   ) {
     this.adForm.setForm(
@@ -160,10 +164,16 @@ export class AddAdvertisement implements OnDestroy {
     effect(() => (this.addAd.title = this.adForm.getControlSignal('title')() as string))
   }
 
-  public getMainCharacteristics = async (): Promise<void> => {
-    this.getCategoryAttributeById = this.apiService.getCategoryAttributeById({
+  public async getMainCharacteristics(): Promise<void> {
+    this.mainCharacteristicsState = this.apiService.getCategoryAttributeById({
       searchParams: {
         id: this.adForm.getControlSignal('categoryId')(),
+      },
+      onSuccess: () => {
+        const attributes = this.mainCharacteristicsState?.data()
+        if (attributes?.length) {
+          this.mainCharacteristicsForm.buildForm(attributes)
+        }
       },
     })
   }
@@ -183,10 +193,32 @@ export class AddAdvertisement implements OnDestroy {
   public onSubmit(): void {
     this.adForm.submit({
       onSuccess: () => {
-        this.addPostState = this.apiService.addPost({
-          form: this.adForm.form,
-          formData: this.adForm.getFormData(),
-          onSuccess: () => this.router.navigate(['/']),
+        this.mainCharacteristicsForm.submit({
+          onSuccess: () => {
+            const adValues = this.adForm.getValues()
+            const attributes = this.mainCharacteristicsForm.getValues()
+
+            const formData = new FormData()
+
+            Object.entries(adValues).forEach(([key, value]) => {
+              if (value === null || value === undefined) return
+              if (Array.isArray(value) && value[0] instanceof File) {
+                value.forEach((file) => formData.append(key, file))
+              } else if (value instanceof File) {
+                formData.append(key, value)
+              } else {
+                formData.append(key, String(value))
+              }
+            })
+
+            formData.append('attributesJson', JSON.stringify(attributes))
+
+            this.addPostState = this.apiService.addPost({
+              formData,
+              onSuccess: () => this.router.navigate(['/']),
+            })
+          },
+          onFailure: () => scrollToFirstElement('.has-error'),
         })
       },
       onFailure: () => scrollToFirstElement('.has-error'),
@@ -388,6 +420,17 @@ export class AddAdvertisement implements OnDestroy {
 
   public get conditionTypeValues(): ConditionType[] {
     return Object.values(ConditionType).filter((v) => typeof v === 'number') as ConditionType[]
+  }
+
+  public get yesNoItems(): Record<YesNo, string> {
+    return {
+      [YesNo.Yes]: this.ts.translate('common.yes'),
+      [YesNo.No]: this.ts.translate('common.no'),
+    }
+  }
+
+  public get yesNoValues(): YesNo[] {
+    return Object.values(YesNo).filter((v) => typeof v === 'number') as YesNo[]
   }
 
   public get vipDays(): DropdownEl[] {

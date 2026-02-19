@@ -3,7 +3,9 @@
   "langCode": "en",
   "langAbbr": "Eng",
   "common": {
-    "search": "Search"
+    "search": "Search",
+    "yes": "Yes",
+    "no": "No"
   },
   "auth": {
     "emailOrPhone": "Email or phone",
@@ -142,6 +144,8 @@
     "total": "Total",
     "totalPrice": "Total price",
     "cancel": "Cancel",
-    "publish": "Publish"
+    "publish": "Publish",
+    "mainCharacteristicsLabel": "Provide features to make it easier for customers to find your product/service",
+    "select": "Select"
   }
 }

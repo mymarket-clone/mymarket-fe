@@ -29,13 +29,13 @@
         variant="dynamic"
       />
       @if (!!adForm.getControl('categoryId').value && adForm.getControl('postType').value < 3) {
-      <select-ship
-        [control]="adForm.getControl('conditionType')"
-        [submitted]="adForm.submitted"
-        [items]="conditionTypeItems"
-        [values]="conditionTypeValues"
-        label="Condition of an item"
-      />
+        <select-ship
+          [control]="adForm.getControl('conditionType')"
+          [submitted]="adForm.submitted"
+          [items]="conditionTypeItems"
+          [values]="conditionTypeValues"
+          label="Condition of an item"
+        />
       }
     </div>
     <div class="rounded-xl bg-white p-6 md:p-10">
@@ -49,105 +49,106 @@
         "
       />
       @if (!adForm.getControl('images').value?.length) {
-      <div
-        (click)="filesInput.click()"
-        class="mt-6 flex items-center justify-start w-full border-dashed border-2 rounded-3xl border-yellow"
-      >
-        <div class="flex flex-row flex-1 -mx-1">
-          <div class="w-full">
-            <div class="outline-0 cursor-pointer rounded-3xl mb-0 md:p-8 w-full">
-              <div class="mx-auto py-6 lg:py-0">
-                <input
-                  (input)="onFilesSelected($event)"
-                  #filesInput
-                  multiple
-                  hidden
-                  type="file"
-                  accept="image/jpeg,.jpeg,.jpg,image/png,image/heic,.heic,image/heif,.heif,image/webp"
-                />
-                <div class="w-full text-center">
-                  <span class="flex justify-center min-h-9">
-                    <svg-icon src="assets/camera.svg" />
-                  </span>
-                  <span class="tbc-bold text-sm flex justify-center mt-2">
-                    {{ t('addPost.uploadPhoto') }}
-                  </span>
-                  <span class="tbc-bold text-xs flex justify-center mt-2 text-blue-gray">
-                    {{ t('addPost.maxPhoto') }}
-                  </span>
+        <div
+          (click)="filesInput.click()"
+          class="mt-6 flex items-center justify-start w-full border-dashed border-2 rounded-3xl border-yellow"
+        >
+          <div class="flex flex-row flex-1 -mx-1">
+            <div class="w-full">
+              <div class="outline-0 cursor-pointer rounded-3xl mb-0 md:p-8 w-full">
+                <div class="mx-auto py-6 lg:py-0">
+                  <input
+                    (input)="onFilesSelected($event)"
+                    #filesInput
+                    multiple
+                    hidden
+                    type="file"
+                    accept="image/jpeg,.jpeg,.jpg,image/png,image/heic,.heic,image/heif,.heif,image/webp"
+                  />
+                  <div class="w-full text-center">
+                    <span class="flex justify-center min-h-9">
+                      <svg-icon src="assets/camera.svg" />
+                    </span>
+                    <span class="tbc-bold text-sm flex justify-center mt-2">
+                      {{ t('addPost.uploadPhoto') }}
+                    </span>
+                    <span class="tbc-bold text-xs flex justify-center mt-2 text-blue-gray">
+                      {{ t('addPost.maxPhoto') }}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
       } @else {
-      <div class="flex flex-1 -mx-1 mt-6 flex-wrap">
-        <div
-          (click)="filesInput.click()"
-          class="cursor-pointer mb-2 w-32.5 h-32.5 flex items-center justify-start border-dashed border-2 rounded-3xl border-yellow"
-        >
-          <div class="flex justify-center items-center w-full">
-            <input
-              (input)="onFilesSelected($event)"
-              #filesInput
-              multiple
-              hidden
-              type="file"
-              accept="image/jpeg,.jpeg,.jpg,image/png,image/heic,.heic,image/heif,.heif,image/webp"
-            />
-            <div class="w-full text-center">
-              <span class="flex justify-center">
-                <svg-icon src="assets/camera-2.svg" />
-              </span>
+        <div class="flex flex-1 -mx-1 mt-6 flex-wrap">
+          <div
+            (click)="filesInput.click()"
+            class="cursor-pointer mb-2 w-32.5 h-32.5 flex items-center justify-start border-dashed border-2 rounded-3xl border-yellow"
+          >
+            <div class="flex justify-center items-center w-full">
+              <input
+                (input)="onFilesSelected($event)"
+                #filesInput
+                multiple
+                hidden
+                type="file"
+                accept="image/jpeg,.jpeg,.jpg,image/png,image/heic,.heic,image/heif,.heif,image/webp"
+              />
+              <div class="w-full text-center">
+                <span class="flex justify-center">
+                  <svg-icon src="assets/camera-2.svg" />
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-        @for (item of files(); track $index) {
-        <div class="relative group h-32.5 w-32.5 mb-2 mx-1">
-          <img
-            class="object-cover w-full h-full rounded-2xl transition-all duration-300 group-hover:brightness-50"
-            [src]="item.url"
-            alt="img"
-          />
+          @for (item of files(); track $index) {
+            <div class="relative group h-32.5 w-32.5 mb-2 mx-1">
+              <img
+                class="object-cover w-full h-full rounded-2xl transition-all duration-300 group-hover:brightness-50"
+                [src]="item.url"
+                alt="img"
+              />
 
-          @if ($first) {
-          <div
-            class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"
-          >
-            <button
-              type="button"
-              (click)="handleDeleteImage($index)"
-              class="cursor-pointer h-12 w-12 flex items-center justify-center rounded-xl hover:bg-[rgba(137,150,174,0.4)] transition-colors duration-500"
-            >
-              <svg-icon src="assets/img-delete.svg" class="w-6 h-6 text-white" />
-            </button>
-          </div>
-          } @else {
-          <div
-            class="absolute inset-0 flex items-center justify-center gap-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"
-          >
-            <button
-              type="button"
-              (click)="handleMainImage($index)"
-              class="cursor-pointer h-12 w-12 flex items-center justify-center rounded-xl hover:bg-[rgba(137,150,174,0.4)] transition-colors duration-500"
-            >
-              <svg-icon src="assets/camera-2.svg" class="w-8 h-8 text-white" />
-            </button>
-            <button
-              type="button"
-              (click)="handleDeleteImage($index)"
-              class="cursor-pointer h-12 w-12 flex items-center justify-center rounded-xl hover:bg-[rgba(137,150,174,0.4)] transition-colors duration-500"
-            >
-              <svg-icon src="assets/img-delete.svg" class="w-6 h-6 text-white" />
-            </button>
-          </div>
+              @if ($first) {
+                <div
+                  class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"
+                >
+                  <button
+                    type="button"
+                    (click)="handleDeleteImage($index)"
+                    class="cursor-pointer h-12 w-12 flex items-center justify-center rounded-xl hover:bg-[rgba(137,150,174,0.4)] transition-colors duration-500"
+                  >
+                    <svg-icon src="assets/img-delete.svg" class="w-6 h-6 text-white" />
+                  </button>
+                </div>
+              } @else {
+                <div
+                  class="absolute inset-0 flex items-center justify-center gap-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"
+                >
+                  <button
+                    type="button"
+                    (click)="handleMainImage($index)"
+                    class="cursor-pointer h-12 w-12 flex items-center justify-center rounded-xl hover:bg-[rgba(137,150,174,0.4)] transition-colors duration-500"
+                  >
+                    <svg-icon src="assets/camera-2.svg" class="w-8 h-8 text-white" />
+                  </button>
+                  <button
+                    type="button"
+                    (click)="handleDeleteImage($index)"
+                    class="cursor-pointer h-12 w-12 flex items-center justify-center rounded-xl hover:bg-[rgba(137,150,174,0.4)] transition-colors duration-500"
+                  >
+                    <svg-icon src="assets/img-delete.svg" class="w-6 h-6 text-white" />
+                  </button>
+                </div>
+              }
+            </div>
           }
         </div>
-        }
-      </div>
-      } @if(adForm.submitted && !adForm.getControl('images').value?.length) {
-      <div class="text-red-500 tbc-medium text-xs mt-1 has-error">{{ t('addPost.imageRequired') }} *</div>
+      }
+      @if (adForm.submitted && !adForm.getControl('images').value?.length) {
+        <div class="text-red-500 tbc-medium text-xs mt-1 has-error">{{ t('addPost.imageRequired') }} *</div>
       }
       <app-input
         [control]="adForm.getControl('youtubeLink')"
@@ -159,7 +160,71 @@
       />
     </div>
     <div class="rounded-xl bg-white p-6 md:p-10">
-      <h1 class="text-sm tbc-bold leading-5 mb-6">{{ t('addPost.productDetails') }}</h1>
+      @if (mainCharacteristicsState?.data()) {
+        <ng-container
+          *ngTemplateOutlet="
+            note;
+            context: {
+              text: t('addPost.mainCharacteristicsLabel'),
+            }
+          "
+        />
+        <h1 class="text-sm tbc-bold leading-5 mb-5 mt-6">{{ t('addPost.mainCharacteristics') }}</h1>
+        @for (item of mainCharacteristicsState?.data(); track $index) {
+          @switch (item.attributeType) {
+            @case (4) {
+              <select-ship
+                [required]="item.isRequired"
+                [control]="mainCharacteristicsForm.getControl(item.attributeId)"
+                [submitted]="mainCharacteristicsForm.submitted"
+                [values]="yesNoValues"
+                [items]="yesNoItems"
+                [label]="item.attributeName"
+              />
+            }
+            @case (3) {
+              <app-dropdown
+                [required]="item.isRequired"
+                [control]="mainCharacteristicsForm.getControl(item.attributeId)"
+                [submitted]="mainCharacteristicsForm.submitted"
+                [dataList]="item.options"
+                [label]="item.attributeName"
+                [defaultLabel]="t('addPost.select')"
+                variant="static"
+                class="dynamic-dropdown inline-block max-w-1/2 w-full odd:pr-3.75 even:pl-3.75"
+              />
+            }
+            @case (2) {
+              <app-input
+                [required]="item.isRequired"
+                [control]="mainCharacteristicsForm.getControl(item.attributeId)"
+                [submitted]="mainCharacteristicsForm.submitted"
+                [label]="item.attributeName"
+                [trailingBorderContent]="item.unitName ? unit : undefined"
+                [trailingBorderContext]="item.unitName ? { $implicit: item.unitName } : undefined"
+                [maxValue]="100000"
+                variant="static"
+                type="number"
+                class="w-56.25"
+              />
+            }
+            @case (1) {
+              <app-input
+                [required]="item.isRequired"
+                [control]="mainCharacteristicsForm.getControl(item.attributeId)"
+                [submitted]="mainCharacteristicsForm.submitted"
+                [label]="item.attributeName"
+                [trailingBorderContent]="item.unitName ? unit : undefined"
+                [trailingBorderContext]="item.unitName ? { $implicit: item.unitName } : undefined"
+                variant="static"
+                type="text"
+                class="w-56.25"
+              />
+            }
+          }
+        }
+      }
+      <h1 class="text-sm tbc-bold leading-5 mb-6 mt-6">{{ t('addPost.productDetails') }}</h1>
       <ng-container
         *ngTemplateOutlet="
           note;
@@ -303,101 +368,105 @@
       <div class="w-full p-6 bg-blue-10 rounded-b-2xl">
         <div class="flex gap-4 md:gap-3 flex-wrap md:flex-nowrap">
           @for (item of promoService; track $index) {
-          <div
-            (click)="onCardSelect(item.type)"
-            [class.outline-green-10!]="adForm.getControl('promoType').value === item.type"
-            [class.outline!]="adForm.getControl('promoType').value === item.type"
-            [class.hover:outline!]="adForm.getControl('promoType').value !== item.type"
-            [class.hover:outline-raisin-30!]="adForm.getControl('promoType').value !== item.type"
-            class="select-none relative outline-1 p-2.5 w-full rounded-2xl cursor-pointer flex flex-col bg-white justify-between"
-          >
-            <div>
-              @if ($last) {
-              <div
-                class="bg-green-10 text-[10px] absolute top-0 left-0 right-0 h-5.5 flex items-center justify-center z-1 text-white rounded-t-2xl"
-              >
-                {{ t('addPost.recommended') }}
-              </div>
-              }
-              <div [class.pt-4]="$last" class="flex justify-between mb-4 w-full">
-                <div [class]="item.color" class="tbc-bold text-[16px]">{{ item.title }}</div>
-                <div
-                  [style.background]="item.bg"
-                  class="h-9 w-9 flex items-center justify-center rounded-[10px]"
-                >
-                  <svg-icon class="h-5.5 w-5.5" [src]="item.iconSrc" />
-                </div>
-              </div>
-              <div class="flex flex-col text-xs mb-4 leading-4 gap-y-1.5">
-                @for (feature of item.features; track $index) {
-                <div class="flex text-wrap">
-                  <span class="inline-block mr-1 mt-0.5">
-                    <svg-icon src="assets/check-circle.svg" />
-                  </span>
-                  {{ feature }}
-                </div>
+            <div
+              (click)="onCardSelect(item.type)"
+              [class.outline-green-10!]="adForm.getControl('promoType').value === item.type"
+              [class.outline!]="adForm.getControl('promoType').value === item.type"
+              [class.hover:outline!]="adForm.getControl('promoType').value !== item.type"
+              [class.hover:outline-raisin-30!]="adForm.getControl('promoType').value !== item.type"
+              class="select-none relative outline-1 p-2.5 w-full rounded-2xl cursor-pointer flex flex-col bg-white justify-between"
+            >
+              <div>
+                @if ($last) {
+                  <div
+                    class="bg-green-10 text-[10px] absolute top-0 left-0 right-0 h-5.5 flex items-center justify-center z-1 text-white rounded-t-2xl"
+                  >
+                    {{ t('addPost.recommended') }}
+                  </div>
                 }
-              </div>
-            </div>
-            <div>
-              <div class="w-full h-px bg-gray-90 mb-4"></div>
-              <div class="flex justify-between items-center">
-                <div class="flex items-center">
-                  <span class="tbc-bold text-sm text-nowrap text-black-20">{{ item.price[0] }}₾</span>
-                  <span class="text-xs tbc-medium text-nowrap text-gray-110">/1 {{ t('addPost.day') }}</span>
+                <div [class.pt-4]="$last" class="flex justify-between mb-4 w-full">
+                  <div [class]="item.color" class="tbc-bold text-[16px]">{{ item.title }}</div>
+                  <div
+                    [style.background]="item.bg"
+                    class="h-9 w-9 flex items-center justify-center rounded-[10px]"
+                  >
+                    <svg-icon class="h-5.5 w-5.5" [src]="item.iconSrc" />
+                  </div>
                 </div>
+                <div class="flex flex-col text-xs mb-4 leading-4 gap-y-1.5">
+                  @for (feature of item.features; track $index) {
+                    <div class="flex text-wrap">
+                      <span class="inline-block mr-1 mt-0.5">
+                        <svg-icon src="assets/check-circle.svg" />
+                      </span>
+                      {{ feature }}
+                    </div>
+                  }
+                </div>
+              </div>
+              <div>
+                <div class="w-full h-px bg-gray-90 mb-4"></div>
+                <div class="flex justify-between items-center">
+                  <div class="flex items-center">
+                    <span class="tbc-bold text-sm text-nowrap text-black-20">{{ item.price[0] }}₾</span>
+                    <span class="text-xs tbc-medium text-nowrap text-gray-110"
+                      >/1 {{ t('addPost.day') }}</span
+                    >
+                  </div>
 
-                <div>
-                  <span
-                    [class.border-green-10!]="adForm.getControl('promoType').value === item.type"
-                    [class.border-[6px]!]="adForm.getControl('promoType').value === item.type"
-                    class="flex shrink w-4.5 h-4.5 rounded-full border-2 border-raisin-30"
-                  ></span>
+                  <div>
+                    <span
+                      [class.border-green-10!]="adForm.getControl('promoType').value === item.type"
+                      [class.border-[6px]!]="adForm.getControl('promoType').value === item.type"
+                      class="flex shrink w-4.5 h-4.5 rounded-full border-2 border-raisin-30"
+                    ></span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
           }
         </div>
         @if (!!adForm.getControl('promoType').value && !!totalPrice().length) {
-        <div
-          class="flex flex-col gap-3 md:gap-0 md:flex-row justify-between items-center bg-white px-4 py-3.5 mt-6 rounded-[14px]"
-        >
-          <div class="text-sm flex justify-start w-full">
-            <span>{{ t('addPost.chooseDaysNumber') }}</span>
-          </div>
-          <div class="flex justify-start items-center gap-6 w-full">
-            <div class="md:ml-4 ml-0 basis-25 sm:basis-auto grow sm:grow-0 w-full">
-              <app-dropdown
-                [control]="adForm.getControl('promoDays')"
-                [submitted]="adForm.submitted"
-                [dataList]="promoDaysList()"
-                [hightlightLabel]="true"
-                [contentWidth]="true"
-                variant="static"
-                itemStyle="small"
-                defaultLabel="Choose"
-                class="block w-full"
-              />
+          <div
+            class="flex flex-col gap-3 md:gap-0 md:flex-row justify-between items-center bg-white px-4 py-3.5 mt-6 rounded-[14px]"
+          >
+            <div class="text-sm flex justify-start w-full">
+              <span>{{ t('addPost.chooseDaysNumber') }}</span>
             </div>
-            <div class="md:ml-auto flex md:justify-center items-center text-nowrap">
-              @if (finalPrice && salePrice) { @if (salePrice > finalPrice) {
-              <span class="tbc-bold text-sm text-nowrap mr-1.5 text-red-500 leading-5 relative top-px">
-                {{ finalPrice }} ₾
-              </span>
-              <span>
-                <span class="tbc-medium text-sm line-through text-gray-110"> {{ salePrice }} </span>
-                <span class="text-nowrap text-xs text-gray-110"> ₾/{{t('addPost.total')}}</span>
-              </span>
-              } @else {
-              <span>
-                <span class="tbc-medium text-sm text-gray-110"> {{ finalPrice }} </span>
-                <span class="text-nowrap text-xs text-gray-110"> ₾/{{t('addPost.total')}}</span>
-              </span>
-              } }
+            <div class="flex justify-start items-center gap-6 w-full">
+              <div class="md:ml-4 ml-0 basis-25 sm:basis-auto grow sm:grow-0 w-full">
+                <app-dropdown
+                  [control]="adForm.getControl('promoDays')"
+                  [submitted]="adForm.submitted"
+                  [dataList]="promoDaysList()"
+                  [hightlightLabel]="true"
+                  [contentWidth]="true"
+                  variant="static"
+                  itemStyle="small"
+                  defaultLabel="Choose"
+                  class="block w-full"
+                />
+              </div>
+              <div class="md:ml-auto flex md:justify-center items-center text-nowrap">
+                @if (finalPrice && salePrice) {
+                  @if (salePrice > finalPrice) {
+                    <span class="tbc-bold text-sm text-nowrap mr-1.5 text-red-500 leading-5 relative top-px">
+                      {{ finalPrice }} ₾
+                    </span>
+                    <span>
+                      <span class="tbc-medium text-sm line-through text-gray-110"> {{ salePrice }} </span>
+                      <span class="text-nowrap text-xs text-gray-110"> ₾/{{ t('addPost.total') }}</span>
+                    </span>
+                  } @else {
+                    <span>
+                      <span class="tbc-medium text-sm text-gray-110"> {{ finalPrice }} </span>
+                      <span class="text-nowrap text-xs text-gray-110"> ₾/{{ t('addPost.total') }}</span>
+                    </span>
+                  }
+                }
+              </div>
             </div>
           </div>
-        </div>
         }
       </div>
       <div class="tbc-medium text-xs mb-3 mt-6 mx-6 rounded-2xl text-gray-120">
@@ -493,15 +562,15 @@
       </div>
 
       @if (showPriceFinal()) {
-      <div class="px-6 mt-6 flex justify-end items-center">
-        <span class="tbc-regular text-xs text-gray-140">{{ t('addPost.totalPrice') }}</span>
-        <span class="tbc-bold text-[16px] text-raisin-150 ml-2">{{ showPriceFinal().toFixed(2) }}₾</span>
-        @if (showPriceFinal() < showPriceSale()) {
-        <span class="tbc-tegular text-sm text-gray-50 ml-2 line-through">
-          {{ showPriceSale().toFixed(2) }}₾
-        </span>
-        }
-      </div>
+        <div class="px-6 mt-6 flex justify-end items-center">
+          <span class="tbc-regular text-xs text-gray-140">{{ t('addPost.totalPrice') }}</span>
+          <span class="tbc-bold text-[16px] text-raisin-150 ml-2">{{ showPriceFinal().toFixed(2) }}₾</span>
+          @if (showPriceFinal() < showPriceSale()) {
+            <span class="tbc-tegular text-sm text-gray-50 ml-2 line-through">
+              {{ showPriceSale().toFixed(2) }}₾
+            </span>
+          }
+        </div>
       }
     </div>
     <div class="rounded-xl bg-white p-6 md:p-10 mt-7 mb-32">
@@ -526,33 +595,33 @@
     >
       <ng-container
         *ngTemplateOutlet="
-      stat;
-      context: {
-        label: t('addPost.views'),
-        icon: 'assets/eye.svg',
-        percentage: addAd.calcViews(),
-      }
-    "
+          stat;
+          context: {
+            label: t('addPost.views'),
+            icon: 'assets/eye.svg',
+            percentage: addAd.calcViews(),
+          }
+        "
       />
       <ng-container
         *ngTemplateOutlet="
-      stat;
-      context: {
-        label: t('addPost.calls'),
-        icon: 'assets/phone.svg',
-        percentage: addAd.calcCalls(),
-      }
-    "
+          stat;
+          context: {
+            label: t('addPost.calls'),
+            icon: 'assets/phone.svg',
+            percentage: addAd.calcCalls(),
+          }
+        "
       />
       <ng-container
         *ngTemplateOutlet="
-      stat;
-      context: {
-        label: t('addPost.favourites'),
-        icon: 'assets/favourite.svg',
-        percentage: addAd.calcFavourites(),
-      }
-    "
+          stat;
+          context: {
+            label: t('addPost.favourites'),
+            icon: 'assets/favourite.svg',
+            percentage: addAd.calcFavourites(),
+          }
+        "
       />
     </ul>
   </div>
@@ -566,11 +635,11 @@
         <p class="tbc-medium text-[10px] text-gray-120 mb-0">{{ label }}</p>
       </div>
       @if (percentage > 10) {
-      <div class="flex items-center gap-0.75">
-        <i class="svg-i double-arrow-i"></i>
-        <svg-icon src="assets/double-arrow.svg" />
-        <p class="tbc-bold text-raisin-150 text-xs mb-0">{{ (percentage * 10).toFixed(0) }}%</p>
-      </div>
+        <div class="flex items-center gap-0.75">
+          <i class="svg-i double-arrow-i"></i>
+          <svg-icon src="assets/double-arrow.svg" />
+          <p class="tbc-bold text-raisin-150 text-xs mb-0">{{ (percentage * 10).toFixed(0) }}%</p>
+        </div>
       }
     </div>
     <div class="w-full h-1.25 bg-gray-130 rounded-[2.5px] overflow-hidden">
@@ -603,13 +672,17 @@
     </div>
     <div class="text-xs tbc-regular">{{ text }}</div>
     @if (required) {
-    <span class="text-red-500 ml-1">*</span>
+      <span class="text-red-500 ml-1">*</span>
     }
   </div>
 </ng-template>
 
 <ng-template #percentage>
   <div class="py-1.5 px-3 flex items-center text-xs">%</div>
+</ng-template>
+
+<ng-template #unit let-unit>
+  <div class="py-1.5 px-3 flex items-center text-xs">{{ unit }}</div>
 </ng-template>
 
 <ng-template
@@ -631,30 +704,30 @@
   </div>
 
   @if (isOpen()) {
-  <app-input
-    [control]="titleControl"
-    [submitted]="adForm.submitted"
-    [required]="true"
-    [hightlightLabel]="true"
-    label="Title"
-    variant="static"
-  />
+    <app-input
+      [control]="titleControl"
+      [submitted]="adForm.submitted"
+      [required]="true"
+      [hightlightLabel]="true"
+      label="Title"
+      variant="static"
+    />
 
-  <app-text-editor [control]="descControl" [submitted]="adForm.submitted" label="Description" />
+    <app-text-editor [control]="descControl" [submitted]="adForm.submitted" label="Description" />
   }
 </ng-template>
 
 <ng-template #priceSection let-price="price">
   <span *transloco="let t">
     @if (price) {
-    <span class="tbc-bold text-sm pr-0.5">{{ price.toFixed(2) }} ₾</span>
-    <span class="text-nowrap text-xs text-gray-110">/Total</span>
+      <span class="tbc-bold text-sm pr-0.5">{{ price.toFixed(2) }} ₾</span>
+      <span class="text-nowrap text-xs text-gray-110">/Total</span>
     } @else {
-    <span class="tbc-bold text-sm">
-      <span class="tbc-bold pr-0.5 inline-block">0.00</span>
-      ₾
-    </span>
-    <span class="text-nowrap text-xs text-gray-110">/1 {{ t('addPost.day') }}</span>
+      <span class="tbc-bold text-sm">
+        <span class="tbc-bold pr-0.5 inline-block">0.00</span>
+        ₾
+      </span>
+      <span class="text-nowrap text-xs text-gray-110">/1 {{ t('addPost.day') }}</span>
     }
   </span>
 </ng-template>

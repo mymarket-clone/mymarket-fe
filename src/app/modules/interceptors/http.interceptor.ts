@@ -5,6 +5,7 @@ import { BehaviorSubject, throwError } from 'rxjs'
 import { catchError, filter, mergeMap, take } from 'rxjs/operators'
 import { ApiService } from '../../services/http/api.service'
 import { UserStore } from '../../stores/user.store'
+import { TranslocoService } from '@jsverse/transloco'
 
 let isRefreshing = false
 const refreshTokenSubject = new BehaviorSubject<string | null>(null)
@@ -13,10 +14,18 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router)
   const apiService = inject(ApiService)
   const userStore = inject(UserStore)
+  const transloco = inject(TranslocoService)
 
   const currentUser = userStore.getUser()
   const accessToken = currentUser?.accessToken
-  const authReq = accessToken ? req.clone({ setHeaders: { Authorization: `Bearer ${accessToken}` } }) : req
+  const authReq = accessToken
+    ? req.clone({
+        setHeaders: {
+          Authorization: `Bearer ${accessToken}`,
+          ['Accept-Language']: transloco.getActiveLang(),
+        },
+      })
+    : req
 
   if (req.url.includes('/refresh')) return next(authReq)
 

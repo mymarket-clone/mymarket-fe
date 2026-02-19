@@ -8,7 +8,7 @@ export type HttpRequestOptions<DataType, BodyType> = {
   endpoint: string
   searchParams?: SearchParams
   body?: BodyType
-  form?: FormGroup
+  form?: FormGroup | FormGroup[]
   formData?: FormData
   onSuccess?: (data: DataType) => void
   onError?: (errors: Record<string, string[]>, record?: IBaseError) => void

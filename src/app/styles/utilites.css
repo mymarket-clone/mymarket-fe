@@ -48,4 +48,9 @@
   .bg-yellow-gradient {
     background: linear-gradient(180deg, #fcc000, #fdcd33) !important;
   }
+
+  .dynamic-dropdown>div>label {
+    margin-bottom: 4px;
+    margin-top: 8px;
+  }
 }

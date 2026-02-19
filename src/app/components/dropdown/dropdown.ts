@@ -16,7 +16,6 @@ import { ReactiveFormsModule } from '@angular/forms'
 import { SvgIconComponent } from 'angular-svg-icon'
 import { ApiService } from '../../services/http/api.service'
 import { IHttpService } from '../../interfaces/common/IHttpService'
-import { ICategoryFlat } from '../../interfaces/response/ICategoryFlat'
 import { DropdownEl, WithName } from '../../types/DropdownEl'
 
 @Component({
@@ -46,7 +45,7 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
 
   public inputValue = signal<string>('')
   public selecting = signal<boolean>(false)
-  public dataState = signal<IHttpService<any> | null>(null)
+
   public currentData = signal<any | undefined | null>(null)
   public selectedItemRoute = signal<string[] | null>(null)
   public currentLabel = signal<string | undefined>(undefined)
@@ -54,6 +53,8 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
   private dropRootEl = viewChild<ElementRef<HTMLElement>>('dropRootEl')
   private dropMenuEl = viewChild<ElementRef<HTMLElement>>('dropMenuEl')
   private dropEl = viewChild<ElementRef<HTMLInputElement>>('dropEl')
+
+  public dataState?: IHttpService<any>
 
   public constructor(
     private readonly apiService: ApiService,
@@ -68,7 +69,7 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
 
   public ngOnInit(): void {
     if (!this.currentLabel()?.length && this.dataEndpoint()) {
-      this.dataState.set(this.apiService[this.dataEndpoint()!]() as IHttpService<ICategoryFlat[]>)
+      this.dataState = this.apiService[this.dataEndpoint()!]() as IHttpService<any>
     }
   }
 
@@ -88,7 +89,7 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
   }
 
   public goDeepInCategory(id: number): void {
-    const data = this.dataState()?.data()
+    const data = this.dataState?.data()
     if (!data) return
 
     const selectedCategory = data.find((c: any) => c.id === id)
@@ -110,7 +111,7 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
   }
 
   public goHigherInCategory(): void {
-    const data = this.dataState()?.data()
+    const data = this.dataState?.data()
     const route = this.selectedItemRoute()
 
     if (!data || !route || route.length === 0) return
@@ -140,8 +141,9 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
   }
 
   public setItem(element: DropdownEl): void {
+    const control = this.control()
     this.currentLabel.set(element.name)
-    this.control().setValue(element.value ?? (element as WithName).id)
+    control?.setValue(element.value ?? (element as WithName).id)
     this.selecting.set(false)
     this.inputValue.set('')
     this.dropEl()!.nativeElement.value = ''
@@ -161,13 +163,13 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
   }
 
   private updateCurrentDataFromState(): void {
-    const data = this.dataState()?.data()
+    const data = this.dataState
     if (data) this.currentData.set(data)
   }
 
   private applyDataFilter(): void {
     const filter = this.dataFilter()
-    const data = this.dataState()?.data()
+    const data = this.dataState?.data()
     if (!data) return
 
     let targetData = data.filter((c: any) => c.parentId === null)

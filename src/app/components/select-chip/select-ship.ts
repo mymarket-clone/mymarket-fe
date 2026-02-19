@@ -5,7 +5,7 @@ import { BaseInput } from '../../shared/components/base-input'
   selector: 'select-ship',
   templateUrl: './select-ship.html',
 })
-export class SelectChipM extends BaseInput {
+export class SelectChip extends BaseInput {
   public items = input.required<Record<number | string, string> | null>()
   public values = input.required<number[] | string[]>()
   public onSelect = output()
