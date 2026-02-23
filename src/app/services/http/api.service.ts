@@ -122,6 +122,7 @@ export class ApiService extends HttpService implements IApiService {
   public addPost(options?: IServiceRequest<Partial<IAddPostPayload>, unknown>): IHttpService<unknown> {
     return this.request({
       method: HttpMethod.POST,
+      form: options?.form,
       formData: options?.formData,
       searchParams: options?.searchParams,
       endpoint: api.addPost,

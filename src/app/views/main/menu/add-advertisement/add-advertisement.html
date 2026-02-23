@@ -713,7 +713,12 @@
       variant="static"
     />
 
-    <app-text-editor [control]="descControl" [submitted]="adForm.submitted" label="Description" />
+    <app-text-editor
+      *transloco="let t"
+      [control]="descControl"
+      [submitted]="adForm.submitted"
+      [label]="t('addPost.description')"
+    />
   }
 </ng-template>
 

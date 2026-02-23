@@ -198,10 +198,16 @@ export class AddAdvertisement implements OnDestroy {
             const adValues = this.adForm.getValues()
             const attributes = this.mainCharacteristicsForm.getValues()
 
+            const attributesArray = Object.entries(attributes).map(([id, value]) => ({
+              id: Number(id),
+              value,
+            }))
+
             const formData = new FormData()
 
             Object.entries(adValues).forEach(([key, value]) => {
               if (value === null || value === undefined) return
+
               if (Array.isArray(value) && value[0] instanceof File) {
                 value.forEach((file) => formData.append(key, file))
               } else if (value instanceof File) {
@@ -211,11 +217,13 @@ export class AddAdvertisement implements OnDestroy {
               }
             })
 
-            formData.append('attributesJson', JSON.stringify(attributes))
+            formData.append('attributesJson', JSON.stringify(attributesArray))
 
             this.addPostState = this.apiService.addPost({
+              form: [this.adForm.form, this.mainCharacteristicsForm.form],
               formData,
               onSuccess: () => this.router.navigate(['/']),
+              onError: () => scrollToFirstElement('.has-error'),
             })
           },
           onFailure: () => scrollToFirstElement('.has-error'),

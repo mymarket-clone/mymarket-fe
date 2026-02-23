@@ -10,6 +10,7 @@
   <div class="flex gap-2.5 flex-wrap">
     @for (item of values(); track $index) {
       <div
+        [class.has-error]="hasError() && !hightlightLabel()"
         class="relative mb-2 flex justify-center items-center bg-gray-60 w-22.5 h-9.5 text-nowrap rounded-[44px]"
       >
         <label
@@ -23,4 +24,8 @@
       </div>
     }
   </div>
+
+  @if (hasError() && !hightlightLabel()) {
+    <span class="text-red-500 text-xs mt-1 px-2">{{ getError() }}</span>
+  }
 </div>

@@ -70,6 +70,17 @@ export class DynamicFormService {
     this.getControl(name).setErrors({ set: errorMessage })
   }
 
+  public applyServerErrors(errors: Record<string, string[]>): void {
+    Object.entries(errors).forEach(([key, messages]) => {
+      const control = this._form.controls[key]
+      if (!control) return
+
+      control.setErrors({ ...(control.errors ?? {}), server: messages })
+      control.markAsTouched()
+      control.updateValueAndValidity({ onlySelf: true, emitEvent: false })
+    })
+  }
+
   public setSubmitted(): void {
     this._submitted.set(true)
   }
