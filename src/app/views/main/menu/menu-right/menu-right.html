@@ -11,25 +11,34 @@
         <div class="bg-blue-gray h-0.5 w-12 my-3 mx-auto"></div>
         <ul class="flex flex-col gap-4 w-full mt-2">
           <ng-container
-            *ngTemplateOutlet="stat; context: {
-            label: t('addPost.views'),
-            icon: 'assets/eye.svg',
-            percentage: addAd.calcViews(),
-          }"
+            *ngTemplateOutlet="
+              stat;
+              context: {
+                label: t('addPost.views'),
+                icon: 'assets/eye.svg',
+                percentage: addAd.calcViews(),
+              }
+            "
           />
           <ng-container
-            *ngTemplateOutlet="stat; context: {
-            label: t('addPost.calls'),
-            icon: 'assets/phone.svg',
-            percentage: addAd.calcCalls(),
-          }"
+            *ngTemplateOutlet="
+              stat;
+              context: {
+                label: t('addPost.calls'),
+                icon: 'assets/phone.svg',
+                percentage: addAd.calcCalls(),
+              }
+            "
           />
           <ng-container
-            *ngTemplateOutlet="stat; context: {
-            label: t('addPost.favourites'),
-            icon: 'assets/favourite.svg',
-            percentage: addAd.calcFavourites(),
-          }"
+            *ngTemplateOutlet="
+              stat;
+              context: {
+                label: t('addPost.favourites'),
+                icon: 'assets/favourite.svg',
+                percentage: addAd.calcFavourites(),
+              }
+            "
           />
         </ul>
       </div>
@@ -45,10 +54,10 @@
         <p class="tbc-medium text-[10px] text-gray-120 mb-0">{{ label }}</p>
       </div>
       @if (percentage > 10) {
-      <div class="flex items-center gap-0.75">
-        <svg-icon src="assets/double-arrow.svg" />
-        <p class="tbc-bold text-raisin-150 text-xs mb-0">{{ percentage * 10 }}%</p>
-      </div>
+        <div class="flex items-center gap-0.75">
+          <svg-icon src="assets/double-arrow.svg" />
+          <p class="tbc-bold text-raisin-150 text-xs mb-0">{{ (percentage * 10).toFixed(0) }}%</p>
+        </div>
       }
     </div>
     <div class="w-full h-1.25 bg-gray-130 rounded-[2.5px] overflow-hidden">
