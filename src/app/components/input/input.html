@@ -106,9 +106,12 @@
             [class.border-blue-120!]="isFocused() || isHovered()"
             class="border-l border-gray-70 transition-all duration-200 ease-in-out flex"
           >
-            @if (trailingBorderContext()) {
-              <ng-container *ngTemplateOutlet="trailingBorderContent(); context: trailingBorderContext()" />
-            }
+            <ng-container
+              *ngTemplateOutlet="
+                trailingBorderContent();
+                context: trailingBorderContext() ? trailingBorderContext() : undefined
+              "
+            />
           </div>
         }
       </div>
