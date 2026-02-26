@@ -582,6 +582,7 @@
         />
         <app-button
           [title]="t('addPost.publish')"
+          [disabled]="addPostState?.loading() || false"
           iclass="bg-yellow-gradient bg-transparent text-black-20! rounded-xl tbc-bold px-8 text-sm hover:bg-yellow-gradient! leading-5.25! h-auto!"
         />
       </div>
