@@ -1,7 +1,7 @@
 import { AbstractControl, AsyncValidatorFn } from '@angular/forms'
 import { catchError, from, map, of } from 'rxjs'
 import { TranslocoService } from '@jsverse/transloco'
-import { api, API_URL } from '../api/api'
+import { API_URL } from '../api/api'
 
 export const userExistsValidator = (translocoService: TranslocoService): AsyncValidatorFn => {
   return (control: AbstractControl) => {
@@ -9,7 +9,7 @@ export const userExistsValidator = (translocoService: TranslocoService): AsyncVa
     if (!email) return of(null)
 
     return from(
-      fetch(`${API_URL}${api.userExists}/?email=${encodeURIComponent(email)}`, {
+      fetch(`${API_URL}user-exists/?email=${encodeURIComponent(email)}`, {
         method: 'GET',
       }).then((resp) => resp.status === 204)
     ).pipe(

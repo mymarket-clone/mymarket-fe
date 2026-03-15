@@ -15,6 +15,8 @@ import { Input } from '../../../components/input/input'
 import { HttpErrorCodes } from '../../../types/enums/HttpErrorCodes'
 import { TranslocoDirective } from '@jsverse/transloco'
 import { User } from '../../../types/User'
+import { IHttpService } from '../../../interfaces/common/IHttpService'
+import { HttpMethod } from '../../../types/enums/HttpMethod'
 
 @Component({
   selector: 'app-login',
@@ -33,10 +35,10 @@ import { User } from '../../../types/User'
 })
 export class Login {
   public showSites = signal<boolean>(false)
-  public loginState?: ReturnType<ApiService['loginUser']>
+  public loginState?: IHttpService<User>
 
   public constructor(
-    private readonly authService: ApiService,
+    private readonly apiService: ApiService,
     private readonly userStore: UserStore,
     private readonly router: Router,
     private readonly zod: Zod,
@@ -57,7 +59,9 @@ export class Login {
   public onSubmit(): void {
     this.loginFs.submit({
       onSuccess: () => {
-        this.loginState = this.authService.loginUser({
+        this.loginState = this.apiService.request({
+          method: HttpMethod.POST,
+          endpoint: 'auth/login-user',
           body: this.loginFs.getValues(),
           form: this.loginFs.form,
           onSuccess: (response) => {

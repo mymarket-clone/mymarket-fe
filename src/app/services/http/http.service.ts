@@ -12,7 +12,7 @@ export class HttpService {
   protected readonly httpClient = inject(HttpClient)
   protected readonly API_URL = API_URL
 
-  protected request<Data, Body = undefined>(options: HttpRequestOptions<Data, Body>): IHttpService<Data> {
+  public request<Data, Body = undefined>(options: HttpRequestOptions<Data, Body>): IHttpService<Data> {
     const { method, endpoint, searchParams, body, formData, onSuccess, onError, form } = options
 
     const loading = signal(false)

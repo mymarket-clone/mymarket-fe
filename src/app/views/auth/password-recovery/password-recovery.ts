@@ -13,6 +13,8 @@ import { Zod } from '../../../utils/Zod'
 import { HttpStatus } from '../../../types/enums/HttpStatus'
 import { HttpErrorCodes } from '../../../types/enums/HttpErrorCodes'
 import { TranslocoDirective } from '@jsverse/transloco'
+import { HttpMethod } from '../../../types/enums/HttpMethod'
+import { IHttpService } from '../../../interfaces/common/IHttpService'
 
 @Component({
   selector: 'app-password-recovery',
@@ -26,9 +28,9 @@ import { TranslocoDirective } from '@jsverse/transloco'
 export class PasswordRecovery {
   public passwordRecoveryStage = signal<PasswordRecoveryStage>('Verification')
 
-  public sendPasswordRecoveryState?: ReturnType<ApiService['sendPasswordRecovery']>
-  public verifyPasswordCodeState?: ReturnType<ApiService['verifyPasswordCode']>
-  public passwordRecoveryState?: ReturnType<ApiService['passwordRecovery']>
+  public sendPasswordRecoveryState?: IHttpService<void>
+  public verifyPasswordCodeState?: IHttpService<void>
+  public passwordRecoveryState?: IHttpService<void>
 
   public sendPasswordRecoveryFs = new FormService<ISendEmailVerificationForm>()
   public passwordEnterFs = new FormService<IPasswordEnterForm>()
@@ -74,7 +76,9 @@ export class PasswordRecovery {
     this.sendCodeActive.set(true)
     this.codeSendLoading.set(true)
 
-    this.sendPasswordRecoveryState = this.authService.sendPasswordRecovery({
+    this.sendPasswordRecoveryState = this.authService.request({
+      method: HttpMethod.POST,
+      endpoint: 'send-password-recovery',
       body: { email: emailControl.value as string },
       onSuccess: () => {
         this.codeSendLoading.set(false)
@@ -102,7 +106,9 @@ export class PasswordRecovery {
   public verifyCode(): void {
     this.sendPasswordRecoveryFs.submit({
       onSuccess: () => {
-        this.verifyPasswordCodeState = this.authService.verifyPasswordCode({
+        this.verifyPasswordCodeState = this.authService.request({
+          method: HttpMethod.POST,
+          endpoint: 'verify-password-code',
           body: this.sendPasswordRecoveryFs.getValues(),
           form: this.sendPasswordRecoveryFs.form,
           onSuccess: () => {
@@ -120,7 +126,9 @@ export class PasswordRecovery {
   public changePassword(): void {
     this.passwordEnterFs.submit({
       onSuccess: () => {
-        this.passwordRecoveryState = this.authService.passwordRecovery({
+        this.passwordRecoveryState = this.authService.request({
+          method: HttpMethod.POST,
+          endpoint: 'password-recovery',
           body: this.passwordEnterFs.getValues(),
           form: this.passwordEnterFs.form,
           onSuccess: () => this.router.navigate(['/user/login']),

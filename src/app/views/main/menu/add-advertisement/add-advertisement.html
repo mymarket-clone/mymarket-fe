@@ -23,7 +23,7 @@
         [dataFilter]="this.adForm.getControlSignal('postType')()!"
         [hightlightLabel]="true"
         (triggerParentOnDeepestSelect)="getMainCharacteristics()"
-        dataEndpoint="getCategories"
+        dataEndpoint="categories"
         label="Choose/type Category"
         placeholder="Choose/type Category"
         variant="dynamic"
@@ -160,7 +160,7 @@
       />
     </div>
     <div class="rounded-xl bg-white p-6 md:p-10">
-      @if (mainCharacteristicsState?.data()) {
+      @if (mainCharacteristicsState?.data()?.length) {
         <ng-container
           *ngTemplateOutlet="
             note;
@@ -338,7 +338,7 @@
         [control]="adForm.getControl('cityId')"
         [submitted]="adForm.submitted"
         [hightlightLabel]="true"
-        dataEndpoint="getAllCities"
+        dataEndpoint="cities"
         label="Select a location"
         variant="static"
       />

@@ -17,6 +17,7 @@ import { SvgIconComponent } from 'angular-svg-icon'
 import { ApiService } from '../../services/http/api.service'
 import { IHttpService } from '../../interfaces/common/IHttpService'
 import { DropdownEl, WithName } from '../../types/DropdownEl'
+import { HttpMethod } from '../../types/enums/HttpMethod'
 
 @Component({
   selector: 'app-dropdown',
@@ -34,7 +35,7 @@ import { DropdownEl, WithName } from '../../types/DropdownEl'
   ],
 })
 export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
-  public dataEndpoint = input<keyof ApiService | undefined>(undefined)
+  public dataEndpoint = input<string | undefined>(undefined)
   public dataFilter = input<string | number | boolean | null | undefined>(null)
   public dataList = input<unknown[] | null>(null)
   public border = input<boolean>(true)
@@ -69,7 +70,10 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
 
   public ngOnInit(): void {
     if (!this.currentLabel()?.length && this.dataEndpoint()) {
-      this.dataState = this.apiService[this.dataEndpoint()!]() as IHttpService<any>
+      this.dataState = this.apiService.request({
+        method: HttpMethod.GET,
+        endpoint: this.dataEndpoint()!,
+      })
     }
   }
 

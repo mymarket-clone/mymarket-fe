@@ -20,6 +20,8 @@ import { Checkbox } from '../../../components/checkbox/checkbox'
 import { UserStore } from '../../../stores/user.store'
 import { PasswordStrength } from '../../../components/password-strength/password-strength'
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco'
+import { IHttpService } from '../../../interfaces/common/IHttpService'
+import { HttpMethod } from '../../../types/enums/HttpMethod'
 import { User } from '../../../types/User'
 
 @Component({
@@ -46,9 +48,9 @@ import { User } from '../../../types/User'
 export class Register implements OnInit {
   public registrationStage = signal<RegistrationStage>('Main')
 
-  public registerState?: ReturnType<ApiService['registerUser']>
-  public sendEmailVerificationCodeState?: ReturnType<ApiService['sendEmailVerificationCode']>
-  public verifyEmailCodeState?: ReturnType<ApiService['verifyEmailCode']>
+  public registerState?: IHttpService<void>
+  public sendEmailVerificationCodeState?: IHttpService<void>
+  public verifyEmailCodeState?: IHttpService<User>
 
   public registerFormMain = new FormService<IRegisterFormMain>()
   public registerFormExtra = new FormService<IRegisterFormExtra>()
@@ -147,7 +149,9 @@ export class Register implements OnInit {
   public registerUser(): void {
     this.registerFormExtra.submit({
       onSuccess: () => {
-        this.registerState = this.authService.registerUser({
+        this.registerState = this.authService.request({
+          method: HttpMethod.POST,
+          endpoint: 'register-user',
           body: {
             ...this.registerFormMain.getValues(),
             ...this.registerFormExtra.getValues(),
@@ -171,7 +175,9 @@ export class Register implements OnInit {
   }
 
   public verifyEmail(): void {
-    this.verifyEmailCodeState = this.authService.verifyEmailCode({
+    this.verifyEmailCodeState = this.authService.request({
+      method: HttpMethod.POST,
+      endpoint: 'verify-email-code',
       body: this.registerFormVerification.getValues(),
       form: this.registerFormVerification.form,
       onSuccess: (response) => {
@@ -193,7 +199,9 @@ export class Register implements OnInit {
       return
     }
 
-    this.sendEmailVerificationCodeState = this.authService.sendEmailVerificationCode({
+    this.sendEmailVerificationCodeState = this.authService.request({
+      method: HttpMethod.POST,
+      endpoint: 'send-email-verification-code',
       body: { email: emailControl.value as string },
       onSuccess: () => {
         this.codeSent.set(true)

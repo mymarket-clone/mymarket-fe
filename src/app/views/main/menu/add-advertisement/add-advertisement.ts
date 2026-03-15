@@ -26,6 +26,9 @@ import { Router } from '@angular/router'
 import { scrollToFirstElement } from '../../../../utils/ScrollToFirstElement'
 import { DynamicFormService } from '../../../../services/dynamic-form.service'
 import { YesNo } from '../../../../types/enums/YesNo'
+import { IHttpService } from '../../../../interfaces/common/IHttpService'
+import { HttpMethod } from '../../../../types/enums/HttpMethod'
+import { ICategoryAttributeOptions } from '../../../../interfaces/response/ICategoryAttributeOptions'
 
 type PreviewFile = { file: File; url: string }
 
@@ -54,8 +57,8 @@ export class AddAdvertisement implements OnDestroy {
   public firstInvalidControl = signal<string | null>(null)
   public files = signal<PreviewFile[] | null>(null)
 
-  public addPostState?: ReturnType<ApiService['addPost']>
-  public mainCharacteristicsState?: ReturnType<ApiService['getCategoryAttributeById']>
+  public addPostState?: IHttpService<unknown>
+  public mainCharacteristicsState?: IHttpService<ICategoryAttributeOptions[]>
 
   public constructor(
     private readonly zod: Zod,
@@ -165,10 +168,9 @@ export class AddAdvertisement implements OnDestroy {
   }
 
   public async getMainCharacteristics(): Promise<void> {
-    this.mainCharacteristicsState = this.apiService.getCategoryAttributeById({
-      searchParams: {
-        id: this.adForm.getControlSignal('categoryId')(),
-      },
+    this.mainCharacteristicsState = this.apiService.request({
+      method: HttpMethod.GET,
+      endpoint: `categories/${this.adForm.getControlSignal('categoryId')()}/attributes`,
       onSuccess: () => {
         const attributes = this.mainCharacteristicsState?.data()
         if (attributes?.length) {
@@ -219,7 +221,9 @@ export class AddAdvertisement implements OnDestroy {
 
             formData.append('attributesJson', JSON.stringify(attributesArray))
 
-            this.addPostState = this.apiService.addPost({
+            this.addPostState = this.apiService.request({
+              method: HttpMethod.POST,
+              endpoint: 'posts',
               form: [this.adForm.form, this.mainCharacteristicsForm.form],
               formData,
               onSuccess: () => this.router.navigate(['/']),
