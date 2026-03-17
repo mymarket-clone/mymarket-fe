@@ -6,4 +6,5 @@ export interface ICategoryFlat {
   parentId?: number | null
   categoryPostType: PostType
   hasChildren: boolean
+  brandRequired: boolean
 }

@@ -22,7 +22,7 @@
         [submitted]="adForm.submitted"
         [dataFilter]="this.adForm.getControlSignal('postType')()!"
         [hightlightLabel]="true"
-        (triggerParentOnDeepestSelect)="getMainCharacteristics()"
+        (triggerParentOnDeepestSelect)="getMainCharacteristics($event)"
         dataEndpoint="categories"
         label="Choose/type Category"
         placeholder="Choose/type Category"
@@ -160,7 +160,7 @@
       />
     </div>
     <div class="rounded-xl bg-white p-6 md:p-10">
-      @if (mainCharacteristicsState?.data()?.length) {
+      @if (mainCharacteristicsState?.data()?.length || brandRequiredState?.data?.length) {
         <ng-container
           *ngTemplateOutlet="
             note;
@@ -169,70 +169,91 @@
             }
           "
         />
-        <h1 class="text-sm tbc-bold leading-5 mb-5 mt-6">{{ t('addPost.mainCharacteristics') }}</h1>
-        @for (item of mainCharacteristicsState?.data(); track $index) {
-          @switch (item.attributeType) {
-            @case (4) {
-              <select-ship
-                [required]="item.isRequired"
-                [control]="mainCharacteristicsForm.getControl(item.attributeId)"
-                [submitted]="mainCharacteristicsForm.submitted"
-                [values]="yesNoValues"
-                [items]="yesNoItems"
-                [label]="item.attributeName"
-              />
-            }
-            @case (3) {
-              <app-dropdown
-                [required]="item.isRequired"
-                [control]="mainCharacteristicsForm.getControl(item.attributeId)"
-                [submitted]="mainCharacteristicsForm.submitted"
-                [dataList]="item.options"
-                [label]="item.attributeName"
-                [defaultLabel]="t('addPost.select')"
-                variant="static"
-                class="dynamic-dropdown inline-block max-w-1/2 w-full odd:pr-3.75 even:pl-3.75"
-              />
-            }
-            @case (2) {
-              <app-input
-                [required]="item.isRequired"
-                [control]="mainCharacteristicsForm.getControl(item.attributeId)"
-                [submitted]="mainCharacteristicsForm.submitted"
-                [label]="item.attributeName"
-                [trailingBorderContent]="item.unitName ? unit : undefined"
-                [trailingBorderContext]="item.unitName ? { $implicit: item.unitName } : undefined"
-                [maxValue]="100000"
-                variant="static"
-                type="number"
-                class="w-56.25"
-              />
-            }
-            @case (1) {
-              <app-input
-                [required]="item.isRequired"
-                [control]="mainCharacteristicsForm.getControl(item.attributeId)"
-                [submitted]="mainCharacteristicsForm.submitted"
-                [label]="item.attributeName"
-                [trailingBorderContent]="item.unitName ? unit : undefined"
-                [trailingBorderContext]="item.unitName ? { $implicit: item.unitName } : undefined"
-                variant="static"
-                type="text"
-                class="w-56.25"
-              />
-            }
-          }
-        }
+        <h1 class="text-sm tbc-bold leading-5 mt-6">{{ t('addPost.mainCharacteristics') }}</h1>
       }
-      <h1 class="text-sm tbc-bold leading-5 mb-6 mt-6">{{ t('addPost.productDetails') }}</h1>
-      <ng-container
-        *ngTemplateOutlet="
-          note;
-          context: {
-            text: t('addPost.suitableTitle'),
+
+      @if (brandRequiredState?.data()?.length && category() != null) {
+        <app-dropdown
+          [required]="category()!.brandRequired"
+          [control]="mainCharacteristicsForm.getControl('brandId')"
+          [submitted]="mainCharacteristicsForm.submitted"
+          [dataList]="brandRequiredState?.data()!"
+          label="Brand"
+          [defaultLabel]="t('addPost.select')"
+          variant="static"
+          class="dynamic-dropdown block max-w-1/2 w-full pr-3.75"
+        />
+      }
+
+      @if (mainCharacteristicsState?.data()?.length) {
+        <div class="inline-block w-full">
+          @for (item of mainCharacteristicsState?.data(); track $index) {
+            @switch (item.attributeType) {
+              @case (4) {
+                <select-ship
+                  [required]="item.isRequired"
+                  [control]="mainCharacteristicsForm.getControl(item.attributeId)"
+                  [submitted]="mainCharacteristicsForm.submitted"
+                  [values]="yesNoValues"
+                  [items]="yesNoItems"
+                  [label]="item.attributeName"
+                />
+              }
+              @case (3) {
+                <app-dropdown
+                  [required]="item.isRequired"
+                  [control]="mainCharacteristicsForm.getControl(item.attributeId)"
+                  [submitted]="mainCharacteristicsForm.submitted"
+                  [dataList]="item.options"
+                  [label]="item.attributeName"
+                  [defaultLabel]="t('addPost.select')"
+                  variant="static"
+                  class="dynamic-dropdown inline-block max-w-1/2 w-full odd:pr-3.75 even:pl-3.75"
+                />
+              }
+              @case (2) {
+                <app-input
+                  [required]="item.isRequired"
+                  [control]="mainCharacteristicsForm.getControl(item.attributeId)"
+                  [submitted]="mainCharacteristicsForm.submitted"
+                  [label]="item.attributeName"
+                  [trailingBorderContent]="item.unitName ? unit : undefined"
+                  [trailingBorderContext]="item.unitName ? { $implicit: item.unitName } : undefined"
+                  [maxValue]="100000"
+                  variant="static"
+                  type="number"
+                  class="w-56.25"
+                />
+              }
+              @case (1) {
+                <app-input
+                  [required]="item.isRequired"
+                  [control]="mainCharacteristicsForm.getControl(item.attributeId)"
+                  [submitted]="mainCharacteristicsForm.submitted"
+                  [label]="item.attributeName"
+                  [trailingBorderContent]="item.unitName ? unit : undefined"
+                  [trailingBorderContext]="item.unitName ? { $implicit: item.unitName } : undefined"
+                  variant="static"
+                  type="text"
+                  class="w-56.25"
+                />
+              }
+            }
           }
-        "
-      />
+        </div>
+      }
+
+      <div class="mt-5">
+        <ng-container
+          *ngTemplateOutlet="
+            note;
+            context: {
+              text: t('addPost.suitableTitle'),
+            }
+          "
+        />
+      </div>
+
       <app-input
         [control]="adForm.getControl('title')"
         [submitted]="adForm.submitted"

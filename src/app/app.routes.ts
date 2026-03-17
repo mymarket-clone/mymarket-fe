@@ -7,12 +7,17 @@ import { Register } from './views/auth/register/register'
 import { Menu } from './views/main/menu/menu'
 import { loggedGuard } from './modules/guards/logged.guard'
 import { AddAdvertisement } from './views/main/menu/add-advertisement/add-advertisement'
+import { HomeComponent } from './views/main/home/home'
 
 export const routes: Routes = [
   {
     path: '',
     component: MainLayout,
     children: [
+      {
+        path: '',
+        component: HomeComponent,
+      },
       {
         path: 'menu',
         component: Menu,
@@ -38,6 +43,7 @@ export const routes: Routes = [
       },
     ],
   },
+
   {
     path: 'user',
     component: Auth,

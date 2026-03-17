@@ -4,7 +4,7 @@ import { Zod } from '../../../../utils/Zod'
 import { Component, computed, effect, OnDestroy, signal } from '@angular/core'
 import { FormService } from '../../../../services/form.service'
 import { IAddPostForm } from '../../../../interfaces/forms/IAddPostForm'
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
 import { PostType } from '../../../../types/enums/PostType'
 import { CurrencyType } from '../../../../types/enums/CurrencyType'
 import { PromoType } from '../../../../types/enums/PromoType'
@@ -29,6 +29,8 @@ import { YesNo } from '../../../../types/enums/YesNo'
 import { IHttpService } from '../../../../interfaces/common/IHttpService'
 import { HttpMethod } from '../../../../types/enums/HttpMethod'
 import { ICategoryAttributeOptions } from '../../../../interfaces/response/ICategoryAttributeOptions'
+import { ICategoryBrand } from '../../../../interfaces/response/ICategoryBrand'
+import { ICategoryFlat } from '../../../../interfaces/response/ICategoryFlat'
 
 type PreviewFile = { file: File; url: string }
 
@@ -56,15 +58,16 @@ export class AddAdvertisement implements OnDestroy {
   public totalPrice = signal<number[]>([0, 0])
   public firstInvalidControl = signal<string | null>(null)
   public files = signal<PreviewFile[] | null>(null)
+  public category = signal<ICategoryFlat | null>(null)
 
   public addPostState?: IHttpService<unknown>
   public mainCharacteristicsState?: IHttpService<ICategoryAttributeOptions[]>
+  public brandRequiredState?: IHttpService<ICategoryBrand[]>
 
   public constructor(
     private readonly zod: Zod,
     private readonly apiService: ApiService,
     private readonly router: Router,
-    private readonly fb: FormBuilder,
     public readonly addAd: AddAdvertisementService,
     public readonly adForm: FormService<IAddPostForm>,
     public readonly mainCharacteristicsForm: DynamicFormService,
@@ -77,6 +80,9 @@ export class AddAdvertisement implements OnDestroy {
           validators: zod.required(),
         }),
         categoryId: new FormControl(null, {
+          validators: zod.required(),
+        }),
+        brandId: new FormControl(null, {
           validators: zod.required(),
         }),
         conditionType: new FormControl(ConditionType.Used, {
@@ -167,17 +173,25 @@ export class AddAdvertisement implements OnDestroy {
     effect(() => (this.addAd.title = this.adForm.getControlSignal('title')() as string))
   }
 
-  public async getMainCharacteristics(): Promise<void> {
+  public async getMainCharacteristics(category: ICategoryFlat): Promise<void> {
     this.mainCharacteristicsState = this.apiService.request({
       method: HttpMethod.GET,
-      endpoint: `categories/${this.adForm.getControlSignal('categoryId')()}/attributes`,
+      endpoint: `categories/${category.id}/attributes`,
       onSuccess: () => {
         const attributes = this.mainCharacteristicsState?.data()
         if (attributes?.length) {
           this.mainCharacteristicsForm.buildForm(attributes)
+          this.category.set(category)
         }
       },
     })
+
+    if (category.brandRequired) {
+      this.brandRequiredState = this.apiService.request({
+        method: HttpMethod.GET,
+        endpoint: `categories/${category.id}/brands`,
+      })
+    }
   }
 
   public ngOnDestroy(): void {

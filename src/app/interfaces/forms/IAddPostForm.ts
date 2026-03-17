@@ -7,6 +7,7 @@ import { ConditionType } from '../../types/enums/ConditionType'
 export interface IAddPostForm {
   postType: FormControl<PostType>
   categoryId: FormControl<string | null>
+  brandId: FormControl<string | null>
   conditionType: FormControl<ConditionType>
   images: FormControl<File[] | null>
   mainImage: FormControl<File | null>

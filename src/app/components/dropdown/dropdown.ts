@@ -42,7 +42,7 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
   public contentWidth = input<boolean>(false)
   public defaultLabel = input<string | null>(null)
   public itemStyle = input<'small' | 'normal'>('normal')
-  public triggerParentOnDeepestSelect = output<void>()
+  public triggerParentOnDeepestSelect = output<any>()
 
   public inputValue = signal<string>('')
   public selecting = signal<boolean>(false)
@@ -107,7 +107,7 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
       this.currentLabel.set(this.selectedItemRoute()?.join(' -> ') ?? selectedCategory.name)
 
       this.control().setValue(selectedCategory.id)
-      this.triggerParentOnDeepestSelect.emit()
+      this.triggerParentOnDeepestSelect.emit(selectedCategory)
       return
     }
 
