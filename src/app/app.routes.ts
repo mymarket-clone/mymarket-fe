@@ -8,6 +8,7 @@ import { Menu } from './views/main/menu/menu'
 import { loggedGuard } from './modules/guards/logged.guard'
 import { AddAdvertisement } from './views/main/menu/add-advertisement/add-advertisement'
 import { HomeComponent } from './views/main/home/home'
+import { Search } from './views/search/search'
 
 export const routes: Routes = [
   {
@@ -17,6 +18,10 @@ export const routes: Routes = [
       {
         path: '',
         component: HomeComponent,
+      },
+      {
+        path: 'search',
+        component: Search,
       },
       {
         path: 'menu',
