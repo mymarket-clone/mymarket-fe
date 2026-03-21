@@ -5,6 +5,7 @@ import { provideAngularSvgIcon } from 'angular-svg-icon'
 import { provideHttpClient, withInterceptors } from '@angular/common/http'
 import { httpInterceptor } from './modules/interceptors/http.interceptor'
 import { provideI18n } from './modules/providers/transloco.provider'
+import { provideImg } from './modules/providers/img.provider'
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,5 +14,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptors([httpInterceptor])),
     provideAngularSvgIcon(),
+    provideImg(),
   ],
 }

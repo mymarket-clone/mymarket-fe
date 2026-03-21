@@ -1,62 +1,112 @@
 @let groups = groupedCategories();
 
-<div class="flex overflow-x-auto gap-3 no-scrollbar">
-  @for (group of groups.slice(0, 1); track $index) {
-    <ng-container
-      *ngTemplateOutlet="
-        categoriesGroupTemplate;
-        context: {
-          $implicit: group,
-          gridClass: 'grid-cols-[132px_180px_180px]',
-          isFirstGroup: true,
-        }
-      "
-    />
+<div #sliderCont class="flex overflow-x-auto gap-3 no-scrollbar group/categories">
+  @if (groups.length && categoriesState?.data()?.length) {
+    @for (group of groups.slice(0, 1); track $index) {
+      <ng-container
+        *ngTemplateOutlet="
+          categoriesGroup;
+          context: {
+            $implicit: group,
+            gridClass: 'grid-cols-[132px_180px_180px]',
+            isFirstGroup: true,
+            index: 0,
+          }
+        "
+      />
+    }
+
+    @for (group of groups.slice(1); track $index) {
+      <ng-container
+        *ngTemplateOutlet="
+          categoriesGroup;
+          context: {
+            $implicit: group,
+            gridClass: 'grid-cols-[132px_180px_132px]',
+            isFirstGroup: false,
+            index: $index + 1,
+          }
+        "
+      />
+    }
   }
 
-  @for (group of groups.slice(1); track $index) {
-    <ng-container
-      *ngTemplateOutlet="
-        categoriesGroupTemplate;
-        context: {
-          $implicit: group,
-          gridClass: 'grid-cols-[132px_180px_132px]',
-          isFirstGroup: false,
-        }
-      "
-    />
-  }
+  <div
+    (click)="setIndex(slideIndex() - 1)"
+    [class.opacity-0!]="!slideIndex()"
+    class="category-nav-arrow -left-6"
+  >
+    <svg-icon src="assets/left-arrow.svg" />
+  </div>
+
+  <div
+    (click)="setIndex(slideIndex() + 1)"
+    [class.opacity-0!]="slideIndex() == groups.length - 2"
+    class="category-nav-arrow -right-6"
+  >
+    <svg-icon src="assets/right-arrow.svg" />
+  </div>
 </div>
 
-<ng-template #categoriesGroupTemplate let-group let-gridClass="gridClass" let-isFirstGroup="isFirstGroup">
-  <div class="grid grid-rows-2 gap-3 shrink-0 cursor-pointer" [class]="gridClass">
+<ng-template
+  #categoriesGroup
+  let-group
+  let-gridClass="gridClass"
+  let-isFirstGroup="isFirstGroup"
+  let-index="index"
+>
+  <div class="grid shrink-0 grid-rows-2 gap-3 cursor-pointer" [class]="gridClass" [attr.slide-index]="index">
     @for (item of group; track item.id; let itemIndex = $index) {
-      @if (isFirstGroup && itemIndex === 0) {
-        <div class="flex h-25 overflow-hidden rounded-xl bg-black-20">
-          <div
-            class="mr-3 h-25! w-33! cursor-pointer flex-col rounded-xl bg-black-100 px-4 py-4 transition-all hover:bg-black-90 md:px-5"
-          >
-            <svg-icon src="assets/dashes.svg" />
-            <span class="tbc-regular text-xs ml-1 mt-1 block w-20 text-white">ყველა კატეგორია</span>
-          </div>
-        </div>
+      @if (item.variant === 'all') {
+        <ng-container *ngTemplateOutlet="allCategoryCard" />
       } @else {
-        @let route = getCategoryRoute(item);
-
-        <div class="flex h-25 overflow-hidden rounded-xl bg-[#FAF3D8]">
-          <a class="block h-full w-full" [routerLink]="route.link" [queryParams]="route.queryParams">
-            <div class="relative h-full">
-              <img alt="category" [src]="item.logoUrl" class="h-25 w-45 transition-all md:hover:scale-105" />
-              <span
-                class="tbc-medium text-xs absolute left-0 top-0 z-20 ml-3 mt-3 block w-30"
-                [style]="{ color: isFirstGroup && $index === 1 ? '#fff' : '#000' }"
-              >
-                {{ item.name }}
-              </span>
-            </div>
-          </a>
-        </div>
+        <ng-container
+          *ngTemplateOutlet="
+            categoryCard;
+            context: {
+              $implicit: item,
+              isFirstGroup: isFirstGroup,
+              itemIndex: itemIndex,
+            }
+          "
+        />
       }
     }
+  </div>
+</ng-template>
+
+<ng-template #allCategoryCard>
+  <div *transloco="let t" class="flex h-25 overflow-hidden rounded-xl bg-black-20">
+    <div
+      class="mr-3 h-25! w-33! cursor-pointer flex-col rounded-xl bg-black-100 px-4 py-4 transition-all hover:bg-black-90 md:px-5"
+    >
+      <span class="min-h-8 block">
+        <svg-icon src="assets/dashes.svg" />
+      </span>
+      <span class="tbc-regular text-xs ml-1 mt-1 block w-20 text-white">{{ t('home.categories.all') }}</span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #categoryCard let-item let-isFirstGroup="isFirstGroup" let-itemIndex="itemIndex">
+  <div class="flex h-25 overflow-hidden rounded-xl bg-[#FAF3D8]">
+    <a class="block h-full w-full" [routerLink]="item.route.link" [queryParams]="item.route.queryParams">
+      <div class="relative h-full">
+        <img
+          fetchpriority="high"
+          loading="eager"
+          decoding="sync"
+          alt="category"
+          [src]="item.logoUrl"
+          class="h-25 w-45 transition-all md:hover:scale-105"
+        />
+        <span
+          class="tbc-medium text-xs absolute left-0 top-0 z-20 ml-3 mt-3 block w-30"
+          [style]="{ color: isFirstGroup && itemIndex === 1 ? '#fff' : '#000' }"
+        >
+          {{ item.name }}
+        </span>
+      </div>
+    </a>
   </div>
 </ng-template>

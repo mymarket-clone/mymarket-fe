@@ -147,5 +147,12 @@
     "publish": "Publish",
     "mainCharacteristicsLabel": "Provide features to make it easier for customers to find your product/service",
     "select": "Select"
+  },
+  "home": {
+    "categories": {
+      "all": "All",
+      "installments": "Installments",
+      "discount": "Discount"
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, computed } from '@angular/core'
+import { Component, computed, ElementRef, signal, viewChild } from '@angular/core'
 import { ApiService } from '../../../../services/http/api.service'
 import { IHttpService } from '../../../../interfaces/common/IHttpService'
 import { IHomeCategory } from '../../../../interfaces/response/IHomeCategory'
@@ -6,105 +6,94 @@ import { HttpMethod } from '../../../../types/enums/HttpMethod'
 import { NgTemplateOutlet } from '@angular/common'
 import { SvgIconComponent } from 'angular-svg-icon'
 import { RouterLink } from '@angular/router'
-
-type CategoryRoute = {
-  link: string[]
-  queryParams?: Record<string, string | number | boolean>
-}
+import { HomeCategoryCard } from '../../../../types/CategoryRoute'
+import { buildCategoryCards, chunkItems } from './categories.utils'
+import { TranslocoDirective, TranslocoService } from '@jsverse/transloco'
 
 @Component({
   selector: 'app-categories',
   templateUrl: 'categories.html',
-  imports: [NgTemplateOutlet, SvgIconComponent, RouterLink],
+  imports: [NgTemplateOutlet, SvgIconComponent, RouterLink, TranslocoDirective],
 })
 export class Categories {
+  public slideIndex = signal<number>(0)
+  private sliderCont = viewChild<ElementRef<HTMLDivElement>>('sliderCont')
+
   public categoriesState?: IHttpService<IHomeCategory[]>
 
-  public constructor(private readonly apiService: ApiService) {
+  public constructor(
+    private readonly apiService: ApiService,
+    private readonly ts: TranslocoService
+  ) {
     this.categoriesState = this.apiService.request({
       endpoint: 'home-categories',
       method: HttpMethod.GET,
     })
   }
 
-  private readonly uniqueCategory: IHomeCategory = {
-    id: -1000,
-    name: 'უნიკალური',
-    logoUrl: '',
-    categoryId: -1000,
-    order: -1000,
-  }
+  public categoryCards = computed<HomeCategoryCard[]>(() => {
+    return buildCategoryCards(this.categoriesState?.data() ?? [], this.specialCards())
+  })
 
-  private readonly hardcodedCategory1: IHomeCategory = {
-    id: -1,
-    name: 'მეორადი განვადებით',
-    logoUrl: 'https://static.my.ge/mymarket/sections/tabs/images/559.jpg?v=1',
-    categoryId: -1,
-    order: -1,
-  }
+  public groupedCategories = computed<HomeCategoryCard[][]>(() => {
+    return chunkItems(this.categoryCards())
+  })
 
-  private readonly hardcodedCategory2: IHomeCategory = {
-    id: -2,
-    name: 'ფასდაკლებული',
-    logoUrl: 'https://static.my.ge/mymarket/sections/tabs/images/520.jpg?v=1',
-    categoryId: -2,
-    order: -2,
-  }
-
-  public getCategoryRoute(item: IHomeCategory): CategoryRoute {
-    switch (item.id) {
-      case -1:
-        return {
+  private specialCards = computed(() => {
+    return {
+      all: {
+        id: -1000,
+        name: this.ts.translate('home.categories.all'),
+        logoUrl: '',
+        variant: 'all' as const,
+        route: {
+          link: ['/search'],
+          queryParams: {},
+        },
+      },
+      installments: {
+        id: -1,
+        name: this.ts.translate('home.categories.installments'),
+        logoUrl: 'assets/installments.jpg',
+        variant: 'installments' as const,
+        route: {
           link: ['/search'],
           queryParams: { installments: 'true' },
-        }
-
-      case -2:
-        return {
+        },
+      },
+      discount: {
+        id: -2,
+        name: this.ts.translate('home.categories.discount'),
+        logoUrl: 'assets/discount.jpg',
+        variant: 'discount' as const,
+        route: {
           link: ['/search'],
           queryParams: { discount: 'true' },
-        }
-
-      default:
-        return {
-          link: ['/search'],
-          queryParams: { catId: item.categoryId },
-        }
+        },
+      },
     }
+  })
+
+  public setIndex(index: number): void {
+    const maxIndex = this.groupedCategories().length - 2
+
+    if (index < 0 || index > maxIndex) return
+
+    this.slideIndex.set(index)
+    this.scrollToSlide(index)
   }
 
-  public categoriesWithInserted = computed(() => {
-    const items = [...(this.categoriesState?.data() ?? [])].sort((a, b) => a.order - b.order)
+  public scrollToSlide(index: number): void {
+    const container = this.sliderCont()?.nativeElement
+    if (!container) return
 
-    const item0 = items.find((x) => x.order === 0)
-    const item1 = items.find((x) => x.order === 1)
-    const item2 = items.find((x) => x.order === 2)
+    const slide = container.querySelector<HTMLElement>(`[slide-index="${index}"]`)
+    if (!slide) return
 
-    const usedIds = new Set<number>(
-      [item0?.id, item1?.id, item2?.id].filter((id): id is number => id != null)
-    )
-
-    const rest = items.filter((x) => !usedIds.has(x.id))
-
-    return [
-      this.uniqueCategory,
-      this.hardcodedCategory1,
-      ...(item0 ? [item0] : []),
-      ...(item1 ? [item1] : []),
-      this.hardcodedCategory2,
-      ...(item2 ? [item2] : []),
-      ...rest,
-    ]
-  })
-
-  public groupedCategories = computed(() => {
-    const items = this.categoriesWithInserted()
-    const result: IHomeCategory[][] = []
-
-    for (let i = 0; i < items.length; i += 6) {
-      result.push(items.slice(i, i + 6))
-    }
-
-    return result
-  })
+    slide.scrollIntoView({
+      behavior: 'smooth',
+      inline: 'start',
+      block: 'nearest',
+    })
+  }
 }
