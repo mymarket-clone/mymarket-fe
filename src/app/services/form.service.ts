@@ -65,6 +65,7 @@ export class FormService<T extends { [P in keyof T]: AbstractControl }> {
     if (this._form.valid) callbacks.onSuccess()
     else {
       console.warn('Invalid form')
+      console.info(this._form)
       runInInjectionContext(this.injector, () => {
         afterNextRender(() => {
           callbacks.onFailure?.()

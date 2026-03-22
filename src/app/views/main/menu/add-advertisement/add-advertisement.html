@@ -160,7 +160,7 @@
       />
     </div>
     <div class="rounded-xl bg-white p-6 md:p-10">
-      @if (mainCharacteristicsState?.data()?.length || brandRequiredState?.data?.length) {
+      @if (mainCharacteristicsState?.data()?.length || brandRequiredState?.data()?.length) {
         <ng-container
           *ngTemplateOutlet="
             note;
@@ -175,8 +175,8 @@
       @if (brandRequiredState?.data()?.length && category() != null) {
         <app-dropdown
           [required]="category()!.brandRequired"
-          [control]="mainCharacteristicsForm.getControl('brandId')"
-          [submitted]="mainCharacteristicsForm.submitted"
+          [control]="adForm.getControl('brandId')"
+          [submitted]="adForm.submitted"
           [dataList]="brandRequiredState?.data()!"
           label="Brand"
           [defaultLabel]="t('addPost.select')"

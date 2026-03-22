@@ -82,9 +82,7 @@ export class AddAdvertisement implements OnDestroy {
         categoryId: new FormControl(null, {
           validators: zod.required(),
         }),
-        brandId: new FormControl(null, {
-          validators: zod.required(),
-        }),
+        brandId: new FormControl(null),
         conditionType: new FormControl(ConditionType.Used, {
           nonNullable: true,
           validators: zod.required(),
@@ -174,15 +172,14 @@ export class AddAdvertisement implements OnDestroy {
   }
 
   public async getMainCharacteristics(category: ICategoryFlat): Promise<void> {
+    this.category.set(category)
+
     this.mainCharacteristicsState = this.apiService.request({
       method: HttpMethod.GET,
       endpoint: `categories/${category.id}/attributes`,
       onSuccess: () => {
         const attributes = this.mainCharacteristicsState?.data()
-        if (attributes?.length) {
-          this.mainCharacteristicsForm.buildForm(attributes)
-          this.category.set(category)
-        }
+        if (attributes?.length) this.mainCharacteristicsForm.buildForm(attributes)
       },
     })
 
@@ -209,45 +206,62 @@ export class AddAdvertisement implements OnDestroy {
   public onSubmit(): void {
     this.adForm.submit({
       onSuccess: () => {
-        this.mainCharacteristicsForm.submit({
-          onSuccess: () => {
-            const adValues = this.adForm.getValues()
-            const attributes = this.mainCharacteristicsForm.getValues()
+        const hasAttributesForm = !!this.mainCharacteristicsForm?.form
 
-            const attributesArray = Object.entries(attributes).map(([id, value]) => ({
-              id: Number(id),
-              value,
-            }))
+        if (hasAttributesForm) {
+          this.mainCharacteristicsForm.submit({
+            onSuccess: () => this.submitPost(),
+            onFailure: () => scrollToFirstElement('.has-error'),
+          })
+          return
+        }
 
-            const formData = new FormData()
-
-            Object.entries(adValues).forEach(([key, value]) => {
-              if (value === null || value === undefined) return
-
-              if (Array.isArray(value) && value[0] instanceof File) {
-                value.forEach((file) => formData.append(key, file))
-              } else if (value instanceof File) {
-                formData.append(key, value)
-              } else {
-                formData.append(key, String(value))
-              }
-            })
-
-            formData.append('attributesJson', JSON.stringify(attributesArray))
-
-            this.addPostState = this.apiService.request({
-              method: HttpMethod.POST,
-              endpoint: 'posts',
-              form: [this.adForm.form, this.mainCharacteristicsForm.form],
-              formData,
-              onSuccess: () => this.router.navigate(['/']),
-              onError: () => scrollToFirstElement('.has-error'),
-            })
-          },
-          onFailure: () => scrollToFirstElement('.has-error'),
-        })
+        this.submitPost()
       },
       onFailure: () => scrollToFirstElement('.has-error'),
+    })
+  }
+
+  private submitPost(): void {
+    const adValues = this.adForm.getValues()
+    const attributes = this.mainCharacteristicsForm?.getValues?.() ?? {}
+
+    const attributesArray = Object.entries(attributes).map(([id, value]) => ({
+      id: Number(id),
+      value,
+    }))
+
+    const formData = new FormData()
+
+    Object.entries(adValues).forEach(([key, value]) => {
+      if (value === null || value === undefined) return
+
+      if (Array.isArray(value) && value[0] instanceof File) {
+        value.forEach((file) => formData.append(key, file))
+      } else if (value instanceof File) {
+        formData.append(key, value)
+      } else {
+        formData.append(key, String(value))
+      }
+    })
+
+    if (attributesArray.length) {
+      formData.append('attributesJson', JSON.stringify(attributesArray))
+    }
+
+    const finalForms = [this.adForm.form]
+
+    if (this.mainCharacteristicsForm?.form) {
+      finalForms.push(this.mainCharacteristicsForm.form)
+    }
+
+    this.addPostState = this.apiService.request({
+      method: HttpMethod.POST,
+      endpoint: 'posts',
+      form: finalForms,
+      formData,
+      onSuccess: () => this.router.navigate(['/']),
+      onError: () => scrollToFirstElement('.has-error'),
     })
   }
 

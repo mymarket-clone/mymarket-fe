@@ -3,6 +3,7 @@
     <div class="flex flex-col gap-4 lg:gap-5 relative">
       <app-categories class="overflow-hidden w-full" />
       <app-brands class="overflow-hidden" />
+      <app-post-swiper [data]="postsState.data()?.superVip" />
     </div>
   </div>
 </div>

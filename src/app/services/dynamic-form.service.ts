@@ -103,7 +103,7 @@ export class DynamicFormService {
   }
 
   public getValues(): Record<string, any> {
-    return this._form.getRawValue()
+    return this._form?.getRawValue() ?? null
   }
 
   public getFormData(): FormData {

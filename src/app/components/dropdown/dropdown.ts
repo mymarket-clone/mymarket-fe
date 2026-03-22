@@ -147,7 +147,7 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
   public setItem(element: DropdownEl): void {
     const control = this.control()
     this.currentLabel.set(element.name)
-    control?.setValue(element.value ?? (element as WithName).id)
+    control?.setValue(element.value ?? (element as any).brandId ?? (element as WithName).id)
     this.selecting.set(false)
     this.inputValue.set('')
     this.dropEl()!.nativeElement.value = ''

@@ -31,19 +31,11 @@
     }
   }
 
-  <div
-    (click)="setIndex(slideIndex() - 1)"
-    [class.opacity-0!]="!slideIndex()"
-    class="category-nav-arrow -left-6"
-  >
+  <div (click)="prev()" [class.hidden!]="!canGoPrev()" class="category-nav-arrow -left-6">
     <svg-icon src="assets/left-arrow.svg" />
   </div>
 
-  <div
-    (click)="setIndex(slideIndex() + 1)"
-    [class.opacity-0!]="slideIndex() == groups.length - 2"
-    class="category-nav-arrow -right-6"
-  >
+  <div (click)="next()" [class.hidden!]="!canGoNext()" class="category-nav-arrow -right-6">
     <svg-icon src="assets/right-arrow.svg" />
   </div>
 </div>
@@ -55,7 +47,11 @@
   let-isFirstGroup="isFirstGroup"
   let-index="index"
 >
-  <div class="grid shrink-0 grid-rows-2 gap-3 cursor-pointer" [class]="gridClass" [attr.slide-index]="index">
+  <div
+    class="grid shrink-0 grid-rows-2 gap-3 cursor-pointer"
+    [class]="gridClass"
+    [attr.data-slide-index]="index"
+  >
     @for (item of group; track item.id; let itemIndex = $index) {
       @if (item.variant === 'all') {
         <ng-container *ngTemplateOutlet="allCategoryCard" />

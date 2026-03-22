@@ -1,4 +1,4 @@
-import { Component, computed, ElementRef, signal, viewChild } from '@angular/core'
+import { Component, computed } from '@angular/core'
 import { ApiService } from '../../../../services/http/api.service'
 import { IHttpService } from '../../../../interfaces/common/IHttpService'
 import { IHomeCategory } from '../../../../interfaces/response/IHomeCategory'
@@ -9,26 +9,29 @@ import { RouterLink } from '@angular/router'
 import { HomeCategoryCard } from '../../../../types/CategoryRoute'
 import { buildCategoryCards, chunkItems } from './categories.utils'
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco'
+import { Swiper } from '../../../../components/swiper/swiper'
 
 @Component({
   selector: 'app-categories',
   templateUrl: 'categories.html',
   imports: [NgTemplateOutlet, SvgIconComponent, RouterLink, TranslocoDirective],
 })
-export class Categories {
-  public slideIndex = signal<number>(0)
-  private sliderCont = viewChild<ElementRef<HTMLDivElement>>('sliderCont')
-
+export class Categories extends Swiper {
   public categoriesState?: IHttpService<IHomeCategory[]>
 
   public constructor(
     private readonly apiService: ApiService,
     private readonly ts: TranslocoService
   ) {
+    super()
     this.categoriesState = this.apiService.request({
       endpoint: 'home-categories',
       method: HttpMethod.GET,
     })
+  }
+
+  protected override get maxIndex(): number {
+    return this.groupedCategories().length - 2
   }
 
   public categoryCards = computed<HomeCategoryCard[]>(() => {
@@ -73,27 +76,4 @@ export class Categories {
       },
     }
   })
-
-  public setIndex(index: number): void {
-    const maxIndex = this.groupedCategories().length - 2
-
-    if (index < 0 || index > maxIndex) return
-
-    this.slideIndex.set(index)
-    this.scrollToSlide(index)
-  }
-
-  public scrollToSlide(index: number): void {
-    const container = this.sliderCont()?.nativeElement
-    if (!container) return
-
-    const slide = container.querySelector<HTMLElement>(`[slide-index="${index}"]`)
-    if (!slide) return
-
-    slide.scrollIntoView({
-      behavior: 'smooth',
-      inline: 'start',
-      block: 'nearest',
-    })
-  }
 }

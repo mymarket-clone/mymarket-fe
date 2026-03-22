@@ -56,7 +56,7 @@ html {
   }
 }
 
-#editorEl>div {
+#editorEl > div {
   height: 100%;
 }
 
@@ -112,7 +112,7 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
-input[type=number] {
+input[type='number'] {
   -moz-appearance: textfield;
   appearance: textfield;
 }
