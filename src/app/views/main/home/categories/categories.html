@@ -1,6 +1,6 @@
 @let groups = groupedCategories();
 
-<div #sliderCont class="flex overflow-x-auto gap-3 no-scrollbar group/categories">
+<div #swiper class="flex overflow-x-auto gap-3 no-scrollbar group/categories">
   @if (groups.length && categoriesState?.data()?.length) {
     @for (group of groups.slice(0, 1); track $index) {
       <ng-container

@@ -2,7 +2,7 @@
   @if (brandsState?.data()?.length) {
     @for (brand of brandsState!.data(); track $index) {
       <div class="snap-start shrink-0 relative w-22 h-full mr-[16.7px] last-of-type:mr-0!">
-        <a [routerLink]="`/search/?Brands=${brand.id}`" class="group/brand block">
+        <a routerLink="/search" [queryParams]="{ brand: brand.id }" class="group/brand block">
           <div
             class="relative flex h-18 w-18 items-center justify-center rounded-full border-2 border-gray-90 bg-white md:h-22 md:w-22"
           >

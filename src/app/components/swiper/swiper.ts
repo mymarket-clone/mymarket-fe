@@ -3,7 +3,7 @@ import { Directive, ElementRef, signal, viewChild } from '@angular/core'
 @Directive()
 export abstract class Swiper {
   protected readonly slideIndex = signal(0)
-  protected readonly sliderCont = viewChild<ElementRef<HTMLElement>>('sliderCont')
+  protected readonly swiper = viewChild<ElementRef<HTMLElement>>('swiper')
 
   protected abstract get maxIndex(): number
 
@@ -23,12 +23,16 @@ export abstract class Swiper {
     return this.slideIndex() < this.maxIndex
   }
 
-  protected prev(): void {
+  protected prev($event?: PointerEvent): void {
+    $event?.preventDefault()
+    $event?.stopPropagation()
     if (!this.canGoPrev()) return
     this.goTo(this.slideIndex() - 1)
   }
 
-  protected next(): void {
+  protected next($event?: PointerEvent): void {
+    $event?.preventDefault()
+    $event?.stopPropagation()
     if (!this.canGoNext()) return
     this.goTo(this.slideIndex() + 1)
   }
@@ -57,7 +61,7 @@ export abstract class Swiper {
   }
 
   protected getSlideElement(index: number): HTMLElement | null {
-    const container = this.sliderCont()?.nativeElement
+    const container = this.swiper()?.nativeElement
     if (!container) return null
 
     return container.querySelector<HTMLElement>(this.getSlideSelector(index))

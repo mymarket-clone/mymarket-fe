@@ -67,4 +67,12 @@
     @apply select-none absolute top-17 z-20 hidden h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-white opacity-0 transition group-hover/categories:opacity-100 lg:flex;
     box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.06);
   }
+
+  .category-nav-arrow-rnd {
+    @apply select-none w-9 h-9 border border-gray-40 hover:bg-gray-10 transition-all rounded-full lg:flex hidden items-center justify-center cursor-pointer bg-white;
+  }
+
+  .post-card-arrow {
+    @apply flex cursor-pointer items-center justify-center rounded-full h-9 w-9 bg-black-30 opacity-0 transition-all hover:bg-black-40 group-hover/product:opacity-100;
+  }
 }
