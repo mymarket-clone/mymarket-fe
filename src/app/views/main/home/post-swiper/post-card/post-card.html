@@ -1,9 +1,9 @@
-<div class="block relative transform h-full shrink-0 w-47.5">
-  <div class="product-card group/product relative h-full w-full overflow-hidden">
+<div *transloco="let t" class="block relative transform shrink-0 w-47.5 h-60.5">
+  <div class="product-card group/product relative w-full overflow-hidden h-full flex flex-col">
     <a routerLink="/post" [queryParams]="{ postId: post().id }">
       <div>
-        <div class="ease-in-out mx-0 my-auto relative h-full w-full flex z-1">
-          <div #swiper class="overflow-hidden relative w-full h-full flex z-1">
+        <div class="ease-in-out mx-0 my-auto">
+          <div #swiper class="overflow-hidden relative w-full h-full flex z-1 rounded-2xl">
             @for (image of post().images; track $index) {
               <div
                 [attr.data-slide-index]="$index"
@@ -13,7 +13,7 @@
                   [src]="image"
                   width="190"
                   height="158"
-                  class="block h-39.5 w-47.5 shrink-0 rounded-2xl object-cover"
+                  class="block h-39.5 w-47.5 shrink-0 object-cover"
                   fallback="https://nf.mymarket.ge/no-image-min.png"
                 />
               </div>
@@ -35,9 +35,20 @@
     <p class="tbc-medium text-sm mt-2 line-clamp-2 shrink-0">
       {{ post().title }}
     </p>
-    <div class="mt-2 flex h-full items-end">
+    <div class="flex mt-auto">
       <div class="flex items-center">
-        <span class="tbc-bold text-base mr-1.5">{{ post().price }}</span>
+        <span class="tbc-bold text-base mr-1.5">
+          @if (post().price) {
+            {{ post().price }}
+            @if (post().currencyType == currencyType.GEL) {
+              ₾
+            } @else if (post().currencyType == currencyType.Dollar) {
+              $
+            }
+          } @else {
+            {{ t('home.post.priceNegotiable') }}
+          }
+        </span>
       </div>
     </div>
   </div>

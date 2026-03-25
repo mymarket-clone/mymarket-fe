@@ -149,11 +149,14 @@
     "select": "Select"
   },
   "home": {
-    "seeAll": "See all",
     "categories": {
       "all": "All",
       "installments": "Installments",
       "discount": "Discount"
+    },
+    "post": {
+      "seeAll": "See all",
+      "priceNegotiable": "Price negotiable"
     }
   }
 }
