@@ -29,6 +29,7 @@ export class TextEditor extends BaseInput implements AfterViewInit, OnDestroy {
         StarterKit,
         CharacterCount.configure({
           limit: this.maxLength,
+          mode: 'textSize',
         }),
       ],
       content: '',

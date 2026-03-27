@@ -1,8 +1,8 @@
-<div *transloco="let t" class="block relative transform shrink-0 w-47.5 h-60.5">
-  <div class="product-card group/product relative w-full overflow-hidden h-full flex flex-col">
-    <a routerLink="/post" [queryParams]="{ postId: post().id }">
+<div *transloco="let t" class="block transform shrink-0 w-47.5 h-60.5">
+  <div class="product-card group/product w-full overflow-hidden h-60.5 relative">
+    <a class="flex flex-col h-full" routerLink="/post" [queryParams]="{ postId: post().id }">
       <div>
-        <div class="ease-in-out mx-0 my-auto">
+        <div class="ease-in-out mx-0 my-auto relative">
           <div #swiper class="overflow-hidden relative w-full h-full flex z-1 rounded-2xl">
             @for (image of post().images; track $index) {
               <div
@@ -31,25 +31,53 @@
           }
         </div>
       </div>
-    </a>
-    <p class="tbc-medium text-sm mt-2 line-clamp-2 shrink-0">
-      {{ post().title }}
-    </p>
-    <div class="flex mt-auto">
-      <div class="flex items-center">
-        <span class="tbc-bold text-base mr-1.5">
-          @if (post().price) {
-            {{ post().price }}
-            @if (post().currencyType == currencyType.GEL) {
-              ₾
-            } @else if (post().currencyType == currencyType.Dollar) {
-              $
+      <p class="tbc-medium text-sm mt-2 line-clamp-2 shrink-0">
+        {{ post().title }}
+      </p>
+      <div class="flex mt-auto">
+        <div class="flex items-center">
+          <span class="tbc-bold text-base mr-1.5">
+            @if (post().price && !post().isNegotiable) {
+              @if (post().priceAfterDiscount) {
+                {{ post().priceAfterDiscount }}
+                @if (post().currencyType == currencyType.GEL) {
+                  ₾
+                } @else if (post().currencyType == currencyType.Dollar) {
+                  $
+                }
+
+                <span class="tbc-medium text-sm text-black-70 line-through ml-2">
+                  {{ post().price }}
+                  @if (post().currencyType == currencyType.GEL) {
+                    ₾
+                  } @else if (post().currencyType == currencyType.Dollar) {
+                    $
+                  }
+                </span>
+              } @else {
+                {{ post().price }}
+                @if (post().currencyType == currencyType.GEL) {
+                  ₾
+                } @else if (post().currencyType == currencyType.Dollar) {
+                  $
+                }
+              }
+            } @else {
+              {{ t('home.post.priceNegotiable') }}
             }
-          } @else {
-            {{ t('home.post.priceNegotiable') }}
-          }
-        </span>
+          </span>
+        </div>
       </div>
+    </a>
+    <div
+      class="absolute -bottom-11.25 hidden w-full opacity-0 transition-all delay-100 group-hover/product:bottom-px group-hover/product:opacity-100 md:block"
+    >
+      <button
+        class="cursor-pointer outline-none p-3.5 rounded-lg text-black-100 transition-all flex w-full items-center justify-center bg-yellow py-2.5"
+      >
+        <svg-icon src="assets/heart.svg" />
+        <span class="tbc-medium text-sm ml-2 block"> Save </span>
+      </button>
     </div>
   </div>
 </div>

@@ -19,6 +19,7 @@ export class PostSwiper extends Swiper {
   }
 
   protected override get maxIndex(): number {
-    return 2
+    const length = this.data()?.length ?? 0
+    return Math.max(Math.ceil(length / 6) - 1, 0)
   }
 }
