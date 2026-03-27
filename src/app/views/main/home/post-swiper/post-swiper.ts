@@ -13,6 +13,12 @@ import { ProuductCard } from './post-card/post-card'
 })
 export class PostSwiper extends Swiper {
   public data = input<IPostLite[]>()
+  public meta = input.required<{
+    title: string
+    query: Record<string, unknown>
+    icon: string
+    color: string
+  }>()
 
   public constructor() {
     super()

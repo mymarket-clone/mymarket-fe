@@ -3,7 +3,28 @@
     <div class="flex flex-col gap-4 lg:gap-5 relative">
       <app-categories class="overflow-hidden w-full" />
       <app-brands class="overflow-hidden" />
-      <app-post-swiper [data]="postsState.data()?.superVip" />
+      <app-post-swiper
+        [data]="postsState.data()?.superVip"
+        [meta]="{
+          title: 'Super Vip',
+          query: { promoType: 3 },
+          icon: 'assets/super-vip.svg',
+          color: '#FD541A',
+        }"
+      />
+      <app-post-swiper
+        [data]="postsState.data()?.vipPlus"
+        [meta]="{
+          title: 'Vip+',
+          query: { promoType: 2 },
+          icon: 'assets/vip-plus.svg',
+          color: '#FCC000',
+        }"
+      />
+      <app-post-swiper
+        [data]="postsState.data()?.vip"
+        [meta]="{ title: 'Vip', query: { promoType: 1 }, icon: 'assets/vip.svg', color: '#3C74FF' }"
+      />
     </div>
   </div>
 </div>

@@ -1,51 +1,58 @@
-<div *transloco="let t">
-  <div class="flex items-center justify-between">
-    <div class="flex items-center justify-between flex-1">
-      <div class="flex w-full items-center justify-between">
-        <div class="flex items-center">
-          <div class="h-9 w-9 flex items-center justify-center rounded-[10px] bg-[#FD541A] mr-3">
-            <svg-icon class="h-5.5 w-5.5" src="assets/super-vip.svg" />
+<div *transloco="let t" class="min-h-75.5">
+  @if (data()?.length) {
+    <div class="flex items-center justify-between">
+      <div class="flex items-center justify-between flex-1">
+        <div class="flex w-full items-center justify-between">
+          <div class="flex items-center">
+            <div
+              class="h-9 w-9 flex items-center justify-center rounded-[10px] mr-3"
+              [style.background]="meta().color"
+            >
+              <svg-icon class="h-5.5 w-5.5" [src]="meta().icon" />
+            </div>
+            <span class="tbc-bold capitalize">
+              {{ meta().title }}
+            </span>
           </div>
-          <span class="tbc-bold capitalize">Super Vip</span>
+          <a
+            class="underline-offset-4 hover:underline mr-0 tbc-medium text-sm md:mr-3"
+            routerLink="/search"
+            [queryParams]="meta().query"
+          >
+            {{ t('home.post.seeAll') }}
+          </a>
         </div>
-        <a
-          class="underline-offset-4 hover:underline mr-0 tbc-medium text-sm md:mr-3"
-          routerLink="/search"
-          [queryParams]="{ promoType: 3 }"
-        >
-          {{ t('home.post.seeAll') }}
-        </a>
-      </div>
-      <div class="flex items-center gap-1">
-        <div
-          (click)="prev()"
-          [class.opacity-40!]="!canGoPrev()"
-          [class.pointer-events-none!]="!canGoPrev()"
-          class="category-nav-arrow-rnd"
-        >
-          <svg-icon src="assets/left-arrow.svg" />
-        </div>
+        <div class="flex items-center gap-1">
+          <div
+            (click)="prev()"
+            [class.opacity-40!]="!canGoPrev()"
+            [class.pointer-events-none!]="!canGoPrev()"
+            class="category-nav-arrow-rnd"
+          >
+            <svg-icon src="assets/left-arrow.svg" />
+          </div>
 
-        <div
-          (click)="next()"
-          [class.opacity-40!]="!canGoNext()"
-          [class.pointer-events-none!]="!canGoNext()"
-          class="category-nav-arrow-rnd"
-        >
-          <svg-icon src="assets/right-arrow.svg" />
+          <div
+            (click)="next()"
+            [class.opacity-40!]="!canGoNext()"
+            [class.pointer-events-none!]="!canGoNext()"
+            class="category-nav-arrow-rnd"
+          >
+            <svg-icon src="assets/right-arrow.svg" />
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="mt-4 flex justify-between md:mt-6">
-    <div #swiper class="overflow-hidden ease-in-out mx-0 my-auto relative h-full w-full flex z-1">
-      @for (post of [...(data() ?? [])]; track $index) {
-        <div [attr.data-slide-index]="$index">
-          <div class="w-50">
-            <post-card [post]="post" />
+    <div class="mt-4 flex justify-between md:mt-6">
+      <div #swiper class="overflow-hidden ease-in-out mx-0 my-auto relative h-full w-full flex z-1">
+        @for (post of [...(data() ?? [])]; track $index) {
+          <div [attr.data-slide-index]="$index">
+            <div class="w-50">
+              <post-card [post]="post" />
+            </div>
           </div>
-        </div>
-      }
+        }
+      </div>
     </div>
-  </div>
+  }
 </div>
