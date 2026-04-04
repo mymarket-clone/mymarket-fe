@@ -158,5 +158,28 @@
       "seeAll": "See all",
       "priceNegotiable": "Price negotiable"
     }
+  },
+  "footer": {
+    "download": "Download app and get latest features",
+    "termsAndConditions": "Terms and Conditions",
+    "privacyPolicy": "Privacy Policy",
+    "returnPolicy": "Return Policy",
+    "allRightsReserved": "All rights reserved",
+    "navigation": {
+      "title": "Navigation",
+      "addAdvertisement": "Add an advertisement",
+      "buyOnline": "Buy online",
+      "usedProducts": "Used Products",
+      "safetyLanding": "Safety landing",
+      "shops": "Shops",
+      "openShop": "Open Shop"
+    },
+    "help": {
+      "title": "Help",
+      "faq": "Frequently asked questions",
+      "contact": "Contact",
+      "mail": "info@mymarket.ge",
+      "feedback": "Anonymous feedback"
+    }
   }
 }

@@ -1,0 +1,234 @@
+<div *transloco="let t">
+  <div class="border-b border-b-gray-10">
+    <div class="container">
+      <div class="my-10 flex flex-col items-start md:container md:mx-auto md:flex-row md:items-center">
+        <ng-container *ngTemplateOutlet="storeLinks" />
+
+        <span class="max-w-xs text-xs opacity-70 md:ml-9.75 md:mt-0">
+          {{ t('footer.download') }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-b border-b-gray-10">
+    <div class="container my-14 flex flex-row gap-7.5 justify-between">
+      <ng-container
+        *ngTemplateOutlet="
+          section;
+          context: {
+            title: t('footer.navigation.title'),
+            items: navigation(),
+          }
+        "
+      />
+
+      <ng-container
+        *ngTemplateOutlet="
+          section;
+          context: {
+            title: t('footer.help.title'),
+            items: help(),
+            extra: socialIcons,
+          }
+        "
+      />
+
+      <div class="flex-2">
+        <h6 class="text-raisin-150 text-xs m-0 py-4 cursor-pointer tbc-bold w-fit">
+          {{ t('footer.navigation.title') }}
+        </h6>
+
+        <div class="flex justify-between">
+          @for (column of navigationColumns(); track $index) {
+            <ul>
+              @for (item of column; track $index) {
+                <ng-container *ngTemplateOutlet="categoryLink; context: { item }" />
+              }
+            </ul>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container py-2 flex items-center mt-5">
+    <div class="flex flex-col md:flex-row rules-link">
+      <ul class="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-6">
+        <ng-container
+          *ngTemplateOutlet="
+            ruleLink;
+            context: { href: 'https://auth.tnet.ge/ka/rules/', label: t('footer.termsAndConditions') }
+          "
+        />
+        <ng-container
+          *ngTemplateOutlet="
+            ruleLink;
+            context: { href: 'https://auth.tnet.ge/ka/usageagreement', label: t('footer.privacyPolicy') }
+          "
+        />
+        <ng-container
+          *ngTemplateOutlet="
+            ruleLink;
+            context: {
+              href: 'https://www.mymarket.ge/en/rules/mymarketreturnpolicy',
+              label: t('footer.returnPolicy'),
+            }
+          "
+        />
+      </ul>
+    </div>
+  </div>
+
+  <div class="container px-3.75 my-8">
+    <div class="rounded-[64px] border border-gray-40 flex items-center relative z-997">
+      <div class="flex justify-between items-center">
+        <div class="w-32.5 mr-6 flex items-center justify-center rounded-[64px] h-16.5 bg-blue-100">
+          <span class="flex items-center justify-center">
+            <svg-icon src="assets/tnet3.svg" />
+          </span>
+        </div>
+        <div class="w-full -mx-3 gap-x-6 flex flex-wrap content-start">
+          @for (item of platfomLogos(); track $index) {
+            <div class="px-3 w-fit">
+              <div class="py-5">
+                <a
+                  [href]="item.url"
+                  class="hover:opacity-70 cursor-pointer h-5 flex items-center justify-center rounded-lg transition-all"
+                >
+                  <img [src]="item.icon" class="max-h-6.5 w-full h-full object-contain" />
+                </a>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="container my-8">
+      <div class="flex flex-col md:flex-row items-center md:justify-between text-raisin-150 text-xs">
+        <div class="text-center justify-center">
+          <span>This site is protected by reCAPTCHA and the Google</span>
+          <a
+            href="https://policies.google.com/privacy"
+            rel="noreferrer"
+            class="px-1.25 text-raisin-150 underline"
+            >Privacy Policy</a
+          >
+          <span>and</span>
+          <a
+            href="https://policies.google.com/terms"
+            rel="noreferrer"
+            class="px-1.25 text-raisin-150 underline"
+            >Terms of Service</a
+          >
+          apply
+        </div>
+        <div class="flex items-center text-xs mt-6 md:mt-0">© 2026 {{ t('footer.allRightsReserved') }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #section let-title="title" let-items="items" let-extra="extra">
+  <div class="flex-1">
+    <h6 class="text-raisin-150 text-xs m-0 py-4 cursor-pointer tbc-bold w-fit">
+      {{ title }}
+    </h6>
+
+    <ul>
+      @for (item of items; track $index) {
+        <ng-container *ngTemplateOutlet="navLink; context: { item }" />
+      }
+
+      <ng-container *ngTemplateOutlet="extra" />
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #navLink let-item="item">
+  <li>
+    <a
+      [routerLink]="`/${item.route}`"
+      rel="noopener noreferrer"
+      target="_blank"
+      class="decoration-0 text-raisin-150 text-xs flex py-2 opacity-70"
+    >
+      {{ item.label }}
+    </a>
+  </li>
+</ng-template>
+
+<ng-template #categoryLink let-item="item">
+  <li>
+    <a
+      routerLink="/search"
+      [queryParams]="{ catId: item.categoryId }"
+      class="decoration-0 text-raisin-150 text-xs flex py-2 opacity-70"
+    >
+      {{ item.name }}
+    </a>
+  </li>
+</ng-template>
+
+<ng-template #storeLinks>
+  <div class="mb-3.5 flex md:mb-0">
+    <a
+      target="_blank"
+      href="https://play.google.com/store/apps/details?id=ge.my.mymarket&utm_camapaign=marketing&utm_source=facebook&utm_term=main+video"
+      class="mr-3.5 last-of-type:mr-0 w-21 h-7"
+    >
+      <img class="h-full w-full" src="assets/google-play.svg" />
+    </a>
+    <a
+      target="_blank"
+      href="https://apps.apple.com/us/app/mymarket-ge/id1560783192?utm_camapaign=marketing&utm_source=facebook&utm_term=main+video"
+      class="mr-3.5 last-of-type:mr-0 w-21 h-7"
+    >
+      <img class="h-full w-full" src="assets/apple-store.svg" />
+    </a>
+  </div>
+</ng-template>
+
+<ng-template #socialIcons>
+  <div class="md:flex mt-4.5">
+    <ng-container
+      *ngTemplateOutlet="social; context: { icon: 'fb', url: 'https://www.facebook.com/mymarket.ge/' }"
+    />
+    <ng-container
+      *ngTemplateOutlet="social; context: { icon: 'insta', url: 'https://www.instagram.com/mymarket.ge/' }"
+    />
+    <ng-container
+      *ngTemplateOutlet="
+        social;
+        context: { icon: 'linkedin', url: 'https://www.linkedin.com/company/tnetgeorgia/mycompany/' }
+      "
+    />
+  </div>
+</ng-template>
+
+<ng-template #social let-icon="icon" let-url="url">
+  <a
+    [href]="url"
+    rel="noopener noreferrer"
+    target="_blank"
+    class="decoration-0 bg-raisin-120 text-12 items-center justify-center w-10 h-10 bg-middle-gray mr-2 rounded-full flex py-4"
+  >
+    <svg-icon [src]="'assets/' + icon + '.svg'" />
+  </a>
+</ng-template>
+
+<ng-template #ruleLink let-href="href" let-label="label">
+  <li class="flex items-center h-11.5">
+    <a
+      [href]="href"
+      rel="noopener noreferrer"
+      target="_blank"
+      class="underline text-raisin-150 text-xs opacity-70"
+    >
+      {{ label }}
+    </a>
+  </li>
+</ng-template>
