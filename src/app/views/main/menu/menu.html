@@ -1,4 +1,4 @@
-<div class="bg-gray-30 py-5 sm:py-10">
+<div class="bg-gray-30">
   <div class="container px-4">
     <div class="flex gap-4 lg:gap-5">
       <app-menu-aside [menuList]="menuList()!" class="hidden xl:block" />
@@ -8,5 +8,8 @@
       </div>
       <app-menu-right class="hidden xl:block mt-23 h-fit sticky top-4" />
     </div>
+  </div>
+  <div (click)="scrollToTop()" class="flex items-center justify-center bg-yellow cursor-pointer h-11">
+    <svg-icon src="assets/scr-top.svg" />
   </div>
 </div>

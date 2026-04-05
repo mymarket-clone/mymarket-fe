@@ -7,10 +7,11 @@ import { MenuItem } from '../../../types/MenuItem'
 import { MenuTitle } from './menu-title/menu-title'
 import { MenuAside } from './menu-aside/menu-aside'
 import { MenuRight } from './menu-right/menu-right'
+import { SvgIconComponent } from 'angular-svg-icon'
 
 @Component({
   selector: 'app-menu',
-  imports: [RouterOutlet, MenuTitle, MenuAside, MenuRight],
+  imports: [RouterOutlet, MenuTitle, MenuAside, MenuRight, SvgIconComponent],
   templateUrl: './menu.html',
 })
 export class Menu {
@@ -27,6 +28,13 @@ export class Menu {
 
     this.router.events.pipe(filter((e) => e instanceof NavigationEnd)).subscribe(() => {
       this.updateCurrentMenuItem()
+    })
+  }
+
+  public scrollToTop(): void {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
     })
   }
 
