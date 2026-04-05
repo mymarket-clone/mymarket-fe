@@ -1,6 +1,6 @@
 <div *transloco="let t" class="block transform shrink-0 w-47.5 h-60.5">
   <div class="product-card group/product w-full overflow-hidden h-60.5 relative">
-    <a class="flex flex-col h-full" routerLink="/post" [queryParams]="{ postId: post().id }">
+    <a class="flex flex-col h-full" [routerLink]="['/post', post().id]">
       <div>
         <div class="ease-in-out mx-0 my-auto relative">
           <div #swiper class="overflow-hidden relative w-full h-full flex z-1 rounded-2xl">

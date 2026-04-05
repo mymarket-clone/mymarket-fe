@@ -9,6 +9,7 @@ import { loggedGuard } from './modules/guards/logged.guard'
 import { AddAdvertisement } from './views/main/menu/add-advertisement/add-advertisement'
 import { HomeComponent } from './views/main/home/home'
 import { Search } from './views/search/search'
+import { Post } from './views/post/post'
 
 export const routes: Routes = [
   {
@@ -45,6 +46,10 @@ export const routes: Routes = [
             data: { requiresAuth: true },
           },
         ],
+      },
+      {
+        path: `post/:id`,
+        component: Post,
       },
     ],
   },
