@@ -116,3 +116,34 @@ input[type='number'] {
   -moz-appearance: textfield;
   appearance: textfield;
 }
+
+.no-scroll {
+  overflow: hidden;
+  margin-right: 15px;
+}
+
+.fade-in {
+  animation: fadeIn 300ms forwards;
+}
+
+.fade-out {
+  animation: fadeOut 300ms forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
