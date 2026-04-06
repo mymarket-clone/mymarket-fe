@@ -3,9 +3,9 @@ import { inject } from '@angular/core'
 import { Router } from '@angular/router'
 import { BehaviorSubject, throwError } from 'rxjs'
 import { catchError, filter, mergeMap, take } from 'rxjs/operators'
-import { ApiService } from '../../services/http/api.service'
-import { UserStore } from '../../stores/user.store'
 import { TranslocoService } from '@jsverse/transloco'
+import { ApiService } from '@app/services/http/api.service'
+import { UserStore } from '@app/stores/user.store'
 
 let isRefreshing = false
 const refreshTokenSubject = new BehaviorSubject<string | null>(null)

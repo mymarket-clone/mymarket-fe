@@ -1,13 +1,13 @@
 import { Component, signal } from '@angular/core'
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router'
-import { UserStore } from '../../../stores/user.store'
 import { TranslocoService } from '@jsverse/transloco'
 import { filter } from 'rxjs'
-import { MenuItem } from '../../../types/MenuItem'
 import { MenuTitle } from './menu-title/menu-title'
 import { MenuAside } from './menu-aside/menu-aside'
 import { MenuRight } from './menu-right/menu-right'
 import { SvgIconComponent } from 'angular-svg-icon'
+import { UserStore } from '@app/stores/user.store'
+import { MenuItem } from '@app/types/MenuItem'
 
 @Component({
   selector: 'app-menu',

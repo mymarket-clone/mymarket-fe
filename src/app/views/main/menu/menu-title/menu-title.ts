@@ -1,6 +1,6 @@
 import { Component, input } from '@angular/core'
-import { MenuItem } from '../../../../types/MenuItem'
 import { RouterLink } from '@angular/router'
+import { MenuItem } from '@app/types/MenuItem'
 import { TranslocoDirective } from '@jsverse/transloco'
 
 @Component({

@@ -5,8 +5,8 @@ import {
   provideAppInitializer,
   inject,
 } from '@angular/core'
+import { TranslocoHttpLoader } from '@app/common/transcoloHttpLoader'
 import { provideTransloco, translocoConfig, TranslocoService } from '@jsverse/transloco'
-import { TranslocoHttpLoader } from '../../common/transcoloHttpLoader'
 import { firstValueFrom } from 'rxjs'
 
 export function provideI18n(): EnvironmentProviders {

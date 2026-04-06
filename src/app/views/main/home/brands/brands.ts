@@ -1,9 +1,9 @@
-import { HttpMethod } from './../../../../types/enums/HttpMethod'
 import { Component } from '@angular/core'
-import { ApiService } from '../../../../services/http/api.service'
-import { IBrand } from '../../../../interfaces/response/IBrand'
-import { IHttpService } from '../../../../interfaces/common/IHttpService'
 import { RouterLink } from '@angular/router'
+import { IHttpService } from '@app/interfaces/common/IHttpService'
+import { IBrand } from '@app/interfaces/response/IBrand'
+import { ApiService } from '@app/services/http/api.service'
+import { HttpMethod } from '@app/types/enums/HttpMethod'
 
 @Component({
   selector: 'app-brands',

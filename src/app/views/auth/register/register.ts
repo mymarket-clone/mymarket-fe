@@ -1,28 +1,28 @@
 import { Component, OnInit, signal } from '@angular/core'
-import { SvgIconComponent } from 'angular-svg-icon'
-import { InjectElementDirective } from '../../../modules/directives/injectElement.directive'
-import { Input } from '../../../components/input/input'
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
-import { FormService } from '../../../services/form.service'
-import { Zod } from '../../../utils/Zod'
-import { RegistrationStage } from '../../../types/RegistrationStage'
-import { Button } from '../../../components/button/button'
-import { ApiService } from '../../../services/http/api.service'
-import { ActivatedRoute, Router, RouterLink } from '@angular/router'
-import { userExistsValidator } from '../../../utils/AsyncValidators'
+import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms'
+import { RouterLink, ActivatedRoute, Router } from '@angular/router'
+import { Button } from '@app/components/button/button'
+import { Checkbox } from '@app/components/checkbox/checkbox'
+import { Input } from '@app/components/input/input'
+import { PasswordStrength } from '@app/components/password-strength/password-strength'
+import { Segmented } from '@app/components/segmented/segmented'
+import { IHttpService } from '@app/interfaces/common/IHttpService'
 import {
-  IRegisterFormExtra,
   IRegisterFormMain,
+  IRegisterFormExtra,
   IRegisterFormVerification,
-} from '../../../interfaces/forms/IRegisterForm'
-import { Segmented } from '../../../components/segmented/segmented'
-import { Checkbox } from '../../../components/checkbox/checkbox'
-import { UserStore } from '../../../stores/user.store'
-import { PasswordStrength } from '../../../components/password-strength/password-strength'
+} from '@app/interfaces/forms/IRegisterForm'
+import { InjectElementDirective } from '@app/modules/directives/injectElement.directive'
+import { FormService } from '@app/services/form.service'
+import { ApiService } from '@app/services/http/api.service'
+import { UserStore } from '@app/stores/user.store'
+import { HttpMethod } from '@app/types/enums/HttpMethod'
+import { RegistrationStage } from '@app/types/RegistrationStage'
+import { User } from '@app/types/User'
+import { userExistsValidator } from '@app/utils/AsyncValidators'
+import { Zod } from '@app/utils/Zod'
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco'
-import { IHttpService } from '../../../interfaces/common/IHttpService'
-import { HttpMethod } from '../../../types/enums/HttpMethod'
-import { User } from '../../../types/User'
+import { SvgIconComponent } from 'angular-svg-icon'
 
 @Component({
   selector: 'app-register',

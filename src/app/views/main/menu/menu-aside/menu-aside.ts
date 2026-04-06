@@ -1,9 +1,9 @@
 import { Component, input } from '@angular/core'
-import { UserStore } from '../../../../stores/user.store'
 import { SvgIconComponent } from 'angular-svg-icon'
 import { RouterLink, RouterLinkActive } from '@angular/router'
 import { TranslocoDirective } from '@jsverse/transloco'
-import { MenuItem } from '../../../../types/MenuItem'
+import { UserStore } from '@app/stores/user.store'
+import { MenuItem } from '@app/types/MenuItem'
 
 @Component({
   selector: 'app-menu-aside',

@@ -1,8 +1,8 @@
 import { FormControl } from '@angular/forms'
-import { CurrencyType } from '../../types/enums/CurrencyType'
-import { PostType } from '../../types/enums/PostType'
-import { PromoType } from '../../types/enums/PromoType'
-import { ConditionType } from '../../types/enums/ConditionType'
+import { ConditionType } from '@app/types/enums/ConditionType'
+import { CurrencyType } from '@app/types/enums/CurrencyType'
+import { PostType } from '@app/types/enums/PostType'
+import { PromoType } from '@app/types/enums/PromoType'
 
 export interface IAddPostForm {
   postType: FormControl<PostType>

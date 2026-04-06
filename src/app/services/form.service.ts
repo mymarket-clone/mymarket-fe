@@ -8,9 +8,9 @@ import {
   signal,
 } from '@angular/core'
 import { AbstractControl, FormGroup } from '@angular/forms'
-import { NonNullableProps } from '../types/NonNullableProps'
 import { toSignal } from '@angular/core/rxjs-interop'
-import { SubmitHandlers } from '../types/SubmitCallbacks'
+import { SubmitHandlers } from '@app/types/SubmitCallbacks'
+import { NonNullableProps } from '@app/types/NonNullableProps'
 
 @Injectable()
 export class FormService<T extends { [P in keyof T]: AbstractControl }> {

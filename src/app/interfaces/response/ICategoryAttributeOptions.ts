@@ -1,4 +1,4 @@
-import { AttributeType } from './../../types/enums/AttributeType'
+import { AttributeType } from '@app/types/enums/AttributeType'
 
 export interface ICategoryAttributeOptions {
   id: number

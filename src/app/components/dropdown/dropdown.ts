@@ -11,13 +11,13 @@ import {
   signal,
   viewChild,
 } from '@angular/core'
-import { BaseInput } from '../../shared/components/base-input'
 import { ReactiveFormsModule } from '@angular/forms'
+import { IHttpService } from '@app/interfaces/common/IHttpService'
+import { ApiService } from '@app/services/http/api.service'
+import { BaseInput } from '@app/shared/components/base-input'
+import { DropdownEl, WithName } from '@app/types/DropdownEl'
+import { HttpMethod } from '@app/types/enums/HttpMethod'
 import { SvgIconComponent } from 'angular-svg-icon'
-import { ApiService } from '../../services/http/api.service'
-import { IHttpService } from '../../interfaces/common/IHttpService'
-import { DropdownEl, WithName } from '../../types/DropdownEl'
-import { HttpMethod } from '../../types/enums/HttpMethod'
 
 @Component({
   selector: 'app-dropdown',

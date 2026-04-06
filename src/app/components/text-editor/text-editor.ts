@@ -1,9 +1,9 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, signal, viewChild } from '@angular/core'
-import { BaseInput } from '../../shared/components/base-input'
 import { ReactiveFormsModule } from '@angular/forms'
 import { Editor } from '@tiptap/core'
 import StarterKit from '@tiptap/starter-kit'
 import CharacterCount from '@tiptap/extension-character-count'
+import { BaseInput } from '@app/shared/components/base-input'
 
 @Component({
   selector: 'app-text-editor',

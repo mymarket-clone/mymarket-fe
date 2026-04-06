@@ -1,4 +1,4 @@
-import { CurrencyType } from '../../types/enums/CurrencyType'
+import { CurrencyType } from '@app/types/enums/CurrencyType'
 
 export interface IPostLite {
   id: number

@@ -3,10 +3,10 @@ import { SvgIconComponent } from 'angular-svg-icon'
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco'
 import { CommonModule } from '@angular/common'
 import { RouterLink } from '@angular/router'
-import { IHttpService } from '../../interfaces/common/IHttpService'
-import { IHomeCategory } from '../../interfaces/response/IHomeCategory'
-import { ApiService } from '../../services/http/api.service'
-import { HttpMethod } from '../../types/enums/HttpMethod'
+import { IHttpService } from '@app/interfaces/common/IHttpService'
+import { IHomeCategory } from '@app/interfaces/response/IHomeCategory'
+import { ApiService } from '@app/services/http/api.service'
+import { HttpMethod } from '@app/types/enums/HttpMethod'
 
 @Component({
   selector: 'app-footer',

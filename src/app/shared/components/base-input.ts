@@ -1,6 +1,6 @@
 import { Component, ElementRef, HostListener, input, signal, viewChild } from '@angular/core'
 import { FormControl } from '@angular/forms'
-import { InputType } from '../../types/Input'
+import { InputType } from '@app/types/Input'
 
 @Component({
   selector: 'app-base-input',

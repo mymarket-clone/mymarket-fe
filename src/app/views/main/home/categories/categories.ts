@@ -1,15 +1,15 @@
 import { Component, computed } from '@angular/core'
-import { ApiService } from '../../../../services/http/api.service'
-import { IHttpService } from '../../../../interfaces/common/IHttpService'
-import { IHomeCategory } from '../../../../interfaces/response/IHomeCategory'
-import { HttpMethod } from '../../../../types/enums/HttpMethod'
 import { NgTemplateOutlet } from '@angular/common'
 import { SvgIconComponent } from 'angular-svg-icon'
 import { RouterLink } from '@angular/router'
-import { HomeCategoryCard } from '../../../../types/CategoryRoute'
 import { buildCategoryCards, chunkItems } from './categories.utils'
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco'
-import { Swiper } from '../../../../components/swiper/swiper'
+import { IHomeCategory } from '@app/interfaces/response/IHomeCategory'
+import { Swiper } from '@app/components/swiper/swiper'
+import { IHttpService } from '@app/interfaces/common/IHttpService'
+import { ApiService } from '@app/services/http/api.service'
+import { HomeCategoryCard } from '@app/types/CategoryRoute'
+import { HttpMethod } from '@app/types/enums/HttpMethod'
 
 @Component({
   selector: 'app-categories',

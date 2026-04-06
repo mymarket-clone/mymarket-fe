@@ -1,6 +1,6 @@
 import { FormGroup } from '@angular/forms'
+import { SearchParams } from '@app/types/SearchParams'
 import { IBaseError } from '../response/IBaseResponse'
-import { SearchParams } from '../../types/SearchParams'
 
 export interface IServiceRequest<Body, Response> {
   body?: Body

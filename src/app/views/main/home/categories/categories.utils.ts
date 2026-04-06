@@ -1,5 +1,5 @@
-import { IHomeCategory } from '../../../../interfaces/response/IHomeCategory'
-import { HomeCategoryCard } from '../../../../types/CategoryRoute'
+import { IHomeCategory } from '@app/interfaces/response/IHomeCategory'
+import { HomeCategoryCard } from '@app/types/CategoryRoute'
 import { HOME_CATEGORY_LAYOUT } from './categories.config'
 
 export function mapApiCategory(item: IHomeCategory): HomeCategoryCard {

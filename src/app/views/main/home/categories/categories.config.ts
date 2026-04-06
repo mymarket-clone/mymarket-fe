@@ -1,4 +1,4 @@
-import { HomeCategoryLayoutItem } from '../../../../types/CategoryRoute'
+import { HomeCategoryLayoutItem } from '@app/types/CategoryRoute'
 
 export const HOME_CATEGORY_LAYOUT: HomeCategoryLayoutItem[] = [
   { type: 'special', key: 'all' },

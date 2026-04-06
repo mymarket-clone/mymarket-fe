@@ -1,8 +1,8 @@
 import { Component, OnDestroy } from '@angular/core'
-import { AddAdvertisementService } from '../../../../services/views/add-advertisement.service'
 import { SvgIconComponent } from 'angular-svg-icon'
 import { TranslocoDirective } from '@jsverse/transloco'
 import { NgTemplateOutlet } from '@angular/common'
+import { AddAdvertisementService } from '@app/services/views/add-advertisement.service'
 
 @Component({
   selector: 'app-menu-right',

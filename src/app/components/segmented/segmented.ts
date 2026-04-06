@@ -1,6 +1,6 @@
 import { Component, input, signal } from '@angular/core'
-import { BaseInput } from '../../shared/components/base-input'
-import { Gender } from '../../types/enums/Gender'
+import { BaseInput } from '@app/shared/components/base-input'
+import { Gender } from '@app/types/enums/Gender'
 
 @Component({
   selector: 'app-segmented',

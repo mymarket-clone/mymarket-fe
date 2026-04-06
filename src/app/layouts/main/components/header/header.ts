@@ -1,9 +1,9 @@
 import { Component, signal, WritableSignal } from '@angular/core'
 import { SvgIconComponent } from 'angular-svg-icon'
 import { Router, RouterLink } from '@angular/router'
-import { UserStore } from '../../../../stores/user.store'
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco'
-import { NavbarItem } from '../../../../types/NavbarItem'
+import { UserStore } from '@app/stores/user.store'
+import { NavbarItem } from '@app/types/NavbarItem'
 
 @Component({
   selector: 'app-header',

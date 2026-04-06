@@ -1,5 +1,5 @@
 import { computed, Injectable, signal } from '@angular/core'
-import { PromoType } from '../../types/enums/PromoType'
+import { PromoType } from '@app/types/enums/PromoType'
 
 @Injectable({ providedIn: 'root' })
 export class AddAdvertisementService {

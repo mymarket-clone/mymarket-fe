@@ -1,7 +1,7 @@
 import { AbstractControl, AsyncValidatorFn } from '@angular/forms'
 import { catchError, from, map, of } from 'rxjs'
 import { TranslocoService } from '@jsverse/transloco'
-import { API_URL } from '../api/api'
+import { API_URL } from '@app/api/api'
 
 export const userExistsValidator = (translocoService: TranslocoService): AsyncValidatorFn => {
   return (control: AbstractControl) => {

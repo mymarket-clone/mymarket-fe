@@ -1,15 +1,15 @@
 import { Routes } from '@angular/router'
-import { MainLayout } from './layouts/main/main'
 import { Auth } from './layouts/auth/auth'
+import { MainLayout } from './layouts/main/main'
+import { loggedGuard } from './modules/guards/logged.guard'
 import { Login } from './views/auth/login/login'
 import { PasswordRecovery } from './views/auth/password-recovery/password-recovery'
 import { Register } from './views/auth/register/register'
-import { Menu } from './views/main/menu/menu'
-import { loggedGuard } from './modules/guards/logged.guard'
-import { AddAdvertisement } from './views/main/menu/add-advertisement/add-advertisement'
 import { HomeComponent } from './views/main/home/home'
-import { Search } from './views/search/search'
+import { AddAdvertisement } from './views/main/menu/add-advertisement/add-advertisement'
+import { Menu } from './views/main/menu/menu'
 import { Post } from './views/post/post'
+import { Search } from './views/search/search'
 
 export const routes: Routes = [
   {

@@ -1,10 +1,10 @@
-import { CurrencyType } from './../../../../../types/enums/CurrencyType'
 import { Component, input } from '@angular/core'
-import { Swiper } from '../../../../../components/swiper/swiper'
 import { RouterLink } from '@angular/router'
-import { IPostLite } from '../../../../../interfaces/response/IPostLite'
 import { SvgIconComponent } from 'angular-svg-icon'
 import { TranslocoDirective } from '@jsverse/transloco'
+import { Swiper } from '@app/components/swiper/swiper'
+import { IPostLite } from '@app/interfaces/response/IPostLite'
+import { CurrencyType } from '@app/types/enums/CurrencyType'
 
 @Component({
   selector: 'post-card',

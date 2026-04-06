@@ -1,5 +1,5 @@
+import { ITreeNode } from '@app/interfaces/common/ITreeNode'
 import z, { ZodType } from 'zod'
-import { ITreeNode } from '../interfaces/common/ITreeNode'
 
 export class Utils {
   private flattenTree<T>(nodes: ITreeNode<T>[]): ITreeNode<T>[] {

@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http'
 import { inject, signal } from '@angular/core'
 import { Observable } from 'rxjs'
-import { IHttpService } from '../../interfaces/common/IHttpService'
-import { HttpMethod } from '../../types/enums/HttpMethod'
-import { HttpRequestOptions } from '../../types/HttpRequestOptions'
-import { API_URL } from '../../api/api'
 import qs from 'qs'
 import { FormGroup } from '@angular/forms'
+import { API_URL } from '@app/api/api'
+import { IHttpService } from '@app/interfaces/common/IHttpService'
+import { HttpMethod } from '@app/types/enums/HttpMethod'
+import { HttpRequestOptions } from '@app/types/HttpRequestOptions'
 
 export class HttpService {
   protected readonly httpClient = inject(HttpClient)

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { HttpService } from './http.service'
 import { Observable } from 'rxjs'
-import { User } from '../../types/User'
+import { User } from '@app/types/User'
 
 @Injectable({ providedIn: 'root' })
 export class ApiService extends HttpService {

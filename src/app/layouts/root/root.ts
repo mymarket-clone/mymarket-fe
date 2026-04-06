@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core'
 import { RouterOutlet } from '@angular/router'
-import { LanguageService } from '../../services/language.service'
 import { PortalModule } from '@angular/cdk/portal'
-import { PortalService } from '../../services/portal.service'
+import { LanguageService } from '@app/services/language.service'
+import { PortalService } from '@app/services/portal.service'
 
 @Component({
   selector: 'app-root',

@@ -1,12 +1,11 @@
 import { Component } from '@angular/core'
-import { BrandComponent } from './brands/brands'
+import { IHttpService } from '@app/interfaces/common/IHttpService'
+import { IPostLiteList } from '@app/interfaces/response/IPostLiteList'
+import { ApiService } from '@app/services/http/api.service'
+import { HttpMethod } from '@app/types/enums/HttpMethod'
 import { Categories } from './categories/categories'
-import { ApiService } from '../../../services/http/api.service'
-import { IHttpService } from '../../../interfaces/common/IHttpService'
-import { HttpMethod } from '../../../types/enums/HttpMethod'
 import { PostSwiper } from './post-swiper/post-swiper'
-import { IPostLiteList } from '../../../interfaces/response/IPostLiteList'
-
+import { BrandComponent } from './brands/brands'
 @Component({
   selector: 'app-home',
   imports: [BrandComponent, Categories, PostSwiper],

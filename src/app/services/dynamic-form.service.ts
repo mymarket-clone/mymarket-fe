@@ -10,8 +10,8 @@ import {
 } from '@angular/core'
 import { FormControl, FormGroup } from '@angular/forms'
 import { toSignal } from '@angular/core/rxjs-interop'
-import { SubmitHandlers } from '../types/SubmitCallbacks'
-import { ICategoryAttributeOptions } from '../interfaces/response/ICategoryAttributeOptions'
+import { ICategoryAttributeOptions } from '@app/interfaces/response/ICategoryAttributeOptions'
+import { SubmitHandlers } from '@app/types/SubmitCallbacks'
 
 @Injectable({ providedIn: 'root' })
 export class DynamicFormService {

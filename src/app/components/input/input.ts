@@ -1,8 +1,8 @@
 import { NgTemplateOutlet } from '@angular/common'
 import { Component, input, signal, TemplateRef } from '@angular/core'
 import { SvgIconComponent } from 'angular-svg-icon'
-import { BaseInput } from '../../shared/components/base-input'
 import { ReactiveFormsModule } from '@angular/forms'
+import { BaseInput } from '@app/shared/components/base-input'
 
 @Component({
   selector: 'app-input',
