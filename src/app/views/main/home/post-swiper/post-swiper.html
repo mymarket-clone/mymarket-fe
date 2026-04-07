@@ -44,7 +44,10 @@
       </div>
     </div>
     <div class="mt-4 flex justify-between md:mt-6">
-      <div #swiper class="overflow-hidden ease-in-out mx-0 my-auto relative h-full w-full flex z-1">
+      <div
+        #swiper
+        class="overflow-auto no-scrollbar ease-in-out mx-0 my-auto relative h-full w-full flex z-1"
+      >
         @for (post of [...(data() ?? [])]; track $index) {
           <div [attr.data-slide-index]="$index">
             <div class="w-50">
