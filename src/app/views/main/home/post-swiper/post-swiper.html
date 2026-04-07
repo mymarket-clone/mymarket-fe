@@ -50,7 +50,7 @@
       >
         @for (post of [...(data() ?? [])]; track $index) {
           <div [attr.data-slide-index]="$index">
-            <div class="w-50">
+            <div class="mr-5" [class.mr-0!]="$last">
               <post-card [post]="post" />
             </div>
           </div>
