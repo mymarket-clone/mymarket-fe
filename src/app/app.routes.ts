@@ -10,6 +10,7 @@ import { AddAdvertisement } from './views/main/menu/add-advertisement/add-advert
 import { Menu } from './views/main/menu/menu'
 import { Post } from './views/post/post'
 import { Search } from './views/search/search'
+import { Users } from './views/users/users'
 
 export const routes: Routes = [
   {
@@ -50,6 +51,10 @@ export const routes: Routes = [
       {
         path: `post/:id`,
         component: Post,
+      },
+      {
+        path: `users/:id`,
+        component: Users,
       },
     ],
   },

@@ -181,5 +181,17 @@
       "mail": "info@mymarket.ge",
       "feedback": "Anonymous feedback"
     }
+  },
+  "postDetails": {
+    "home": "Home",
+    "used": "Used",
+    "new": "New",
+    "likeNew": "Like New",
+    "forParts": "For Parts",
+    "listing": "Listing",
+    "privatePerson": "Private person",
+    "quickBuy": "Quick buy",
+    "offerPrice": "Offer a price",
+    "specifications": "Specifications"
   }
 }

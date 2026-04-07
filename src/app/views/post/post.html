@@ -1,0 +1,269 @@
+@let post = postState?.data();
+
+<div class="container" *transloco="let t">
+  <div class="md:mx-auto">
+    <div class="my-6 min-h-4">
+      @if (post) {
+        <ol class="flex flex-wrap items-center gap-y-1.5 wrap-break-word">
+          <li class="inline-flex items-center">
+            <a routerLink="/">
+              <span class="tbc-regular text-xs block text-gray-160 group-last-of-type:text-black-100">
+                {{ t('postDetails.home') }}
+              </span>
+            </a>
+          </li>
+          <li>
+            <svg-icon src="assets/breadcrumb-arrow.svg" />
+          </li>
+          @for (item of post?.breadcrumb; track $index) {
+            <li class="inline-flex items-center">
+              <a routerLink="/search" [queryParams]="{ catId: item.id }">
+                <span class="tbc-regular text-xs block text-gray-160" [class.text-raisin-130!]="$last">
+                  {{ item.name }}
+                </span>
+              </a>
+            </li>
+            <li [class.hidden]="$last">
+              <svg-icon src="assets/breadcrumb-arrow.svg" />
+            </li>
+          }
+        </ol>
+      }
+    </div>
+  </div>
+  <div class="flex flex-row flex-wrap items-start lg:flex-nowrap">
+    <div class="flex flex-col w-full lg:w-auto">
+      <div class="relative h-full w-full overflow-hidden lg:max-w-100 min-h-82.75">
+        @if (post) {
+          <div #swiper class="flex h-83.25 overflow-hidden rounded-xl border border-gray-180">
+            @for (item of post?.images; track $index) {
+              <div [attr.data-slide-index]="$index" class="flex justify-center shrink-0 w-full">
+                <img [src]="item" />
+              </div>
+            }
+          </div>
+          <div class="absolute left-0 top-5 z-40 flex px-2">
+            @if (promo()) {
+              <div class="rounded-md px-1.75 md:px-2.5 py-0.75 mr-2" [style.background]="promo()?.color">
+                <span class="font-tbcx-medium text-[10px] block text-white">{{ promo()?.label }}</span>
+              </div>
+            }
+            @if (condition()) {
+              <div
+                class="rounded-md px-1.75 md:px-2.5 py-0.75 flex items-center"
+                [style.background]="condition()?.color"
+              >
+                <span class="font-tbcx-medium text-[10px] block text-white">{{ condition()?.label }}</span>
+              </div>
+            }
+          </div>
+          @if (post?.images!.length > 1) {
+            <div
+              (click)="prev()"
+              class="post-detail-main-slider-arrow left-0 ml-2"
+              [class.fill-gray-40]="!canGoPrev()"
+              [class.hover:bg-gray-10!]="canGoPrev()"
+              [class.cursor-not-allowed!]="!canGoPrev()"
+            >
+              <svg-icon src="assets/left-arrow.svg" />
+            </div>
+            <div
+              (click)="next()"
+              class="post-detail-main-slider-arrow right-0 mr-2"
+              [class.hover:bg-gray-10!]="canGoNext()"
+              [class.fill-gray-40]="!canGoNext()"
+              [class.cursor-not-allowed!]="!canGoNext()"
+            >
+              <svg-icon src="assets/right-arrow.svg" />
+            </div>
+          }
+        }
+      </div>
+
+      <div class="no-scroll mt-4 overflow-auto min-h-15 mr-0!">
+        <div #swiperMini class="flex flex-row lg:max-w-100">
+          @for (item of post?.images; track $index) {
+            <div
+              [attr.data-slide-index-mini]="$index"
+              (click)="goTo($index)"
+              class="border border-transparent mr-3 shrink-0 h-15 w-18.5 cursor-pointer overflow-hidden rounded-sm"
+              [class.border-yellow]="$index == slideIndex()"
+            >
+              <img class="h-full w-full object-fill" [src]="item" fallback="assets/no-image.png" />
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-5 lg:mt-0 flex justify-between w-full">
+      <div class="flex w-full flex-wrap items-start md:flex-nowrap max-w-full lg:max-w-136.25">
+        @if (post) {
+          <div class="mr-0 w-full md:mr-5 lg:mx-5">
+            <div class="flex items-start justify-between">
+              <div class="flex flex-wrap items-center">
+                <span class="tbc-medium text-xs mr-5 block shrink-0">ID {{ post?.id }}</span>
+              </div>
+              <div class="-translate-y-1/4">
+                <div class="relative">
+                  <div
+                    (click)="copyCurrentUrl()"
+                    class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg transition-colors duration-300"
+                    [class.bg-blue-100-20/10]="copied()"
+                    [class.hover:bg-gray-10]="!copied()"
+                  >
+                    <svg-icon src="assets/share.svg" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <span class="tbc-bold text-xl mt-3 block break-all border-b-gray-20 pb-4 md:border-b">
+                {{ post?.title }}
+              </span>
+            </div>
+
+            <div class="block md:hidden">
+              <ng-container *ngTemplateOutlet="asideBuy; context: { post }" />
+            </div>
+
+            <div
+              class="flex flex-col flex-wrap items-start lg:items-center justify-between border-b border-b-gray-20 py-4 md:flex-row"
+            >
+              <div class="flex flex-col items-start">
+                <div class="mb-1 flex items-center rounded-xl bg-gray-40 px-2 py-1">
+                  <svg-icon src="assets/private-person.svg" />
+                  <span class="tbc-regular text-[10px] block">
+                    {{ t('postDetails.privatePerson') }}
+                  </span>
+                </div>
+                <div class="mb-1 flex items-center">
+                  <span class="tbc-regular text-xs block">
+                    {{ post.user.firstName }} {{ post.user.lastname }}
+                  </span>
+                </div>
+                <a [routerLink]="`/users/${post.user.id}`">
+                  <span class="font-tbcx-regular text-xs mb-1 block text-gray-160 underline">
+                    {{ post.user.postsCount }} განცხადება
+                  </span>
+                </a>
+                <span class="tbc-regular text-xs mb-2 block">
+                  {{ post.city }}
+                </span>
+              </div>
+
+              <div class="w-full md:w-auto">
+                <div class="flex w-full md:w-auto">
+                  <div
+                    class="relative flex w-full cursor-pointer items-center text-nowrap rounded-lg border border-blue-100 p-3 md:min-w-45.5"
+                  >
+                    <svg-icon src="assets/phone-green.svg" />
+                    <span class="tbc-medium text-sm mr-1 block">
+                      {{
+                        phoneNumberState?.data()
+                          ? `(+995) ${formatNumber(phoneNumberState?.data()!)}`
+                          : post.phoneNumber
+                      }}
+                    </span>
+                    @if (!phoneNumberState?.data() && !phoneNumberState?.loading()) {
+                      <span (click)="phoneNumber(post.user.id)" class="tbc-regular text-[10px] text-blue-100">
+                        Show phone number
+                      </span>
+                    } @else if (phoneNumberState?.loading()) {
+                      <div class="ml-1 flex w-17.5 justify-center">
+                        <svg-icon src="assets/progress.svg" />
+                      </div>
+                    }
+                  </div>
+                  <div class="ml-2 cursor-pointer rounded-lg border p-4 border-gray-180">
+                    <svg-icon src="assets/chat.svg" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <span
+                [innerHTML]="post.description"
+                class="tbc-regular text-xs block truncate text-wrap md:max-w-125"
+              >
+              </span>
+            </div>
+          </div>
+        }
+      </div>
+
+      @if (post) {
+        <div
+          class="hidden md:block w-full max-w-73.75 rounded-xl border border-gray-20 bg-white p-5 shadow-[0_4px_24px_0_rgba(0,0,0,0.04)] h-fit"
+        >
+          <ng-container *ngTemplateOutlet="asideBuy; context: { post }" />
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="mt-8">
+    <div class="mt-6 rounded-xl">
+      <span class="tbc-bold text-base mb-6 inline-block">{{ t('postDetails.specifications') }}</span>
+      @for (item of post?.attributes; track $index) {
+        <div
+          class="mb-3.5 grid grid-cols-2 border-0 lg:border-b border-[#DDDDDD40] border-opacity-25 pb-3.5 last-of-type:mb-0 last-of-type:border-none last-of-type:pb-0"
+        >
+          <span class="tbc-medium text-sm block text-gray-50">{{ item.attribute }}</span>
+          @if (item.attributeType !== attributeType.Bool) {
+            <span class="tbc-medium text-sm block">{{ item.value }}</span>
+          } @else {
+            <span class="tbc-medium text-sm block">{{ item.value == 1 ? 'Yes' : 'False' }}</span>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<ng-template #asideBuy let-post="post">
+  <div *transloco="let t" class="flex items-center">
+    <div class="flex items-center">
+      @if (post?.isNegotiable) {
+        <span class="tbc-bold text-xl">{{ t('home.post.priceNegotiable') }}</span>
+      } @else {
+        @if (!post?.salePercentage) {
+          <span class="tbc-bold text-xl block">
+            {{ post?.price }}
+            {{ getCurrencySymbol() }}
+          </span>
+        } @else {
+          <span class="tbc-bold text-xl block">
+            {{ post?.priceAfterDiscount }}
+            {{ getCurrencySymbol() }}
+          </span>
+          <span class="tbc-medium text-base ml-2 block text-gray-190 line-through">
+            {{ post?.price }}
+            {{ getCurrencySymbol() }}
+          </span>
+          <div>
+            <span class="tbc-bold text-xs ml-2 block rounded-lg bg-red-500 px-1 py-1 text-white">
+              -{{ post?.salePercentage }}%
+            </span>
+          </div>
+        }
+      }
+    </div>
+  </div>
+  <div *transloco="let t" class="mt-4">
+    <button
+      class="cursor-pointer flex items-center justify-center outline-none p-3.5 rounded-lg bg-yellow hover:bg-yellow/80 text-raisin-130 transition-all w-full"
+    >
+      <span class="tbc-bold text-sm">{{ t('postDetails.quickBuy') }}</span>
+    </button>
+    @if (post?.canOfferPrice) {
+      <button
+        class="cursor-pointer flex items-center justify-center outline-none p-3.5 rounded-lg text-black-100 transition-all mt-3 w-full bg-opacity-10 bg-blue-100-20/10 hover:bg-blue-100-20/20"
+      >
+        <span class="tbc-medium text-sm text-blue-100-20">{{ t('postDetails.offerPrice') }}</span>
+      </button>
+    }
+  </div>
+</ng-template>

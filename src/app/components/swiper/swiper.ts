@@ -1,9 +1,14 @@
-import { Directive, ElementRef, signal, viewChild } from '@angular/core'
+import { Directive, ElementRef, HostListener, signal, viewChild } from '@angular/core'
 
 @Directive()
 export abstract class Swiper {
   protected readonly slideIndex = signal(0)
   protected readonly swiper = viewChild<ElementRef<HTMLElement>>('swiper')
+
+  @HostListener('window:resize')
+  protected onResize(): void {
+    this.scrollToSlide(this.slideIndex(), false)
+  }
 
   protected abstract get maxIndex(): number
 
@@ -67,12 +72,12 @@ export abstract class Swiper {
     return container.querySelector<HTMLElement>(this.getSlideSelector(index))
   }
 
-  protected scrollToSlide(index: number): void {
+  protected scrollToSlide(index: number, smooth = true): void {
     const slide = this.getSlideElement(index)
     if (!slide) return
 
     slide.scrollIntoView({
-      behavior: 'smooth',
+      behavior: smooth ? 'smooth' : 'auto',
       inline: 'start',
       block: 'nearest',
     })

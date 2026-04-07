@@ -17,6 +17,7 @@
   --color-blue-90: #27b1ff;
   --color-blue-100: #3c74ff;
   --color-blue-100-10: #3c74ff1a;
+  --color-blue-100-20: #2b6ade;
   --color-blue-110: #235be5;
   --color-blue-120: #9aadfc;
   --color-blue-130: #006aff;
@@ -38,6 +39,10 @@
   --color-gray-130: #e8ebef;
   --color-gray-140: #52555f;
   --color-gray-150: #f4f4f5;
+  --color-gray-160: #aaaaaa;
+  --color-gray-170: #cccccc;
+  --color-gray-180: #e5e7eb;
+  --color-gray-190: #909090;
   --color-blue-gray: #8996ae;
   --color-blue: #5890ff;
   --color-black-20: #222222;
