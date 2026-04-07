@@ -7,7 +7,9 @@ export abstract class Swiper {
 
   @HostListener('window:resize')
   protected onResize(): void {
-    this.scrollToSlide(this.slideIndex(), false)
+    if (window.location.href.includes('post')) {
+      this.scrollToSlide(this.slideIndex(), false)
+    }
   }
 
   protected abstract get maxIndex(): number
