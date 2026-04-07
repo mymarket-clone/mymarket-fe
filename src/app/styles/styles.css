@@ -161,3 +161,46 @@ input[type='number'] {
     opacity: 0;
   }
 }
+
+.cont-platform {
+
+  svg,
+  svg>path {
+    height: 20px !important;
+  }
+
+  svg:nth-child(1),
+  svg:nth-child(3) {
+    width: 66px !important;
+  }
+
+  svg:nth-child(2) {
+    width: 68px !important;
+  }
+
+  svg:nth-child(4) {
+    width: 77px !important;
+  }
+
+  svg:nth-child(5) {
+    width: 69px !important;
+  }
+
+  svg:nth-child(6) {
+    width: 65px !important;
+  }
+
+  svg:nth-child(7) {
+    width: 71px !important;
+    height: 17px !important;
+  }
+
+  svg:nth-child(8) {
+    width: 64px !important;
+  }
+
+  svg:nth-child(8) {
+    width: 53px !important;
+    height: 18px !important;
+  }
+}

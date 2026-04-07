@@ -1,4 +1,4 @@
-import { Component, computed } from '@angular/core'
+import { Component, computed, signal } from '@angular/core'
 import { SvgIconComponent } from 'angular-svg-icon'
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco'
 import { CommonModule } from '@angular/common'
@@ -24,6 +24,25 @@ export class Footer {
       endpoint: 'home-categories',
       method: HttpMethod.GET,
     })
+  }
+
+  private sectionStates: Record<number, ReturnType<typeof signal<boolean>>> = {
+    1: signal(false),
+    2: signal(false),
+    3: signal(false),
+    4: signal(false),
+  }
+
+  public toggleFooterSection(index: number): void {
+    const state = this.sectionStates[index]
+    if (state) {
+      state.set(!state())
+    }
+  }
+
+  public isFooterSectionOpen(index: number): boolean {
+    const state = this.sectionStates[index]
+    return state ? state() : false
   }
 
   public navigation = computed(() => {

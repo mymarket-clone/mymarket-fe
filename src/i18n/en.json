@@ -180,6 +180,9 @@
       "contact": "Contact",
       "mail": "info@mymarket.ge",
       "feedback": "Anonymous feedback"
+    },
+    "categories": {
+      "title": "Categories"
     }
   },
   "postDetails": {

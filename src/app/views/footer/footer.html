@@ -1,5 +1,5 @@
 <div *transloco="let t">
-  <div class="border-b border-b-gray-10">
+  <div class="border-0 lg:border-b border-b-gray-10">
     <div class="container">
       <div class="my-10 flex flex-col items-start md:mx-auto md:flex-row md:items-center">
         <ng-container *ngTemplateOutlet="storeLinks" />
@@ -11,14 +11,15 @@
     </div>
   </div>
 
-  <div class="border-b border-b-gray-10">
-    <div class="container my-14 flex flex-row gap-7.5 justify-between">
+  <div class="border-0 lg:border-b border-b-gray-10 lg:b">
+    <div class="container my-0 lg:my-14 flex flex-col lg:flex-row gap-0 lg:gap-7.5 justify-between">
       <ng-container
         *ngTemplateOutlet="
           section;
           context: {
             title: t('footer.navigation.title'),
             items: navigation(),
+            index: 1,
           }
         "
       />
@@ -30,11 +31,12 @@
             title: t('footer.help.title'),
             items: help(),
             extra: socialIcons,
+            index: 2,
           }
         "
       />
 
-      <div class="flex-2">
+      <div class="flex-2 hidden lg:block">
         <h6 class="text-raisin-150 text-xs m-0 py-4 cursor-pointer tbc-bold w-fit">
           {{ t('footer.navigation.title') }}
         </h6>
@@ -49,10 +51,28 @@
           }
         </div>
       </div>
+
+      <div class="flex flex-col lg:hidden w-full border-b border-b-gray-10 border-t-gray-10">
+        <div (click)="toggleFooterSection(3)" class="py-4 text-left cursor-pointer">
+          <button class="peer flex w-full items-center justify-between cursor-pointer" type="button">
+            <span class="block !tbc-medium text-sm">{{ t('footer.categories.title') }}</span>
+            <svg-icon src="assets/accordion-arrow.svg" />
+          </button>
+        </div>
+        @if (isFooterSectionOpen(3)) {
+          @for (item of navigationColumns().flat(); track $index) {
+            <a
+              class="cursor-pointer mb-5 block text-xs text-gray-160 hover:text-raisin-130 transition-colors duration-150"
+            >
+              {{ item.name }}
+            </a>
+          }
+        }
+      </div>
     </div>
   </div>
 
-  <div class="container py-2 flex items-center mt-5">
+  <div class="container py-5 md:py-2 flex items-center mt-0 md:mt-5">
     <div class="flex flex-col md:flex-row rules-link">
       <ul class="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-6">
         <ng-container
@@ -80,15 +100,15 @@
     </div>
   </div>
 
-  <div class="container px-3.75 my-8">
+  <div class="container px-3.75 my-8 hidden lg:block">
     <div class="rounded-[64px] border border-gray-40 flex items-center relative z-997">
-      <div class="flex justify-between items-center">
+      <div class="flex justify-between items-center w-full">
         <div class="w-32.5 mr-6 flex items-center justify-center rounded-[64px] h-16.5 bg-blue-100">
           <span class="flex items-center justify-center">
             <svg-icon src="assets/tnet3.svg" />
           </span>
         </div>
-        <div class="w-full -mx-3 gap-x-6 flex flex-wrap content-start">
+        <div class="w-full -mx-3 justify-between flex flex-wrap flex-row content-start flex-1 pr-3">
           @for (item of platfomLogos(); track $index) {
             <div class="px-3 w-fit">
               <div class="py-5">
@@ -103,6 +123,38 @@
           }
         </div>
       </div>
+    </div>
+  </div>
+
+  <div class="px-4">
+    <div
+      (click)="toggleFooterSection(4)"
+      class="cursor-pointer border-raisin-10 rounded-[22px] border bg-gray-150 p-8 block lg:hidden"
+    >
+      <button
+        class="cursor-pointer flex w-full items-center justify-between"
+        id="headlessui-disclosure-button-:rb:"
+        type="button"
+        aria-expanded="false"
+        data-headlessui-state=""
+      >
+        <div class="flex items-center">
+          <a target="_blank" href="https://www.tnet.ge/">
+            <svg-icon src="assets/tnet-s.svg" />
+          </a>
+        </div>
+        <svg-icon src="assets/accordion-arrow.svg" />
+      </button>
+
+      @if (isFooterSectionOpen(4)) {
+        <div class="cont-platform mt-6 grid grid-cols-3 gap-10">
+          @for (item of platfomLogos(); track $index) {
+            <a [href]="item.url" target="_blank" class="block">
+              <svg-icon [src]="item.icon" />
+            </a>
+          }
+        </div>
+      }
     </div>
   </div>
 
@@ -126,25 +178,51 @@
           >
           apply
         </div>
-        <div class="flex items-center text-xs mt-6 md:mt-0">© 2026 {{ t('footer.allRightsReserved') }}</div>
+        <div class="flex items-center text-xs text-gray-160 mt-6 md:mt-0">
+          © 2026 {{ t('footer.allRightsReserved') }}
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<ng-template #section let-title="title" let-items="items" let-extra="extra">
+<ng-template #section let-title="title" let-items="items" let-extra="extra" let-index="index">
   <div class="flex-1">
-    <h6 class="text-raisin-150 text-xs m-0 py-4 cursor-pointer tbc-bold w-fit">
-      {{ title }}
-    </h6>
+    <div class="hidden lg:block">
+      <h6 class="text-raisin-150 text-xs m-0 py-4 cursor-pointer tbc-bold w-fit">
+        {{ title }}
+      </h6>
 
-    <ul>
-      @for (item of items; track $index) {
-        <ng-container *ngTemplateOutlet="navLink; context: { item }" />
+      <ul>
+        @for (item of items; track $index) {
+          <ng-container *ngTemplateOutlet="navLink; context: { item }" />
+        }
+
+        <ng-container *ngTemplateOutlet="extra" />
+      </ul>
+    </div>
+
+    <div
+      [class.border-t]="index === 1"
+      class="flex flex-col lg:hidden w-full border-b border-b-gray-10 border-t-gray-10"
+    >
+      <div (click)="toggleFooterSection(index)" class="py-4 text-left cursor-pointer">
+        <button class="peer flex w-full items-center justify-between cursor-pointer" type="button">
+          <span class="block !tbc-medium text-sm"> {{ title }}</span>
+          <svg-icon src="assets/accordion-arrow.svg" />
+        </button>
+      </div>
+      @if (isFooterSectionOpen(index)) {
+        @for (item of items; track $index) {
+          <a
+            [routerLink]="`/${item.route}`"
+            class="cursor-pointer mb-5 block text-xs text-gray-160 hover:text-raisin-130 transition-colors duration-150"
+          >
+            {{ item.label }}
+          </a>
+        }
       }
-
-      <ng-container *ngTemplateOutlet="extra" />
-    </ul>
+    </div>
   </div>
 </ng-template>
 
@@ -221,7 +299,7 @@
 </ng-template>
 
 <ng-template #ruleLink let-href="href" let-label="label">
-  <li class="flex items-center h-11.5">
+  <li class="flex items-center h-4 md:h-11.5">
     <a
       [href]="href"
       rel="noopener noreferrer"
