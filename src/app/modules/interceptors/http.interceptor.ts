@@ -18,14 +18,12 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
 
   const currentUser = userStore.getUser()
   const accessToken = currentUser?.accessToken
-  const authReq = accessToken
-    ? req.clone({
-        setHeaders: {
-          Authorization: `Bearer ${accessToken}`,
-          ['Accept-Language']: transloco.getActiveLang(),
-        },
-      })
-    : req
+  const authReq = req.clone({
+    setHeaders: {
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      'Accept-Language': transloco.getActiveLang(),
+    },
+  })
 
   if (req.url.includes('/refresh')) return next(authReq)
 
