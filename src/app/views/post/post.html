@@ -38,7 +38,7 @@
           <div #swiper class="flex h-83.25 overflow-hidden rounded-xl border border-gray-180">
             @for (item of post?.images; track $index) {
               <div [attr.data-slide-index]="$index" class="flex justify-center shrink-0 w-full">
-                <img [src]="item" />
+                <img class="object-scale-down" [src]="item" />
               </div>
             }
           </div>
@@ -89,7 +89,7 @@
               class="border border-transparent mr-3 shrink-0 h-15 w-18.5 cursor-pointer overflow-hidden rounded-sm"
               [class.border-yellow]="$index == slideIndex()"
             >
-              <img class="h-full w-full object-fill" [src]="item" fallback="assets/no-image.png" />
+              <img class="h-full w-full object-cover" [src]="item" fallback="assets/no-image.png" />
             </div>
           }
         </div>
@@ -204,23 +204,25 @@
     </div>
   </div>
 
-  <div class="mt-8">
-    <div class="mt-6 rounded-xl">
-      <span class="tbc-bold text-base mb-6 inline-block">{{ t('postDetails.specifications') }}</span>
-      @for (item of post?.attributes; track $index) {
-        <div
-          class="mb-3.5 grid grid-cols-2 border-0 lg:border-b border-[#DDDDDD40] border-opacity-25 pb-3.5 last-of-type:mb-0 last-of-type:border-none last-of-type:pb-0"
-        >
-          <span class="tbc-medium text-sm block text-gray-50">{{ item.attribute }}</span>
-          @if (item.attributeType !== attributeType.Bool) {
-            <span class="tbc-medium text-sm block">{{ item.value }}</span>
-          } @else {
-            <span class="tbc-medium text-sm block">{{ item.value == 1 ? 'Yes' : 'False' }}</span>
-          }
-        </div>
-      }
+  @if (post?.attributes?.length) {
+    <div class="mt-8">
+      <div class="mt-6 rounded-xl">
+        <span class="tbc-bold text-base mb-6 inline-block">{{ t('postDetails.specifications') }}</span>
+        @for (item of post?.attributes; track $index) {
+          <div
+            class="mb-3.5 grid grid-cols-2 border-0 lg:border-b border-[#DDDDDD40] border-opacity-25 pb-3.5 last-of-type:mb-0 last-of-type:border-none last-of-type:pb-0"
+          >
+            <span class="tbc-medium text-sm block text-gray-50">{{ item.attribute }}</span>
+            @if (item.attributeType !== attributeType.Bool) {
+              <span class="tbc-medium text-sm block">{{ item.value }}</span>
+            } @else {
+              <span class="tbc-medium text-sm block">{{ item.value == 1 ? 'Yes' : 'False' }}</span>
+            }
+          </div>
+        }
+      </div>
     </div>
-  </div>
+  }
 </div>
 
 <ng-template #asideBuy let-post="post">
