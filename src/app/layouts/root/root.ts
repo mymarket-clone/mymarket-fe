@@ -17,6 +17,5 @@ export class Root implements OnInit {
 
   public ngOnInit(): void {
     this.languageService.init()
-    this.languageService.set('en')
   }
 }

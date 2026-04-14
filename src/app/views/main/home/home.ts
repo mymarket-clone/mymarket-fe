@@ -6,6 +6,7 @@ import { HttpMethod } from '@app/types/enums/HttpMethod'
 import { Categories } from './categories/categories'
 import { PostSwiper } from './post-swiper/post-swiper'
 import { BrandComponent } from './brands/brands'
+
 @Component({
   selector: 'app-home',
   imports: [BrandComponent, Categories, PostSwiper],

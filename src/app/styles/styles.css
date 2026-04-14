@@ -48,18 +48,18 @@ body {
 
 html {
   scroll-behavior: smooth;
-  overflow-y: scroll;
+  overflow-y: hidden;
   height: 100vh;
-}
 
-app-root {
-  height: 100%;
+  scrollbar-color: #686868 #424242;
 }
 
 app-main-layout {
   flex-direction: column;
   display: flex;
   height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .menu-hover {
@@ -68,7 +68,7 @@ app-main-layout {
   }
 }
 
-#editorEl>div {
+#editorEl > div {
   height: 100%;
 }
 
@@ -159,48 +159,5 @@ input[type='number'] {
 
   to {
     opacity: 0;
-  }
-}
-
-.cont-platform {
-
-  svg,
-  svg>path {
-    height: 20px !important;
-  }
-
-  svg:nth-child(1),
-  svg:nth-child(3) {
-    width: 66px !important;
-  }
-
-  svg:nth-child(2) {
-    width: 68px !important;
-  }
-
-  svg:nth-child(4) {
-    width: 77px !important;
-  }
-
-  svg:nth-child(5) {
-    width: 69px !important;
-  }
-
-  svg:nth-child(6) {
-    width: 65px !important;
-  }
-
-  svg:nth-child(7) {
-    width: 71px !important;
-    height: 17px !important;
-  }
-
-  svg:nth-child(8) {
-    width: 64px !important;
-  }
-
-  svg:nth-child(8) {
-    width: 53px !important;
-    height: 18px !important;
   }
 }

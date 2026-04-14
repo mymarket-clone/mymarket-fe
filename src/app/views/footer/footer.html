@@ -2,7 +2,22 @@
   <div class="border-0 lg:border-b border-b-gray-10">
     <div class="container">
       <div class="my-10 flex flex-col items-start md:mx-auto md:flex-row md:items-center">
-        <ng-container *ngTemplateOutlet="storeLinks" />
+        <div class="mb-3.5 flex md:mb-0">
+          <a
+            target="_blank"
+            href="https://play.google.com/store/apps/details?id=ge.my.mymarket&utm_camapaign=marketing&utm_source=facebook&utm_term=main+video"
+            class="mr-3.5 last-of-type:mr-0 w-21 h-7"
+          >
+            <img class="h-full w-full" src="assets/google-play.svg" />
+          </a>
+          <a
+            target="_blank"
+            href="https://apps.apple.com/us/app/mymarket-ge/id1560783192?utm_camapaign=marketing&utm_source=facebook&utm_term=main+video"
+            class="mr-3.5 last-of-type:mr-0 w-21 h-7"
+          >
+            <img class="h-full w-full" src="assets/apple-store.svg" />
+          </a>
+        </div>
 
         <span class="max-w-xs text-xs opacity-70 md:ml-9.75 md:mt-0">
           {{ t('footer.download') }}
@@ -97,12 +112,31 @@
           "
         />
       </ul>
+
+      <div
+        inject
+        (stateChange)="languageSwitcherOpen.set($event)"
+        [content]="languageSwitcher"
+        [hoverable]="true"
+        trigger="click"
+        class="relative mt-3 md:mt-0 md:ml-6 flex items-center rounded-xl border border-gray-30 px-3 py-2.25 text-sm cursor-pointer transition-all w-40 justify-between md:w-auto"
+      >
+        <div class="flex items-center">
+          <svg-icon src="assets/globe.svg" />
+          <span class="tbc-medium text-sm ml-2 mr-2 block">{{ t('currentLangLabeled') }}</span>
+        </div>
+        <svg-icon
+          [class.rotate-180]="languageSwitcherOpen()"
+          class="transition-all duration-100"
+          src="assets/profile-arrow.svg"
+        />
+      </div>
     </div>
   </div>
 
   <div class="container px-3.75 my-8 hidden lg:block">
     <div class="rounded-[64px] border border-gray-40 flex items-center relative z-997">
-      <div class="flex justify-between items-center w-full">
+      <div class="flex flex-1 justify-between items-center w-full">
         <div class="w-32.5 mr-6 flex items-center justify-center rounded-[64px] h-16.5 bg-blue-100">
           <span class="flex items-center justify-center">
             <svg-icon src="assets/tnet3.svg" />
@@ -116,7 +150,7 @@
                   [href]="item.url"
                   class="hover:opacity-70 cursor-pointer h-5 flex items-center justify-center rounded-lg transition-all"
                 >
-                  <img [src]="item.icon" class="max-h-6.5 w-full h-full object-contain" />
+                  <svg-icon [src]="item.icon" />
                 </a>
               </div>
             </div>
@@ -147,7 +181,7 @@
       </button>
 
       @if (isFooterSectionOpen(4)) {
-        <div class="cont-platform mt-6 grid grid-cols-3 gap-10">
+        <div class="mt-6 grid grid-cols-3 gap-10">
           @for (item of platfomLogos(); track $index) {
             <a [href]="item.url" target="_blank" class="block">
               <svg-icon [src]="item.icon" />
@@ -185,6 +219,31 @@
     </div>
   </div>
 </div>
+
+<ng-template #languageSwitcher>
+  <div
+    class="absolute z-50 mt-3 rounded-2xl border border-gray-30 bg-white shadow-[0_6px_18px_0_rgba(0,0,0,0.2)] bottom-12 left-0 w-65 md:-left-34"
+  >
+    <div class="my-3">
+      <span class="tbc-regular text-xs mb-2 block px-7 text-[#b3b3b3]">{{ 'language' | transloco }}</span>
+
+      @for (lang of languageService.languages; track lang.code) {
+        <div (click)="switchLang(lang.code)" class="language-switcher-item">
+          <div
+            class="mr-4 flex h-6 w-6 rounded-full border"
+            [class.border-[7px]]="languageService.current === lang.code"
+            [class.border-gray-40]="languageService.current !== lang.code"
+            [class.border-yellow]="languageService.current === lang.code"
+          ></div>
+
+          <span class="font-tbcx-regular text-sm block">
+            {{ lang.label }}
+          </span>
+        </div>
+      }
+    </div>
+  </div>
+</ng-template>
 
 <ng-template #section let-title="title" let-items="items" let-extra="extra" let-index="index">
   <div class="flex-1">
@@ -249,25 +308,6 @@
       {{ item.name }}
     </a>
   </li>
-</ng-template>
-
-<ng-template #storeLinks>
-  <div class="mb-3.5 flex md:mb-0">
-    <a
-      target="_blank"
-      href="https://play.google.com/store/apps/details?id=ge.my.mymarket&utm_camapaign=marketing&utm_source=facebook&utm_term=main+video"
-      class="mr-3.5 last-of-type:mr-0 w-21 h-7"
-    >
-      <img class="h-full w-full" src="assets/google-play.svg" />
-    </a>
-    <a
-      target="_blank"
-      href="https://apps.apple.com/us/app/mymarket-ge/id1560783192?utm_camapaign=marketing&utm_source=facebook&utm_term=main+video"
-      class="mr-3.5 last-of-type:mr-0 w-21 h-7"
-    >
-      <img class="h-full w-full" src="assets/apple-store.svg" />
-    </a>
-  </div>
 </ng-template>
 
 <ng-template #socialIcons>

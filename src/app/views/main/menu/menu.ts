@@ -8,6 +8,7 @@ import { MenuRight } from './menu-right/menu-right'
 import { SvgIconComponent } from 'angular-svg-icon'
 import { UserStore } from '@app/stores/user.store'
 import { MenuItem } from '@app/types/MenuItem'
+import { getScrollableElement } from '@app/helpers/getScrollableElement'
 
 @Component({
   selector: 'app-menu',
@@ -32,7 +33,7 @@ export class Menu {
   }
 
   public scrollToTop(): void {
-    window.scrollTo({
+    getScrollableElement()?.scrollTo({
       top: 0,
       behavior: 'smooth',
     })

@@ -1,3 +1,5 @@
+@let user = currentUserState?.data();
+
 <div *transloco="let t">
   <div class="border-b border-gray-10 bg-white">
     <div
@@ -9,7 +11,7 @@
             <svg-icon src="assets/logo-big.svg" alt="Logo" />
           </a>
         </div>
-        <div>
+        <div [class]="isSearchVisible() ? 'block' : 'hidden'">
           <form
             autocorrect="off"
             autocomplete="off"
@@ -29,54 +31,194 @@
           </form>
         </div>
       </div>
-      <ul class="navbar-nav flex items-center ml-1">
-        <button
-          routerLink="/menu/add-advertisement"
-          class="flex items-center bg-yellow-20 px-6 h-10 max-w-34.5 rounded-xl hover:bg-yellow-30 transition-all duration-300 ease-in-out cursor-pointer"
-        >
-          <span class="mr-2 shrink w-5.25 h-5.25">
-            <svg-icon src="assets/header-add.svg" />
-          </span>
-          <span class="tbc-medium text-xs">Add</span>
-        </button>
-      </ul>
-    </div>
-  </div>
 
-  <div class="hidden lg:flex border-b border-gray-10 bg-white">
-    <div class="container flex justify-between w-full overflow-hidden">
-      <div class="flex items-center justify-between px-4 md:px-0">
-        @for (item of navbar?.()?.slice(0, 5); track $index) {
-          <div class="mr-5 text-sm hover:text-primary-100 xl:mr-9">
-            <a
-              [routerLink]="item.key"
-              class="cursor-pointer py-2 flex items-center text-raisin-150 text-sm hover:text-yellow! transition-all ease-in-out duration-300"
+      @if (!currentUserState?.loading()) {
+        <div class="hidden lg:flex items-center">
+          <button
+            routerLink="/menu/add-advertisement"
+            class="flex items-center bg-yellow-20 px-6 h-10 mr-2 rounded-xl hover:bg-yellow-30 transition-all duration-300 ease-in-out cursor-pointer"
+          >
+            <span class="mr-2 shrink w-5.25 h-5.25">
+              <svg-icon src="assets/header-add.svg" />
+            </span>
+            <span class="tbc-medium text-xs text-nowrap">{{ t('header.addListing') }}</span>
+          </button>
+
+          <div class="mr-4 flex items-center min-w-31.5">
+            <div routerLink="/menu/my-messages" class="header-icon">
+              <svg-icon src="assets/message-s.svg" />
+            </div>
+            <div routerLink="/menu/my-favourites" class="header-icon ml-1 mr-0.5">
+              <svg-icon src="assets/favourite-s.svg" />
+            </div>
+            <div routerLink="/menu/my-cart" class="header-icon">
+              <svg-icon src="assets/cart-s.svg" />
+            </div>
+          </div>
+
+          <div
+            inject
+            [content]="profileDropdown"
+            trigger="click"
+            [hoverable]="true"
+            type="button"
+            (stateChange)="profileDropdownOpen.set($event)"
+            [routerLink]="!user && !currentUserState?.loading() ? '/user/login' : undefined"
+            [class.border-black-100]="profileDropdownOpen()"
+            class="mr-3 relative"
+          >
+            <div
+              class="min-h-[39.8px] flex items-center rounded-xl border border-gray-30 px-3 text-sm cursor-pointer hover:bg-gray-10 transition-all py-2 select-none"
             >
-              @if (item.iconPath) {
+              @if (currentUserState?.loading()) {
+                <div class="animate-pulse bg-[#e7e9ef] h-5.5 w-5.5 rounded-full"></div>
+                <div class="animate-pulse rounded-md bg-[#e7e9ef] ml-2 h-4 w-13.5"></div>
+              } @else if (user) {
+                <svg-icon src="assets/avatar.svg" class="min-w-6" />
+                <span class="tbc-medium text-sm ml-2 mr-2 block">{{ user?.name }}</span>
                 <svg-icon
-                  class="mr-1"
-                  [class.w-4]="$index === 3"
-                  [class.w-4]="$index === 4"
-                  [src]="item.iconPath"
+                  class="transition-all min-w-2"
+                  [class.rotate-180]="profileDropdownOpen()"
+                  src="assets/profile-arrow.svg"
                 />
+              } @else if (!user && !currentUserState?.loading()) {
+                <svg-icon class="min-w-5.5" src="assets/user-s.svg" />
+                <span class="tbc-medium text-sm ml-2">{{ t('auth.signIn') }}</span>
               }
-              <span [class.ml-[6px]]="$last">{{ item.label }}</span>
-            </a>
+            </div>
           </div>
-        }
-      </div>
-      <div class="flex items-center justify-between py-2.25 px-4 md:px-0">
-        @for (item of navbar?.()?.slice(5, 9); track $index) {
-          <div [class.mr-0!]="$last" class="mr-5 text-sm hover:text-primary-100 xl:mr-9">
-            <a
-              [routerLink]="item.key"
-              class="cursor-pointer py-2 flex items-center text-raisin-150 text-sm hover:text-yellow! transition-all ease-in-out duration-300"
+
+          <div class="relative">
+            <button
+              inject
+              [content]="headerSites"
+              [hoverable]="true"
+              type="button"
+              trigger="click"
+              (stateChange)="headerSitesOpen.set($event)"
+              [class.border-blue-100!]="headerSitesOpen()"
+              [class.bg-blue-100!]="headerSitesOpen()"
+              class="cursor-pointer rounded-full border border-gray-170 p-1.75 hover:border-blue-100 focus:outline-none transition-colors duration-100 min-h-[39.8px] min-w-[39.8px]"
             >
-              {{ item.label }}
-            </a>
+              <svg-icon
+                [class.fill-[#3C74FF]]="!headerSitesOpen()"
+                [class.fill-white]="headerSitesOpen()"
+                src="assets/tnet-rounded.svg"
+              />
+            </button>
           </div>
-        }
-      </div>
+        </div>
+
+        <div class="flex lg:hidden select-none">
+          <button (click)="openBurger()" type="button" class="cursor-pointer relative rounded-full">
+            <svg-icon src="assets/burger.svg" />
+          </button>
+        </div>
+      }
     </div>
   </div>
 </div>
+
+<ng-template #headerSites>
+  <div class="absolute -left-82.5 z-9999 mt-3 w-92.5">
+    <div class="rounded-2xl bg-white py-4 shadow-[0_6px_18px_0_rgba(0,0,0,0.2)]">
+      <h3 class="tbc-medium text-base mb-2 px-8 uppercase">TNET</h3>
+      <p class="tbc-regular text-xs px-8 text-left text-gray-160">{{ 'meta.avatarDropText' | transloco }}</p>
+      <div class="mx-3 mt-3 grid grid-cols-3 gap-2">
+        @for (item of platfomLogos(); track $index) {
+          <a
+            [href]="item.url"
+            target="_blank"
+            class="cursor-pointer flex h-20 items-center justify-center rounded-lg hover:bg-gray-10 transition-colors duration-150"
+          >
+            @if (item.key === 'saba') {
+              <img [src]="item.icon" width="52" height="24" />
+            } @else {
+              <svg-icon [src]="item.icon" />
+            }
+          </a>
+        }
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #profileDropdown>
+  <div
+    class="absolute z-50 mt-3 rounded-2xl border border-gray-30 bg-white shadow-[0_6px_18px_0_rgba(0,0,0,0.2)] w-65 right-0"
+  >
+    <div class="border-b border-gray-180">
+      <div class="mx-6 my-4 flex items-center">
+        <svg-icon src="assets/avatar-l.svg" />
+        <div class="ml-3 cursor-pointer">
+          <p class="tbc-regular text-sm w-40 truncate">{{ user?.email }}</p>
+          <p class="tbc-regular text-sm">ID: {{ user?.id }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="mx-6 my-2">
+      @for (item of avatarDropdownItems(); track $index) {
+        <a [routerLink]="item.route" class="block py-1.5">
+          <span class="tbc-regular text-sm hover:text-yellow transition-colors duration-200 ease-in-out">{{
+            item.label
+          }}</span>
+        </a>
+      }
+    </div>
+    <div *transloco="let t" class="border-t border-gray-180">
+      <div (click)="logout()" class="mx-6 my-4">
+        <p class="tbc-regular text-sm cursor-pointer">
+          {{ t('menu.logOut') }}
+        </p>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #burgerMenu>
+  <div *transloco="let t" class="fixed bg-white z-9999 right-3.75 top-0 left-0 bottom-0">
+    <div class="py-7 px-3">
+      <div class="flex justify-between items-center select-none">
+        <div class="text-sm text-blue-gray">{{ t('meta.menu') }}</div>
+        <span (click)="closeBurger()" class="cursor-pointer rounded-full bg-[#f2f2f6]">
+          <div class="p-1">
+            <svg-icon src="assets/close-cross.svg" class="h-6 w-6 block" />
+          </div>
+        </span>
+      </div>
+
+      <div class="mb-6 mt-2 border-b pb-6 border-gray-180">
+        @for (item of navbar(); track $index) {
+          <div (click)="navigateTo(item.key)" class="mb-4 block cursor-pointer last-of-type:mb-0">
+            <span class="tbc-regular text-base flex items-center">
+              {{ item.label }}
+              <svg-icon src="assets" />
+            </span>
+          </div>
+        }
+        @if (userStore.getUser()) {
+          <div (click)="logout()" class="mb-4 block cursor-pointer last-of-type:mb-0">
+            <span class="tbc-regular text-base flex items-center">
+              {{ t('navbar.logout') }}
+            </span>
+          </div>
+        }
+      </div>
+
+      <div class="flex">
+        @for (lang of languageService.languages; track lang.code) {
+          <div
+            (click)="switchLang(lang.code)"
+            class="mr-2 rounded-lg border px-2 py-2 cursor-pointer"
+            [class.border-black-20!]="languageService.current === lang.code"
+            [class.bg-gray-165!]="languageService.current === lang.code"
+          >
+            <span class="font-tbcx-regular text-sm block cur sor-pointer">
+              {{ lang.label }}
+            </span>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</ng-template>

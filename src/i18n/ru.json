@@ -2,8 +2,16 @@
   "lang": "русский",
   "langCode": "ru",
   "langAbbr": "рус",
+  "language": "Язык",
+  "currentLangLabeled": "Русский",
+  "meta": {
+    "avatarDropText": "Крупнейшая технологическая экосистема, объединяющая 10 платформ",
+    "menu": "Меню"
+  },
   "common": {
-    "search": "Поиск"
+    "search": "Поиск",
+    "yes": "Да",
+    "no": "Нет"
   },
   "auth": {
     "emailOrPhone": "E-mail / номер телефона",
@@ -52,6 +60,159 @@
     "valueAtMost": "Максимальное значение {{max}}",
     "onlyLetters": "{{field}} должно содержать только буквы",
     "lengthMustBe": "Длина должна быть {{length}}",
-    "noMatch": "Значение полей не совпадает"
+    "noMatch": "Значение полей не совпадает",
+    "maxLength": "Поле не должно превышать {{maxLength}} символов",
+    "nothingFound": "Ничего не найдено"
+  },
+  "header": {
+    "addListing": "Добавить объявление"
+  },
+  "navbar": {
+    "installments": "Б/у в рассрочку",
+    "tradeIn": "Трейд Ин",
+    "shops": "Магазины",
+    "sale": "Скидка",
+    "giveAway": "Подарить",
+    "openShop": "Открыть магазин",
+    "blog": "Блог",
+    "help": "Помощь",
+    "contact": "Контакт",
+    "sendMessage": "Отправить сообщение",
+    "requestCall": "Заказать звонок",
+    "rate": "Оценить",
+    "protectPhishing": "Защита от фишинга",
+    "termsAndConditions": "Условия и положения",
+    "logout": "Выйти"
+  },
+  "menu": {
+    "balance": "Баланс",
+    "topUp": "Пополнить",
+    "addAdvertisement": "Добавить объявление",
+    "myListing": "Мои объявления",
+    "myCards": "Мои карты",
+    "myAuction": "Мои аукционы",
+    "incomingOffers": "Входящие предложения",
+    "onlineOrders": "Онлайн заказы",
+    "myFinances": "Мои финансы",
+    "myMessages": "Сообщения",
+    "myFavourites": "Мои избранные",
+    "myCart": "Моя корзина",
+    "myOrders": "Мои заказы",
+    "sentOffers": "Отправленниые предложения",
+    "myAddresses": "Мои адреса",
+    "myBankAccounts": "Мои банковские аккаунты",
+    "editAccount": "Редактировать профиль",
+    "logOut": "Выйти"
+  },
+  "addPost": {
+    "home": "Главная страница",
+    "sell": "Продать",
+    "buy": "Купить",
+    "rent": "Аренда",
+    "services": "Услуги",
+    "used": "Б/У",
+    "new": "Новый",
+    "likeNew": "Как новый",
+    "forParts": "На запчасти",
+    "title": "Заголовок",
+    "description": "Описание",
+    "forPsn": "Адаптировано для ЛСП",
+    "psnText": "Отметьте, если продукт/услуга предназначены или адаптированы для людей со специальными потребностями",
+    "productDetails": "Детали объявления",
+    "mainCharacteristics": "Основные характеристики",
+    "price": "Цена",
+    "contactInfo": "Контактная информация",
+    "selectLocation": "Выберите место",
+    "name": "Имя",
+    "phoneNumber": "Номер телефона",
+    "indicatePrice": "Укажи цену товара",
+    "discount": "Скидка",
+    "offerPrice": "Предложить Цену",
+    "priceNegotiable": "Цена по договоренности",
+    "promoServices": "Промо Услуги",
+    "vipLabel": "Покажите свой продукт перед любым бесплатным листингом",
+    "vipPlusLabel": "Покажите свой продукт в карусели VIP+ на главной странице",
+    "vipPlusLabel2": "Покажите свой продукт перед любым бесплатным или VIP-листингом",
+    "vipSuperLabel": "Покажите свой продукт в карусели SUPER VIP на главной странице",
+    "vipSuperLabel2": "Покажите свой продукт перед ЛЮБЫМ листингом",
+    "chooseDaysNumber": "Выберите количество дней",
+    "days": {
+      "one": "{{count}} день",
+      "other": "{{count}} дней"
+    },
+    "day": "День",
+    "dayRange": "{{from}} - {{to}} День День: {{price}} ₾",
+    "chooseDays": "Выберите дни",
+    "addService": "Добвьте сервис",
+    "color": "Цвет",
+    "autoRenewal": "Aвтоматическое обновление",
+    "suitableTitle": "Добавьте подходящее название и описание на грузинском языке",
+    "morePeopleInterested": "Правильно подобранные фото заинтересуют больше людей ",
+    "uploadPhoto": "Загрузить изображение",
+    "maxPhoto": "Загрузить изображение",
+    "recommended": "Рекомендовано",
+    "youtubeVideo": "Видео Youtube",
+    "views": "Просмотры",
+    "calls": "Звонки",
+    "favourites": "Избранное",
+    "imageRequired": "необходимо загрузить изображение",
+    "total": "Сумма",
+    "totalPrice": "В сумме",
+    "cancel": "Отмена",
+    "publish": "Опубликовать",
+    "mainCharacteristicsLabel": "Предоставьте функции, которые облегчат клиентам поиск вашего продукта/услуги",
+    "select": "Выбрать",
+    "chooseTypeCategory": "Выбери категорию",
+    "advertisementType": "Тип объявления"
+  },
+  "home": {
+    "categories": {
+      "all": "Все категории",
+      "installments": "Б/у в рассрочку",
+      "discount": "Скидка"
+    },
+    "post": {
+      "seeAll": "Посмотреть всё",
+      "priceNegotiable": "Цена по договоренности"
+    }
+  },
+  "footer": {
+    "download": "Скачайте приложение и получите доступ к новейшим функциям",
+    "termsAndConditions": "Правила сайта",
+    "privacyPolicy": "Политика конфиденциальности",
+    "returnPolicy": "Политика возврата",
+    "allRightsReserved": "Все права защищены",
+    "navigation": {
+      "title": "Навигация",
+      "addAdvertisement": "Добавить объявление",
+      "buyOnline": "Покупай онлайн",
+      "usedProducts": "Б/у в рассрочку",
+      "safetyLanding": "Защита от фишинга",
+      "shops": "Магазины",
+      "openShop": "Открой магазин"
+    },
+    "help": {
+      "title": "Помощь",
+      "faq": "Часто задаваемые вопросы",
+      "contact": "Контакт",
+      "number": "(032) 280 00 35",
+      "mail": "info@mymarket.ge",
+      "feedback": "Анонимный отзыв"
+    },
+    "categories": {
+      "title": "Категории"
+    }
+  },
+  "postDetails": {
+    "home": "Главная страница",
+    "used": "Б/У",
+    "new": "Новый",
+    "likeNew": "Как новый",
+    "forParts": "На запчасти",
+    "listing": "Обьявления",
+    "privatePerson": "Физияеское лицо",
+    "quickBuy": "Быстрая покупка",
+    "offerPrice": "Предложить Цену",
+    "specifications": "Характеристики"
   }
 }

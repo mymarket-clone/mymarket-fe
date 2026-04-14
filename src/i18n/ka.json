@@ -2,8 +2,16 @@
   "lang": "georgian",
   "langCode": "geo",
   "langAbbr": "ქარ",
+  "language": "ენა",
+  "currentLangLabeled": "ქართული",
+  "meta": {
+    "avatarDropText": "ყველაზე დიდი ტექნოლოგიური ეკოსისტემა, რომელიც აერთიანებს 10 პლატფორმას",
+    "menu": "მენიუ"
+  },
   "common": {
-    "search": "ძიება"
+    "search": "ძიება",
+    "yes": "დიახ",
+    "no": "არა"
   },
   "auth": {
     "emailOrPhone": "ელფოსტა / მობილურის ნომერი",
@@ -52,6 +60,159 @@
     "valueAtMost": "მაქსიმალური მნიშვნელობაა {{max}}",
     "onlyLetters": "{{field}} უნდა მოიცავდეს მხოლოდ ასოებს",
     "lengthMustBe": "სიგრძე უნდა იყოს {{length}} სიმბოლო",
-    "noMatch": "ველები არ ემთხვევა"
+    "noMatch": "ველები არ ემთხვევა",
+    "maxLength": "ველის სიგრძე არ უნდა ცდებოდეს {{maxLength}} სიმბოლოს",
+    "nothingFound": "ვერაფერი ვერ მოიძებნა"
+  },
+  "header": {
+    "addListing": "განცხადების დამატება"
+  },
+  "navbar": {
+    "installments": "მეორადი განვადებით",
+    "tradeIn": "Trade In",
+    "shops": "მაღაზიები",
+    "sale": "ფასდაკლებული",
+    "giveAway": "გააჩუქე",
+    "openShop": "გახსენი მაღაზია",
+    "blog": "ბლოგი",
+    "help": "დახმარება",
+    "contact": "კონტაქტი",
+    "sendMessage": "წერილის მიწერა",
+    "requestCall": "მოითხოვე ზარი",
+    "rate": "შეფასება",
+    "protectPhishing": "ფიშინგისგან თავდაცვა",
+    "termsAndConditions": "წესები და პირობები",
+    "logout": "გასვლა"
+  },
+  "menu": {
+    "balance": "ბალანსი",
+    "topUp": "შევსება",
+    "addAdvertisement": "შევსება",
+    "myListing": "ჩემი განცხადებები",
+    "myCards": "ჩემი ბარათები",
+    "myAuction": "ჩემი აუქციონი",
+    "incomingOffers": "შემოსული შეთავაზებები",
+    "onlineOrders": "ონლაინ გაყიდვები",
+    "myFinances": "ჩემი ფინანსები",
+    "myMessages": "შეტყობინებები",
+    "myFavourites": "ჩემი რჩეულები",
+    "myCart": "ჩემი კალათა",
+    "myOrders": "ჩემი შეკვეთები",
+    "sentOffers": "გაგზავნილი შეთავაზებები",
+    "myAddresses": "ჩემი მისამართები",
+    "myBankAccounts": "ჩემი საბანკო ანგარიშები",
+    "editAccount": "ანგარიშის რედაქტირება",
+    "logOut": "გასვლა"
+  },
+  "addPost": {
+    "home": "მთავარი",
+    "sell": "გაყიდვა",
+    "buy": "ყიდვა",
+    "rent": "გაქირავება",
+    "services": "მომსახურება",
+    "used": "მეორადი",
+    "new": "ახალი",
+    "likeNew": "ახალივით",
+    "forParts": "ნაწილებად",
+    "title": "დასახელება",
+    "description": "აღწერა",
+    "forPsn": "შშმპ ადაპტირებული",
+    "psnText": "მონიშნე ჩეკბოქსი, თუ პროდუქცია/სერვისი განკუთვნილია ან ადაპტირებულია სპეციალური საჭიროების მქონე პირებისთვის",
+    "productDetails": "განცხადების დეტალები",
+    "mainCharacteristics": "ძირითადი მახასიათებლები",
+    "price": "ფასი",
+    "contactInfo": "საკონტაქტო ინფორმაცია",
+    "selectLocation": "აირჩიე მდებარეობა ",
+    "name": "სახელი",
+    "phoneNumber": "მობილურის ნომერი",
+    "indicatePrice": "მიუთითე ნივთის ფასი",
+    "discount": "ფასდაკლება",
+    "offerPrice": "ფასის შეთავაზება",
+    "priceNegotiable": "ფასი შეთანხმებით",
+    "promoServices": "პრომო სერვისები",
+    "vipLabel": "გამოაჩინე შენი პროდუქტი უფასო განცხადებებზე წინ",
+    "vipPlusLabel": "გამოჩნდი VIP+ კარუსელში Mymarket-ის მთავარ გვერდზე",
+    "vipPlusLabel2": "გამოაჩინე შენი განცხადება ყველა უფასო და VIP განცხადებაზე ადრე",
+    "vipSuperLabel": "გამოაჩინე განცხადება Super Vip კარუსელში, საიტის მთავარ გვერდზე",
+    "vipSuperLabel2": "გამოაჩინე შენი განცხადება ყველა განცხადებაზე წინ",
+    "chooseDaysNumber": "აირჩიე დღეების რაოდენობა",
+    "days": {
+      "one": "{{count}} დღე",
+      "other": "{{count}} დღე"
+    },
+    "day": "დღე",
+    "dayRange": "{{from}} - {{to}} დღე დღე: {{price}} ₾",
+    "chooseDays": "აირჩიე დღეები",
+    "addService": "დაამატე სერვისი",
+    "color": "ფერი",
+    "autoRenewal": "ავტომატური განახლება",
+    "suitableTitle": "დაამატე შესაფერისი სათაური და აღწერა",
+    "morePeopleInterested": "სწორად შერჩეული ფოტოებით მეტ ადამიანს დააინტერესებ",
+    "uploadPhoto": "ფოტოს ატვირთვა",
+    "maxPhoto": "მაქსიმუმ 12 ფოტო",
+    "recommended": "რეკომენდირებულია",
+    "youtubeVideo": "Youtube ვიდეო",
+    "views": "ნახვები",
+    "calls": "ზარები",
+    "favourites": "რჩეულები",
+    "imageRequired": "ფოტოს ატვირთვა სავალდებულოა",
+    "total": "ჯამი",
+    "totalPrice": "ჯამური ფასი",
+    "cancel": "გაუქმება",
+    "publish": "გამოქვეყნება",
+    "mainCharacteristicsLabel": "მიუთითე მახასიათებლები, რომ გაუადვილდეს მომხმარებელს შენი პროდუქტის/სერვისის პოვნა",
+    "select": "აირჩიე",
+    "chooseTypeCategory": "აირჩიე/ჩაწერე კატეგორია",
+    "advertisementType": "განცხადების ტიპი"
+  },
+  "home": {
+    "categories": {
+      "all": "ყველა კატეგორია",
+      "installments": "მეორადი განვადებით",
+      "discount": "ფასდაკლებული"
+    },
+    "post": {
+      "seeAll": "ყველას ნახვა",
+      "priceNegotiable": "ფასი შეთანხმებით"
+    }
+  },
+  "footer": {
+    "download": "გადმოწერე აპლიკაცია და მიიღე მუდმივად განახლებული ინფორმაცია მარტივად",
+    "termsAndConditions": "წესები და პირობები",
+    "privacyPolicy": "კონფიდენციალურობის პოლიტიკა",
+    "returnPolicy": "დაბრუნების პოლიტიკა",
+    "allRightsReserved": "ყველა უფლება დაცულია",
+    "navigation": {
+      "title": "ნავიგაცია",
+      "addAdvertisement": "განცხადების დამატება",
+      "buyOnline": "იყიდე ონლაინ",
+      "usedProducts": "მეორადი ნივთები",
+      "safetyLanding": "ფიშინგისგან თავდაცვა",
+      "shops": "მაღაზიები",
+      "openShop": "გახსენი მაღაზია"
+    },
+    "help": {
+      "title": "დახმარება",
+      "faq": "ხშირად დასმული კითხვები",
+      "contact": "წერილის მიწერა",
+      "number": "(032) 280 00 35",
+      "mail": "info@mymarket.ge",
+      "feedback": "ანონიმური უკუკავშირი"
+    },
+    "categories": {
+      "title": "კატეგორიები"
+    }
+  },
+  "postDetails": {
+    "home": "მთავარი",
+    "used": "მეორადი",
+    "new": "ახალი",
+    "likeNew": "ახალივით",
+    "forParts": "ნაწილებად",
+    "listing": "განცხადება",
+    "privatePerson": "ფიზიკური პირი",
+    "quickBuy": "სწრაფი შეძენა",
+    "offerPrice": "ფასის შეთავაზება",
+    "specifications": "სპეციფიკაციები"
   }
 }

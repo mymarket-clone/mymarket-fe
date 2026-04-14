@@ -2,6 +2,12 @@
   "lang": "english",
   "langCode": "en",
   "langAbbr": "Eng",
+  "language": "Language",
+  "currentLangLabeled": "English",
+  "meta": {
+    "avatarDropText": "The largest technological ecosystem that combines 10 platforms",
+    "menu": "Menu"
+  },
   "common": {
     "search": "Search",
     "yes": "Yes",
@@ -58,6 +64,9 @@
     "maxLength": "Field must not exceed {{maxLength}}",
     "nothingFound": "Nothing found"
   },
+  "header": {
+    "addListing": "Add Listing"
+  },
   "navbar": {
     "installments": "Installments",
     "tradeIn": "Trade In",
@@ -67,7 +76,13 @@
     "openShop": "Open Shop",
     "blog": "Blog",
     "help": "Help",
-    "contact": "Contact"
+    "contact": "Contact",
+    "sendMessage": "Send Message",
+    "requestCall": "Request Call",
+    "rate": "Rate",
+    "protectPhishing": "Protect from Phishing",
+    "termsAndConditions": "Terms and Conditions",
+    "logout": "Log out"
   },
   "menu": {
     "balance": "Balance",
@@ -126,7 +141,7 @@
       "other": "{{count}} Days"
     },
     "day": "Day",
-    "dayRange": "{{from}} - {{to}} Day Day: {{price}} GEL",
+    "dayRange": "{{from}} - {{to}} Day Day: {{price}} ₾",
     "chooseDays": "Choose days",
     "addService": "Add service",
     "color": "Color",
@@ -146,7 +161,9 @@
     "cancel": "Cancel",
     "publish": "Publish",
     "mainCharacteristicsLabel": "Provide features to make it easier for customers to find your product/service",
-    "select": "Select"
+    "select": "Select",
+    "chooseTypeCategory": "Choose/type Category",
+    "advertisementType": "Advertisement Type"
   },
   "home": {
     "categories": {
@@ -178,6 +195,7 @@
       "title": "Help",
       "faq": "Frequently asked questions",
       "contact": "Contact",
+      "number": "(032) 280 00 35",
       "mail": "info@mymarket.ge",
       "feedback": "Anonymous feedback"
     },

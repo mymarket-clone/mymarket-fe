@@ -2,10 +2,12 @@ import {
   Directive,
   ElementRef,
   EmbeddedViewRef,
+  HostListener,
   Renderer2,
   TemplateRef,
   ViewContainerRef,
   input,
+  output,
 } from '@angular/core'
 
 @Directive({
@@ -19,10 +21,15 @@ export class InjectElementDirective {
   public content = input.required<TemplateRef<unknown>>()
   public context = input<{ text?: string }>()
   public hoverable = input<boolean>(false)
+
+  public trigger = input<'hover' | 'click'>('hover')
+  public closeOnOutsideClick = input<boolean>(true)
+  public stateChange = output<boolean>()
+
   private embeddedViewRef?: EmbeddedViewRef<unknown>
   private tooltipEl?: HTMLElement
-  private hovering: boolean = false
-  private hasView: boolean = false
+  private hovering = false
+  private hasView = false
   private hideTimeout?: ReturnType<typeof setTimeout>
 
   public constructor(
@@ -32,18 +39,46 @@ export class InjectElementDirective {
   ) {}
 
   public onMouseEnter(): void {
+    if (this.trigger() !== 'hover') return
     this.hovering = true
+    this.show()
+  }
 
+  public onMouseLeave(): void {
+    if (this.trigger() !== 'hover') return
+    this.hovering = false
+    this.hide()
+  }
+
+  @HostListener('click', ['$event'])
+  public onClick(event: MouseEvent): void {
+    if (this.trigger() !== 'click') return
+
+    event.stopPropagation()
+
+    if (this.hasView) {
+      this.hide(true)
+    } else {
+      this.show()
+    }
+  }
+
+  @HostListener('document:click')
+  public onDocumentClick(): void {
+    if (this.trigger() !== 'click' || !this.closeOnOutsideClick()) return
+
+    if (this.hasView) {
+      this.hide(true)
+    }
+  }
+
+  private show(): void {
     if (this.hideTimeout) {
       clearTimeout(this.hideTimeout)
       this.hideTimeout = undefined
-      if (this.tooltipEl) {
-        this.renderer.removeClass(this.tooltipEl, 'opacity-0')
-        this.renderer.addClass(this.tooltipEl, 'opacity-100')
-      }
     }
 
-    if (!this.hasView && this.content) {
+    if (!this.hasView) {
       this.vcr.clear()
 
       this.embeddedViewRef = this.vcr.createEmbeddedView(this.content(), this.context())
@@ -68,24 +103,25 @@ export class InjectElementDirective {
       })
 
       this.hasView = true
+      this.stateChange.emit(true)
     }
   }
 
-  public onMouseLeave(): void {
-    this.hovering = false
+  private hide(force = false): void {
+    if (!this.tooltipEl) return
 
-    if (this.hasView && this.tooltipEl) {
-      this.renderer.removeClass(this.tooltipEl, 'opacity-100')
-      this.renderer.addClass(this.tooltipEl, 'opacity-0')
+    this.renderer.removeClass(this.tooltipEl, 'opacity-100')
+    this.renderer.addClass(this.tooltipEl, 'opacity-0')
 
-      this.hideTimeout = setTimeout(() => {
-        if (!this.hovering) {
-          this.vcr.clear()
-          this.hasView = false
-          this.tooltipEl = undefined
-        }
-        this.hideTimeout = undefined
-      }, 300)
-    }
+    this.hideTimeout = setTimeout(() => {
+      if (force || !this.hovering) {
+        this.vcr.clear()
+        this.hasView = false
+        this.tooltipEl = undefined
+
+        this.stateChange.emit(false)
+      }
+      this.hideTimeout = undefined
+    }, 300)
   }
 }

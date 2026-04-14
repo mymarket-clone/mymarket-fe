@@ -1,4 +1,4 @@
-<div *transloco="let t" class="relative flex flex-nowrap mt-6 gap-6">
+<div *transloco="let t" class="relative flex flex-nowrap mt-6 gap-y-6 max-w-auto! xl:max-w-166.25!">
   <form
     autocomplete="off"
     [formGroup]="adForm.form"
@@ -14,7 +14,7 @@
         [values]="postTypeValues"
         [hightlightLabel]="true"
         (onSelect)="adForm.getControl('categoryId').reset()"
-        label="Advertisement type"
+        [label]="t('addPost.advertisementType')"
       />
       <app-dropdown
         [required]="true"
@@ -24,8 +24,8 @@
         [hightlightLabel]="true"
         (triggerParentOnDeepestSelect)="getMainCharacteristics($event)"
         dataEndpoint="categories"
-        label="Choose/type Category"
-        placeholder="Choose/type Category"
+        [label]="t('addPost.chooseTypeCategory')"
+        [placeholder]="t('addPost.chooseTypeCategory')"
         variant="dynamic"
       />
       @if (!!adForm.getControl('categoryId').value && adForm.getControl('postType').value < 3) {

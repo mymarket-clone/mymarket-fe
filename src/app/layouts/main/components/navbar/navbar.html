@@ -1,0 +1,36 @@
+<div class="hidden lg:flex border-b border-gray-10 bg-white">
+  <div class="container flex justify-between w-full overflow-hidden">
+    <div class="flex items-center justify-between px-4 md:px-0">
+      @for (item of navbar().slice(0, 4); track $index) {
+        <div class="mr-5 text-sm hover:text-primary-100 xl:mr-9">
+          <a
+            [routerLink]="item.key"
+            class="cursor-pointer py-2 flex items-center text-raisin-150 text-sm hover:text-yellow! transition-all ease-in-out duration-300"
+          >
+            @if (item.iconPath) {
+              <svg-icon
+                class="mr-1"
+                [class.w-4]="$index === 3"
+                [class.w-4]="$index === 4"
+                [src]="item.iconPath"
+              />
+            }
+            <span [class.ml-[6px]]="$last">{{ item.label }}</span>
+          </a>
+        </div>
+      }
+    </div>
+    <div class="flex items-center justify-between py-2.25 px-4 md:px-0">
+      @for (item of navbar().slice(4, 8); track $index) {
+        <div [class.mr-0!]="$last" class="mr-5 text-sm hover:text-primary-100 xl:mr-9">
+          <a
+            [routerLink]="item.key"
+            class="cursor-pointer py-2 flex items-center text-raisin-150 text-sm hover:text-yellow! transition-all ease-in-out duration-300"
+          >
+            {{ item.label }}
+          </a>
+        </div>
+      }
+    </div>
+  </div>
+</div>

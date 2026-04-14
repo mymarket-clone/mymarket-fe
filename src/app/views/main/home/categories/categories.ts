@@ -4,12 +4,9 @@ import { SvgIconComponent } from 'angular-svg-icon'
 import { RouterLink } from '@angular/router'
 import { buildCategoryCards, chunkItems } from './categories.utils'
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco'
-import { IHomeCategory } from '@app/interfaces/response/IHomeCategory'
 import { Swiper } from '@app/components/swiper/swiper'
-import { IHttpService } from '@app/interfaces/common/IHttpService'
-import { ApiService } from '@app/services/http/api.service'
 import { HomeCategoryCard } from '@app/types/CategoryRoute'
-import { HttpMethod } from '@app/types/enums/HttpMethod'
+import { HomeCategoriesService } from '@app/services/home-categories.service'
 
 @Component({
   selector: 'app-categories',
@@ -17,17 +14,11 @@ import { HttpMethod } from '@app/types/enums/HttpMethod'
   imports: [NgTemplateOutlet, SvgIconComponent, RouterLink, TranslocoDirective],
 })
 export class Categories extends Swiper {
-  public categoriesState?: IHttpService<IHomeCategory[]>
-
   public constructor(
-    private readonly apiService: ApiService,
-    private readonly ts: TranslocoService
+    private readonly ts: TranslocoService,
+    public readonly homeCategories: HomeCategoriesService
   ) {
     super()
-    this.categoriesState = this.apiService.request({
-      endpoint: 'home-categories',
-      method: HttpMethod.GET,
-    })
   }
 
   protected override get maxIndex(): number {
@@ -35,7 +26,7 @@ export class Categories extends Swiper {
   }
 
   public categoryCards = computed<HomeCategoryCard[]>(() => {
-    return buildCategoryCards(this.categoriesState?.data() ?? [], this.specialCards())
+    return buildCategoryCards(this.homeCategories.categories ?? [], this.specialCards())
   })
 
   public groupedCategories = computed<HomeCategoryCard[][]>(() => {

@@ -1,29 +1,37 @@
 import { Component, computed, signal } from '@angular/core'
 import { SvgIconComponent } from 'angular-svg-icon'
-import { TranslocoDirective, TranslocoService } from '@jsverse/transloco'
+import { TranslocoDirective, TranslocoPipe, TranslocoService } from '@jsverse/transloco'
 import { CommonModule } from '@angular/common'
 import { RouterLink } from '@angular/router'
-import { IHttpService } from '@app/interfaces/common/IHttpService'
-import { IHomeCategory } from '@app/interfaces/response/IHomeCategory'
-import { ApiService } from '@app/services/http/api.service'
-import { HttpMethod } from '@app/types/enums/HttpMethod'
+import { HomeCategoriesService } from '@app/services/home-categories.service'
+import { InjectElementDirective } from '@app/modules/directives/injectElement.directive'
+import { LanguageService } from '@app/services/language.service'
+import { Language } from '@app/types/Language'
 
 @Component({
   selector: 'app-footer',
   templateUrl: 'footer.html',
-  imports: [SvgIconComponent, TranslocoDirective, CommonModule, RouterLink],
+  imports: [
+    SvgIconComponent,
+    TranslocoDirective,
+    CommonModule,
+    RouterLink,
+    InjectElementDirective,
+    TranslocoPipe,
+  ],
 })
 export class Footer {
-  public categoriesState?: IHttpService<IHomeCategory[]>
+  public languageSwitcherOpen = signal<boolean>(false)
 
   public constructor(
-    private readonly apiService: ApiService,
-    private readonly ts: TranslocoService
-  ) {
-    this.categoriesState = this.apiService.request({
-      endpoint: 'home-categories',
-      method: HttpMethod.GET,
-    })
+    private readonly ts: TranslocoService,
+    private readonly homeCategories: HomeCategoriesService,
+    public readonly languageService: LanguageService
+  ) {}
+
+  public switchLang(lang: Language): void {
+    this.languageService.set(lang)
+    window.location.reload()
   }
 
   private sectionStates: Record<number, ReturnType<typeof signal<boolean>>> = {
@@ -48,32 +56,26 @@ export class Footer {
   public navigation = computed(() => {
     return [
       {
-        key: 'addAdvertisement',
         label: this.ts.translate('footer.navigation.addAdvertisement'),
         route: '/menu/add-advertisement',
       },
       {
-        key: 'buyOnline',
         label: this.ts.translate('footer.navigation.buyOnline'),
         route: '/buy-online',
       },
       {
-        key: 'usedProducts',
         label: this.ts.translate('footer.navigation.usedProducts'),
         route: '/used-products',
       },
       {
-        key: 'safetyLanding',
         label: this.ts.translate('footer.navigation.safetyLanding'),
         route: '/safety',
       },
       {
-        key: 'shops',
         label: this.ts.translate('footer.navigation.shops'),
         route: '/shops',
       },
       {
-        key: 'openShop',
         label: this.ts.translate('footer.navigation.openShop'),
         route: '/open-shop',
       },
@@ -83,22 +85,14 @@ export class Footer {
   public help = computed(() => {
     return [
       {
-        key: 'faq',
         label: this.ts.translate('footer.help.faq'),
         route: '/faq',
       },
       {
-        key: 'contact',
         label: this.ts.translate('footer.help.contact'),
         route: '/contact',
       },
       {
-        key: 'mail',
-        label: this.ts.translate('footer.help.mail'),
-        route: '/mail',
-      },
-      {
-        key: 'feedback',
         label: this.ts.translate('footer.help.feedback'),
         route: '/feedback',
       },
@@ -106,7 +100,7 @@ export class Footer {
   })
 
   public navigationColumns = computed(() => {
-    const items = (this.categoriesState?.data() || []).slice(0, 16)
+    const items = (this.homeCategories.categories || []).slice(0, 16)
 
     return [items.slice(0, 6), items.slice(6, 12), items.slice(12, 16)]
   })
@@ -114,49 +108,40 @@ export class Footer {
   public platfomLogos = computed(() => {
     return [
       {
-        key: 'myauto',
         url: 'https://www.myauto.ge',
-        icon: 'assets/myauto.svg',
+        icon: 'assets/footer-sites-logos/my-auto.svg',
       },
       {
-        key: 'myparts',
         url: 'https://www.myparts.ge',
-        icon: 'assets/myparts.svg',
+        icon: 'assets/footer-sites-logos/my-parts.svg',
       },
       {
-        key: 'myhome',
-        url: 'https://www.myhome.ge',
-        icon: 'assets/myhome.svg',
-      },
-      {
-        key: 'mymarket',
         url: 'https://www.mymarket.ge',
-        icon: 'assets/mymarket.svg',
+        icon: 'assets/footer-sites-logos/my-market.svg',
       },
       {
-        key: 'myjobs',
+        url: 'https://www.myhome.ge',
+        icon: 'assets/footer-sites-logos/my-home.svg',
+      },
+      {
         url: 'https://myjobs.ge',
-        icon: 'assets/myjobs.svg',
+        icon: 'assets/footer-sites-logos/my-jobs.svg',
       },
       {
-        key: 'superapp',
         url: 'https://superapp.tnet.ge',
-        icon: 'assets/superapp.svg',
+        icon: 'assets/footer-sites-logos/superapp.svg',
       },
       {
-        key: 'tktge',
         url: 'https://tkt.ge',
-        icon: 'assets/tktge.svg',
+        icon: 'assets/footer-sites-logos/tktge.svg',
       },
       {
-        key: 'swoop',
         url: 'https://swoop.ge',
-        icon: 'assets/swoop.svg',
+        icon: 'assets/footer-sites-logos/swoop.svg',
       },
       {
-        key: 'livo',
         url: 'https://livo.ge',
-        icon: 'assets/livo.svg',
+        icon: 'assets/footer-sites-logos/livo.svg',
       },
     ]
   })

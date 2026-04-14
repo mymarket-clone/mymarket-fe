@@ -14,6 +14,7 @@ export class LanguageService {
   }
 
   public set(lang: Language): void {
+    if (this.transloco.getActiveLang() === lang) return
     this.transloco.setActiveLang(lang)
     localStorage.setItem(this.STORAGE_KEY(), lang)
   }
@@ -21,4 +22,10 @@ export class LanguageService {
   public get current(): Language {
     return this.transloco.getActiveLang() as Language
   }
+
+  public languages = [
+    { code: 'ka', label: 'ქართული' },
+    { code: 'en', label: 'English' },
+    { code: 'ru', label: 'Русский' },
+  ] as const
 }

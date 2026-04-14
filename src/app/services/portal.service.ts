@@ -1,19 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable, signal } from '@angular/core'
-import { ComponentPortal } from '@angular/cdk/portal'
+import { Portal } from '@angular/cdk/portal'
+import { getScrollableElement } from '@app/helpers/getScrollableElement'
 
 @Injectable({ providedIn: 'root' })
 export class PortalService {
-  public portal = signal<ComponentPortal<any> | null>(null)
+  public portal = signal<Portal<any> | null>(null)
 
   private defaultEnter = 'fade-in'
   private defaultLeave = 'fade-out'
   private defaultDuration = 300 - 15
 
-  public open(component: any, enterClass?: string): void {
-    this.portal.set(new ComponentPortal(component))
+  public open(portal: Portal<any>, enterClass?: string, scrollVisible: boolean = false): void {
+    this.portal.set(portal)
 
-    document.querySelector('html')?.classList.add('no-scroll')
+    if (!scrollVisible) {
+      getScrollableElement()?.classList.add('no-scroll')
+    }
 
     const animClass = enterClass || this.defaultEnter
 
@@ -34,7 +37,7 @@ export class PortalService {
       portalEl.classList.remove(this.defaultEnter)
       portalEl.classList.add(animClass)
 
-      document.querySelector('html')?.classList.remove('no-scroll')
+      getScrollableElement()?.classList.remove('no-scroll')
 
       setTimeout(() => this.portal.set(null), animDuration)
     } else {
