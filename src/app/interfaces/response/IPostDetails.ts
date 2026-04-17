@@ -29,6 +29,7 @@ export interface IPostDetails {
 export interface IBreadcrumbItem {
   id: number
   name: string
+  hasChildren: boolean
 }
 
 export interface IAttribute {

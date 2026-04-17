@@ -1,0 +1,98 @@
+@let data = postsState?.stableData();
+
+<div *transloco="let t" class="pb-13 container mx-auto">
+  <div class="hidden sm:block">
+    <div class="flex items-center">
+      <nav aria-label="breadcrumb" class="py-4 pr-4">
+        <ol class="flex flex-wrap items-center gap-y-1.5 wrap-break-word">
+          <li class="inline-flex items-center">
+            <a routerLink="/">
+              <span class="tbc-regular text-xs block text-blue-gray">{{ t('addPost.home') }}</span>
+            </a>
+          </li>
+          @if (data?.breadcrumb?.length) {
+            <li class="[&amp;&gt;svg]:size-3.5">
+              <svg-icon src="assets/breadcrumb-arrow.svg" />
+            </li>
+
+            @for (item of data?.breadcrumb; track $index) {
+              <div class="group flex items-center text-center">
+                <li class="inline-flex items-center">
+                  <a routerLink="/search" [queryParams]="{ page: 1, catId: item.id }">
+                    <span class="tbc-regular text-xs block text-blue-gray">{{ item.name }}</span>
+                  </a>
+                </li>
+              </div>
+              @if (!$last) {
+                <li class="[&amp;&gt;svg]:size-3.5">
+                  <svg-icon src="assets/breadcrumb-arrow.svg" />
+                </li>
+              }
+            }
+          }
+        </ol>
+      </nav>
+      <span class="tbc-medium text-xs text-blue-30">
+        {{ data?.result?.totalCount }} {{ t('post.listings') }}
+      </span>
+    </div>
+  </div>
+  <div class="z-40 mt-4 flex items-start justify-between">
+    <aside class="hidden h-fit w-60 shrink-0 rounded-lg bg-white pb-10 pt-3 lg:block xl:ml-0">
+      <div class="mb-6 flex flex-col items-start gap-3 px-4">
+        @if (data && data.breadcrumb) {
+          <div (click)="navigateBack()" class="flex items-center gap-1 hover:cursor-pointer">
+            <svg-icon src="assets/arrow-back.svg" />
+            <h1 class="tbc-medium text-base text-blue-30">
+              {{ data.breadcrumb.at(data.breadcrumb.at(-1)?.hasChildren ? -1 : -2)?.name }}
+            </h1>
+          </div>
+        }
+
+        <ul class="flex flex-col items-start gap-3">
+          @for (category of data?.categories; track $index) {
+            <a routerLink="/search" [queryParams]="{ catId: category.id }">
+              <h2
+                class="tbc-medium text-sm block w-full text-[#454b57] md:hover:text-blue-30 transition-colors duration-300"
+                [class.text-blue-30!]="getCurrentCategory() == category.id"
+              >
+                {{ category.name }} ({{ category.count }})
+              </h2>
+            </a>
+          }
+        </ul>
+      </div>
+      <div class="pt-5">
+        <hr class="mx-5 text-gray-180" />
+        <div class="mt-4 flex flex-col items-start gap-4">
+          <button class="flex w-full flex-nowrap items-center justify-between px-5" type="button">
+            <span class="font-tbcx-regular text-sm text-start text-raisin-150">{{ t('addPost.price') }}</span>
+            <svg-icon src="assets/profile-arrow.svg" />
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <div class="w-full overflow-x-hidden lg:ml-4">
+      <div
+        class="z-50 mb-4 flex w-full flex-col items-start justify-between md:flex-row md:items-center md:pr-20"
+      >
+        <div class="flex items-center gap-1">
+          <h4 class="tbc-medium text-lg">{{ data?.result?.totalCount }}</h4>
+          <h5 class="tbc-regular text-sm">{{ t('post.listings') }}</h5>
+        </div>
+      </div>
+      <div>
+        <main>
+          <div class="flex w-full flex-col items-center justify-center gap-2 min-h-45 md:gap-4 lg:pl-0">
+            @if (data?.result?.items) {
+              @for (item of data?.result?.items!; track $index) {
+                <search-post-card class="block w-full" [data]="item" />
+              }
+            }
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+</div>

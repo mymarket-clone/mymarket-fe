@@ -41,27 +41,14 @@
             @if (post().price && !post().isNegotiable) {
               @if (post().priceAfterDiscount) {
                 {{ post().priceAfterDiscount }}
-                @if (post().currencyType == currencyType.GEL) {
-                  ₾
-                } @else if (post().currencyType == currencyType.Dollar) {
-                  $
-                }
-
+                {{ getCurrencySymbol() }}
                 <span class="tbc-medium text-sm text-black-70 line-through ml-2">
                   {{ post().price }}
-                  @if (post().currencyType == currencyType.GEL) {
-                    ₾
-                  } @else if (post().currencyType == currencyType.Dollar) {
-                    $
-                  }
+                  {{ getCurrencySymbol() }}
                 </span>
               } @else {
                 {{ post().price }}
-                @if (post().currencyType == currencyType.GEL) {
-                  ₾
-                } @else if (post().currencyType == currencyType.Dollar) {
-                  $
-                }
+                {{ getCurrencySymbol() }}
               }
             } @else {
               {{ t('home.post.priceNegotiable') }}
@@ -74,10 +61,10 @@
       class="absolute -bottom-11.25 hidden w-full opacity-0 transition-all delay-100 group-hover/product:bottom-px group-hover/product:opacity-100 md:block"
     >
       <button
-        class="cursor-pointer outline-none p-3.5 rounded-lg text-black-100 transition-all flex w-full items-center justify-center bg-yellow py-2.5"
+        class="cursor-pointer outline-none p-3.5 rounded-lg text-black-20 transition-all flex w-full items-center justify-center bg-yellow py-2.5"
       >
         <svg-icon src="assets/heart.svg" />
-        <span class="tbc-medium text-sm ml-2 block"> Save </span>
+        <span class="tbc-medium text-sm ml-2 block">{{ t('post.save') }}</span>
       </button>
     </div>
   </div>

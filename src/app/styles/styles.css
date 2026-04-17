@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 @import './utilites.css';
 @import './theme.css';
+@import './nprogress.css';
 
 @font-face {
   font-family: 'TBCXRegular';
@@ -68,7 +69,7 @@ app-main-layout {
   }
 }
 
-#editorEl > div {
+#editorEl>div {
   height: 100%;
 }
 

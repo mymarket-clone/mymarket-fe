@@ -214,5 +214,9 @@
     "quickBuy": "Quick buy",
     "offerPrice": "Offer a price",
     "specifications": "Specifications"
+  },
+  "post": {
+    "listings": "Listings",
+    "save": "Save"
   }
 }

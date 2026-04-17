@@ -1,3 +1,4 @@
+import NProgress from 'nprogress'
 import { HttpClient } from '@angular/common/http'
 import { inject, signal } from '@angular/core'
 import { Observable } from 'rxjs'
@@ -12,12 +13,15 @@ export class HttpService {
   protected readonly httpClient = inject(HttpClient)
   protected readonly API_URL = API_URL
 
-  public request<Data, Body = undefined>(options: HttpRequestOptions<Data, Body>): IHttpService<Data> {
+  public request<Data, Body = undefined>(
+    options: HttpRequestOptions<Data, Body> & { state?: IHttpService<Data> }
+  ): IHttpService<Data> {
     const { method, endpoint, searchParams, body, formData, onSuccess, onError, form } = options
 
-    const loading = signal(false)
-    const error = signal<string | null>(null)
-    const data = signal<Data | null>(null)
+    const loading = options.state?.loading ?? signal(false)
+    const error = options.state?.error ?? signal<string | null>(null)
+    const data = options.state?.data ?? signal<Data | null>(null)
+    const stableData = options.state?.stableData ?? signal<Data | null>(null)
 
     const query = searchParams ? qs.stringify(searchParams, { skipNulls: true }) : ''
     const url = query ? `${this.API_URL}${endpoint}?${query}` : `${this.API_URL}${endpoint}`
@@ -47,11 +51,15 @@ export class HttpService {
     }
 
     loading.set(true)
+    NProgress.start()
 
     obs$.subscribe({
       next: (response) => {
         data.set(response)
+        stableData.set(response)
+
         loading.set(false)
+        NProgress.done(true)
         onSuccess?.(response)
       },
       error: (errors) => {
@@ -59,6 +67,8 @@ export class HttpService {
 
         error.set(serverErrors?.[0] || serverErrors || 'Unknown error')
         loading.set(false)
+        NProgress.done(true)
+
         onError?.(serverErrors || 'Unknown error', errors.error)
 
         if (normalizedForms.length && serverErrors && typeof serverErrors === 'object') {
@@ -77,6 +87,6 @@ export class HttpService {
       },
     })
 
-    return { loading, error, data }
+    return { loading, error, data, stableData }
   }
 }
