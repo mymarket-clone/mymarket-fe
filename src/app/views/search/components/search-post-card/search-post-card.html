@@ -55,10 +55,16 @@
       <div class="mt-2 flex w-full items-center justify-between md:hidden">
         <div class="flex flex-col items-start">
           <div class="flex items-center gap-1">
-            <span class="tbc-medium text-sm text-raisin-150">
-              {{ post.price }}
-              {{ utils.getCurrencySymbol(this.data()) }}
-            </span>
+            @if (post.canOfferPrice) {
+              <span class="tbc-medium text-sm text-end text-raisin-150">{{
+                t('addPost.priceNegotiable')
+              }}</span>
+            } @else {
+              <span class="tbc-medium text-sm text-raisin-150">
+                {{ post.price }}
+                {{ utils.getCurrencySymbol(this.data()) }}
+              </span>
+            }
           </div>
         </div>
         <div class="flex items-center gap-1">

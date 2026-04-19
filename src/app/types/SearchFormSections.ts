@@ -1,1 +1,1 @@
-export type SearchFormSections = 'price' | 'location' | 'condType' | 'postType' | 'forPsn'
+export type SearchFormSections = 'price' | 'location' | 'condType' | 'postType' | 'forPsn' | 'viewType'

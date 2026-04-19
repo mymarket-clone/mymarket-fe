@@ -225,6 +225,19 @@
     "price": "Price",
     "location": "Location",
     "condition": "Product Condition",
-    "postType": "The type of listing"
+    "postType": "The type of listing",
+    "all": "All",
+    "yes": "Yes",
+    "no": "No",
+    "forPsn": "Adapted for PSN",
+    "sortLabels": {
+      "dateAsc": "Date decreasing",
+      "dateDesc": "Date ascending",
+      "priceAsc": "Price decreasing",
+      "priceDesc": "Price ascending",
+      "viewsAsc": "Views decreasing",
+      "viewsDesc": "Views ascending",
+      "withDiscount": "With discount"
+    }
   }
 }

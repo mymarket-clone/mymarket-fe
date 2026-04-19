@@ -14,6 +14,7 @@ export class SearchFormStore {
   }
 
   private searchFormStates: Record<SearchFormSections, ReturnType<typeof signal<boolean>>> = {
+    viewType: signal(false),
     price: signal(true),
     location: signal(false),
     condType: signal(false),

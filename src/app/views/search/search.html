@@ -141,7 +141,65 @@
                       context: {
                         selected: sf.getControl('condType').value?.includes(cond.value),
                         title: cond.label,
-                        id: cond.value,
+                        mode: 'multi',
+                      }
+                    "
+                  />
+                </div>
+              }
+            </ul>
+          </div>
+
+          <ng-container
+            *ngTemplateOutlet="
+              sfsHeader;
+              context: {
+                control: 'postType',
+                titleKey: 'post.postType',
+              }
+            "
+          />
+
+          <div [class.hidden]="!sfs.get('postType')" class="w-full px-5">
+            <ul class="flex flex-wrap gap-2">
+              @for (cond of postTypes; track cond.value) {
+                <div (click)="togglePostType(cond.value)">
+                  <ng-container
+                    *ngTemplateOutlet="
+                      chip;
+                      context: {
+                        selected: sf.getControl('postType').value === cond.value,
+                        title: cond.label,
+                        mode: 'single',
+                      }
+                    "
+                  />
+                </div>
+              }
+            </ul>
+          </div>
+
+          <ng-container
+            *ngTemplateOutlet="
+              sfsHeader;
+              context: {
+                control: 'forPsn',
+                titleKey: 'post.forPsn',
+              }
+            "
+          />
+
+          <div [class.hidden]="!sfs.get('forPsn')" class="w-full px-5">
+            <ul class="flex flex-wrap gap-2">
+              @for (cond of psnTypes; track cond.value) {
+                <div (click)="togglePsnType(cond.value)">
+                  <ng-container
+                    *ngTemplateOutlet="
+                      chip;
+                      context: {
+                        selected: sf.getControl('forPsn').value === cond.value,
+                        title: cond.label,
+                        mode: 'single',
                       }
                     "
                   />
@@ -154,18 +212,43 @@
     </aside>
 
     <div class="w-full overflow-x-hidden lg:ml-4">
-      <div
-        class="z-50 mb-4 flex w-full flex-col items-start justify-between md:flex-row md:items-center md:pr-20"
-      >
+      <div class="z-50 mb-4 flex w-full flex-col items-start justify-between md:flex-row md:items-center">
         <div class="flex items-center gap-1">
           <h4 class="tbc-medium text-lg">{{ data?.result?.totalCount }}</h4>
           <h5 class="tbc-regular text-sm">{{ t('post.listings') }}</h5>
+        </div>
+        <div class="mt-3 flex w-full items-center justify-between md:mt-0 md:justify-end">
+          <div class="flex items-center">
+            <div class="relative z-40 h-fit w-fit">
+              <button class="flex items-center" type="button">
+                <span class="tbc-medium text-sm text-black-100">Date decreasing</span>
+              </button>
+            </div>
+          </div>
+          <div class="flex items-center">
+            <hr class="ml-2.5 mr-1.5 hidden h-6.25 w-px bg-gray-180 md:inline-block" />
+            <div class="flex items-center">
+              <hr class="mx-2.5 h-6.25 w-px bg-gray-180 md:hidden border-y-0" />
+              <div
+                (click)="sfs.toggle('viewType')"
+                class="select-none flex cursor-pointer items-center justify-center rounded-full bg-transparent h-6.25 w-6.25 transition-colors duration-100 hover:bg-yellow"
+              >
+                @if (sfs.get('viewType')) {
+                  <svg-icon src="assets/menu-list.svg" />
+                } @else {
+                  <svg-icon src="assets/menu-cards.svg" />
+                }
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div>
         <main>
           <div class="flex w-full flex-col items-center justify-center gap-2 min-h-45 md:gap-4 lg:pl-0">
-            @if (data?.result?.items) {
+            @if (postsState?.loading()) {
+              123
+            } @else if (data?.result?.items) {
               @for (item of data?.result?.items!; track $index) {
                 <search-post-card class="block w-full" [data]="item" />
               }
@@ -188,16 +271,20 @@
   </button>
 </ng-template>
 
-<ng-template #chip let-selected="selected" let-title="title" let-id="id" let-field="field" let-mode="mode">
+<ng-template #chip let-selected="selected" let-title="title" let-mode="mode">
   <li
     [class.bg-yellow-10]="selected"
     [class.border-yellow!]="selected"
     class="flex shrink-0 items-center gap-1 rounded-3xl border border-gray-180 px-3 py-2 text-raisin-150 hover:cursor-pointer"
   >
-    @if (selected) {
-      <svg-icon src="assets/chip-selected.svg" />
-    } @else {
-      <svg-icon src="assets/chip-plus.svg" />
+    @if (mode == 'multi') {
+      <span class="min-w-4.25">
+        @if (selected) {
+          <svg-icon src="assets/chip-selected.svg" />
+        } @else {
+          <svg-icon src="assets/chip-plus.svg" />
+        }
+      </span>
     }
 
     <span class="tbc-regular text-xs">{{ title }}</span>

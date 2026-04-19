@@ -4,9 +4,9 @@ import { IHttpService } from '@app/interfaces/common/IHttpService'
 import { HttpMethod } from '@app/types/enums/HttpMethod'
 import { CategoryLite, IPostSearch } from '@app/interfaces/response/IPostSearch'
 import { SvgIconComponent } from 'angular-svg-icon'
-import { TranslocoDirective, TranslocoModule } from '@jsverse/transloco'
+import { TranslocoDirective, TranslocoModule, TranslocoService } from '@jsverse/transloco'
 import { ActivatedRoute, Router, RouterLink } from '@angular/router'
-import { SearchPostCard } from './components/search-post-card'
+import { SearchPostCard } from './components/search-post-card/search-post-card'
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
 import { ISearchForm } from '@app/interfaces/forms/ISearchForm'
 import { FormService } from '@app/services/form.service'
@@ -18,6 +18,8 @@ import qs from 'qs'
 import { debounceTime, skip } from 'rxjs'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { ConditionType } from '@app/types/enums/ConditionType'
+import { PostType } from '@app/types/enums/PostType'
+import { SortTypes } from '@app/types/enums/SortTypes'
 
 @Component({
   selector: 'app-search',
@@ -44,7 +46,8 @@ import { ConditionType } from '@app/types/enums/ConditionType'
   ],
 })
 export class Search {
-  private actR = inject(ActivatedRoute)
+  private readonly actR = inject(ActivatedRoute)
+  private readonly ts = inject(TranslocoService)
   public postsState?: IHttpService<IPostSearch>
 
   public constructor(
@@ -55,8 +58,8 @@ export class Search {
     public readonly sfs: SearchFormStore
   ) {
     const currentParams = this.actR.snapshot.queryParams
-
     const condType = [...(this.actR.snapshot.queryParams['condType'] ?? [])]?.map((x: unknown) => Number(x))
+    const forPsn = currentParams['forPsn'] === 'true' ? true : false
 
     this.sf.setForm(
       new FormGroup<ISearchForm>({
@@ -66,18 +69,17 @@ export class Search {
         discount: new FormControl(currentParams['discount'] === 'true', { nonNullable: true }),
         locId: new FormControl(currentParams['locId'] ? Number(currentParams['locId']) : null),
         condType: new FormControl(condType.length ? condType : null),
-        postType: new FormControl(null),
-        forPsn: new FormControl(currentParams['forPsn'] === 'true', { nonNullable: true }),
+        postType: new FormControl(
+          Number(currentParams['postType']) ? Number(currentParams['postType']) : null
+        ),
+        forPsn: new FormControl(currentParams['forPsn'] ? forPsn : null),
       })
     )
 
     this.sf.listenToFormChange((values) => {
-      console.log(values)
       const filtered = Object.fromEntries(
         Object.entries(values).map(([k, v]) => [k, (v as unknown) === '' ? null : v])
       )
-
-      console.log(filtered)
 
       this.router.navigate([], {
         queryParams: filtered,
@@ -147,14 +149,80 @@ export class Search {
     })
   }
 
-  public condTypes = Object.entries(ConditionType)
-    .filter(([_, v]) => typeof v === 'number')
-    .map(([key, value]) => ({ label: key, value: value as number }))
+  public sortMapTypes = computed(() => {
+    return {
+      [SortTypes.DateAsc]: this.ts.translate('post.sotLabels.dateAsc'),
+      [SortTypes.DateDesc]: this.ts.translate('post.sotLabels.dateDesc'),
+      [SortTypes.PriceAsc]: this.ts.translate('post.sotLabels.priceAsc'),
+      [SortTypes.PriceDesc]: this.ts.translate('post.sotLabels.priceDesc'),
+      [SortTypes.ViewsAsc]: this.ts.translate('post.sotLabels.viewsAsc'),
+      [SortTypes.ViewsDesc]: this.ts.translate('post.sotLabels.viewsDesc'),
+      [SortTypes.WithDiscount]: this.ts.translate('post.sotLabels.withDiscount'),
+    }
+  })
+
+  public get condTypes(): {
+    label: string
+    value: number
+  }[] {
+    return Object.entries(ConditionType)
+      .filter(([_, v]) => typeof v === 'number')
+      .map(([_, value]) => ({
+        label: {
+          [ConditionType.Used]: this.ts.translate('addPost.used'),
+          [ConditionType.New]: this.ts.translate('addPost.new'),
+          [ConditionType.LikeNew]: this.ts.translate('addPost.likeNew'),
+          [ConditionType.ForParts]: this.ts.translate('addPost.forParts'),
+        }[value as ConditionType],
+        value: value as number,
+      }))
+  }
 
   public toggleCondType(value: number): void {
     const control = this.sf.getControl('condType')
     const current = control.value ?? []
     const updated = current.includes(value) ? current.filter((v) => v !== value) : [...current, value]
     control.setValue(updated.length ? updated : null)
+  }
+
+  public get postTypes(): {
+    label: string
+    value: number | null
+  }[] {
+    return [
+      { label: this.ts.translate('post.all'), value: null },
+      ...Object.entries(PostType)
+        .filter(([_, v]) => typeof v === 'number')
+        .map(([_, value]) => ({
+          label: {
+            [PostType.Sell]: this.ts.translate('addPost.sell'),
+            [PostType.Buy]: this.ts.translate('addPost.buy'),
+            [PostType.Rent]: this.ts.translate('addPost.rent'),
+            [PostType.Service]: this.ts.translate('addPost.services'),
+          }[value as PostType],
+          value: value as number,
+        })),
+    ]
+  }
+
+  public togglePostType(value: number | null): void {
+    const control = this.sf.getControl('postType')
+    control.setValue(control.value === value ? null : value)
+  }
+
+  public get psnTypes(): {
+    label: string
+    value: boolean | null
+  }[] {
+    return [
+      { label: this.ts.translate('post.all'), value: null },
+      { label: this.ts.translate('post.yes'), value: true },
+      { label: this.ts.translate('post.no'), value: false },
+    ]
+  }
+
+  public togglePsnType(value: boolean | null): void {
+    const control = this.sf.getControl('forPsn')
+    control.setValue(control.value === value ? null : value)
   }
 }
