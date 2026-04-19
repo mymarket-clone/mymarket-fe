@@ -11,6 +11,7 @@ import { AbstractControl, FormGroup } from '@angular/forms'
 import { toSignal } from '@angular/core/rxjs-interop'
 import { SubmitHandlers } from '@app/types/SubmitCallbacks'
 import { NonNullableProps } from '@app/types/NonNullableProps'
+import { debounceTime, identity } from 'rxjs'
 
 @Injectable()
 export class FormService<T extends { [P in keyof T]: AbstractControl }> {
@@ -20,6 +21,7 @@ export class FormService<T extends { [P in keyof T]: AbstractControl }> {
   private controlSignals = new Map<keyof T, Signal<string | number | boolean | null | undefined>>()
 
   public get form(): FormGroup<T> {
+    if (!this._form) console.error('Form is not initalized')
     return this._form
   }
 
@@ -31,7 +33,20 @@ export class FormService<T extends { [P in keyof T]: AbstractControl }> {
     return (this._form.controls as T)[key]
   }
 
-  public setForm(form: FormGroup<T>): void {
+  public setControlValue<K extends keyof T>(
+    key: K,
+    value: T[K] extends AbstractControl<infer V> ? V : never
+  ): void {
+    this.getControl(key).setValue(value as never)
+  }
+
+  public listenToFormChange(callback: (values: NonNullableProps<T>) => void, debouncer?: number): void {
+    this._form.valueChanges
+      .pipe(debouncer && debouncer > 0 ? debounceTime(debouncer) : identity)
+      .subscribe(() => callback(this.getValues()))
+  }
+
+  public setForm(form: FormGroup<T>, options?: { debounce?: number }): void {
     this._form = form
 
     Object.keys(form.controls).forEach((key) => {
@@ -39,7 +54,11 @@ export class FormService<T extends { [P in keyof T]: AbstractControl }> {
       const control = this.getControl(controlKey)
 
       if (!this.controlSignals.has(controlKey)) {
-        this.controlSignals.set(controlKey, toSignal(control.valueChanges, { initialValue: control.value }))
+        const stream = options?.debounce
+          ? control.valueChanges.pipe(debounceTime(options.debounce))
+          : control.valueChanges
+
+        this.controlSignals.set(controlKey, toSignal(stream, { initialValue: control.value }))
       }
     })
   }

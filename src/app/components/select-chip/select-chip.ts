@@ -2,8 +2,8 @@ import { Component, input, output } from '@angular/core'
 import { BaseInput } from '@app/shared/components/base-input'
 
 @Component({
-  selector: 'select-ship',
-  templateUrl: './select-ship.html',
+  selector: 'select-chip',
+  templateUrl: './select-chip.html',
 })
 export class SelectChip extends BaseInput {
   public items = input.required<Record<number | string, string> | null>()

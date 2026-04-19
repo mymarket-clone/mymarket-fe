@@ -4,7 +4,7 @@ import { Swiper } from '@app/components/swiper/swiper'
 import { IPostDetails } from '@app/interfaces/response/IPostDetails'
 import { SvgIconComponent } from 'angular-svg-icon'
 import { TranslocoDirective } from '@jsverse/transloco'
-import { CurrencyType } from '@app/types/enums/CurrencyType'
+import { Utils } from '@app/utils/Utils'
 
 @Component({
   selector: 'search-post-card',
@@ -29,18 +29,7 @@ export class SearchPostCard extends Swiper {
     return this.data().images.length - 1
   }
 
-  public constructor() {
+  public constructor(public readonly utils: Utils) {
     super()
-  }
-
-  public getCurrencySymbol(): string {
-    switch (this.data()?.currencyType) {
-      case CurrencyType.GEL:
-        return '₾'
-      case CurrencyType.Dollar:
-        return '$'
-      default:
-        return ''
-    }
   }
 }

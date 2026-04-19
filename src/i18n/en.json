@@ -217,6 +217,14 @@
   },
   "post": {
     "listings": "Listings",
-    "save": "Save"
+    "save": "Save",
+    "from": "from",
+    "to": "to",
+    "offerPrice": "Without - \"Price negotiable\"",
+    "discount": "Discounted",
+    "price": "Price",
+    "location": "Location",
+    "condition": "Product Condition",
+    "postType": "The type of listing"
   }
 }

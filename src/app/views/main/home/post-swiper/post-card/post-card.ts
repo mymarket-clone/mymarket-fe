@@ -5,6 +5,7 @@ import { TranslocoDirective } from '@jsverse/transloco'
 import { Swiper } from '@app/components/swiper/swiper'
 import { IPostLite } from '@app/interfaces/response/IPostLite'
 import { CurrencyType } from '@app/types/enums/CurrencyType'
+import { Utils } from '@app/utils/Utils'
 
 @Component({
   selector: 'post-card',
@@ -19,14 +20,7 @@ export class ProuductCard extends Swiper {
     return (this.post().images?.length ?? 1) - 1
   }
 
-  public getCurrencySymbol(): string {
-    switch (this.post()?.currencyType) {
-      case CurrencyType.GEL:
-        return '₾'
-      case CurrencyType.Dollar:
-        return '$'
-      default:
-        return ''
-    }
+  public constructor(public readonly utils: Utils) {
+    super()
   }
 }

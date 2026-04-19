@@ -87,4 +87,19 @@
   .language-switcher-item {
     @apply flex cursor-pointer items-center px-6 py-2 hover:bg-gray-10 transition-colors duration-150;
   }
+
+  .fade-progress-dot {
+    animation: 1s ease-in-out 0ms infinite normal none running fadeProgress;
+    background-color: currentcolor;
+    border-radius: 1em;
+    display: inline-block;
+    height: 1em;
+    vertical-align: top;
+    width: 1em;
+    margin-left: 1em;
+  }
+
+  .switch {
+    scrollbar-color: auto !important;
+  }
 }

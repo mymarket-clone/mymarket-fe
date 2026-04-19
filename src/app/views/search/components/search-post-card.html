@@ -57,7 +57,7 @@
           <div class="flex items-center gap-1">
             <span class="tbc-medium text-sm text-raisin-150">
               {{ post.price }}
-              {{ getCurrencySymbol() }}
+              {{ utils.getCurrencySymbol(this.data()) }}
             </span>
           </div>
         </div>
@@ -74,11 +74,28 @@
       class="relative ml-2 hidden max-h-full min-h-45 flex-col items-end justify-between md:flex md:min-w-32 md:border-l-2 md:border-blue-gray-20"
     >
       <div class="flex flex-col items-start">
-        <div class="flex items-center gap-1">
-          <span class="tbc-medium text-sm text-raisin-150">
-            {{ post.price }}
-            {{ getCurrencySymbol() }}
-          </span>
+        <div class="flex flex-col items-center gap-1">
+          @if (post.canOfferPrice) {
+            <span class="tbc-medium text-sm text-end text-raisin-150">{{
+              t('addPost.priceNegotiable')
+            }}</span>
+          } @else {
+            <span class="tbc-medium text-sm text-raisin-150">
+              @if (post.priceAfterDiscount) {
+                {{ post.priceAfterDiscount.toFixed(2) }}
+              } @else {
+                {{ post.price?.toFixed(2) }}
+              }
+              {{ utils.getCurrencySymbol(this.data()) }}
+            </span>
+
+            @if (post.salePercentage > 0) {
+              <span class="tbc-medium text-xs text-[#454b57] line-through opacity-30">
+                {{ post.price?.toFixed(2) }}
+                {{ utils.getCurrencySymbol(this.data()) }}
+              </span>
+            }
+          }
         </div>
       </div>
       <div class="flex items-center gap-1">

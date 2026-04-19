@@ -1,0 +1,12 @@
+<button
+  (click)="toggle()"
+  [class.bg-yellow!]="toggled()"
+  class="cursor-pointer relative inline-flex h-4.5 w-7.5 shrink-0 items-center rounded-full bg-gray-170 disabled:opacity-30 transition-colors"
+  role="switch"
+  type="button"
+>
+  <span
+    class="inline h-3.25 w-3.25 transform rounded-full bg-white transition"
+    [class]="toggled() ? 'translate-x-3.5' : 'translate-x-0.5'"
+  ></span>
+</button>

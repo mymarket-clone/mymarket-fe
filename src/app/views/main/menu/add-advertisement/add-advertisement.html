@@ -7,7 +7,7 @@
   >
     <div class="rounded-xl bg-white p-6 md:p-10">
       <h1 class="text-sm tbc-bold leading-5">{{ t('addPost.productDetails') }}</h1>
-      <select-ship
+      <select-chip
         [control]="adForm.getControl('postType')"
         [submitted]="adForm.submitted"
         [items]="postTypeItems"
@@ -29,7 +29,7 @@
         variant="dynamic"
       />
       @if (!!adForm.getControl('categoryId').value && adForm.getControl('postType').value < 3) {
-        <select-ship
+        <select-chip
           [control]="adForm.getControl('conditionType')"
           [submitted]="adForm.submitted"
           [items]="conditionTypeItems"
@@ -190,7 +190,7 @@
           @for (item of mainCharacteristicsState?.data(); track $index) {
             @switch (item.attributeType) {
               @case (4) {
-                <select-ship
+                <select-chip
                   [required]="item.isRequired"
                   [control]="mainCharacteristicsForm.getControl(item.attributeId)"
                   [submitted]="mainCharacteristicsForm.submitted"

@@ -40,15 +40,15 @@
           <span class="tbc-bold text-base mr-1.5">
             @if (post().price && !post().isNegotiable) {
               @if (post().priceAfterDiscount) {
-                {{ post().priceAfterDiscount }}
-                {{ getCurrencySymbol() }}
+                {{ post().priceAfterDiscount.toFixed(2) }}
+                {{ utils.getCurrencySymbol(this.post()) }}
                 <span class="tbc-medium text-sm text-black-70 line-through ml-2">
-                  {{ post().price }}
-                  {{ getCurrencySymbol() }}
+                  {{ post().price.toFixed(2) }}
+                  {{ utils.getCurrencySymbol(this.post()) }}
                 </span>
               } @else {
-                {{ post().price }}
-                {{ getCurrencySymbol() }}
+                {{ post().price.toFixed(2) }}
+                {{ utils.getCurrencySymbol(this.post()) }}
               }
             } @else {
               {{ t('home.post.priceNegotiable') }}

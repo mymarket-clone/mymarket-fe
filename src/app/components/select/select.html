@@ -1,0 +1,59 @@
+<div class="relative tbc-regular text-[12px] text-raisin-150 group/hover">
+  <div
+    (click)="loadData()"
+    class="hover:border-gray-185 flex items-center cursor-pointer flex-wrap justify-between relative min-h-9.5 bg-white w-full px-2 py-px rounded-sm border border-gray-175 duration-150 transition-all"
+  >
+    <div class="flex flex-1">
+      <div class="visible w-full relative">
+        <div class="absolute inset-0 flex items-center pointer-events-none">
+          @if (!isFiltering() && control().value) {
+            {{ selectedLoc }}
+          }
+        </div>
+        <input
+          (input)="onSearch($event)"
+          [value]="search()"
+          autocapitalize="none"
+          autocomplete="off"
+          autocorrect="off"
+          spellcheck="false"
+          type="text"
+          class="[background:0px_center] opacity-100 w-full col-start-2 row-start-1 [font:inherit] min-w-0.5 border-0 m-0 outline-none p-0"
+        />
+      </div>
+    </div>
+    <div class="items-center self-stretch flex shrink-0 box-border">
+      @if (dataState?.loading()) {
+        <div
+          class="flex transition-colors duration-150 self-center text-[4px] leading-none mr-1 text-center align-middle"
+        >
+          <span class="fade-progress-dot [animation-delay:0ms]!"></span>
+          <span class="fade-progress-dot [animation-delay:160ms]!"></span>
+          <span class="fade-progress-dot [animation-delay:320ms]!"></span>
+        </div>
+      }
+      <span class="self-stretch w-px box-border h-5 bg-gray-175 my-1 mx-2 mt-2"></span>
+      <div class="flex transition-colors duration-150">
+        <svg-icon src="assets/select-arrow.svg" />
+      </div>
+    </div>
+  </div>
+  @if (selectOpen() && dataState?.data()) {
+    <div class="absolute top-10.5 w-full z-1 box-border bg-white border border-gray-175 rounded-sm">
+      <div class="switch max-h-75 overflow-y-auto relative box-border">
+        @if (filteredData().length > 0) {
+          @for (item of filteredData(); track $index) {
+            <div
+              (click)="onItemSelect(item.id); $event.stopPropagation()"
+              class="cursor-pointer flex w-full select-none box-border mt-1 px-2 py-1 h-8.75 items-center hover:bg-gray-10 text-inherit"
+            >
+              {{ item.name }}
+            </div>
+          }
+        } @else {
+          <div class="px-2 py-2 text-gray-400 flex justify-center">No results</div>
+        }
+      </div>
+    </div>
+  }
+</div>
