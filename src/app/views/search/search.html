@@ -32,13 +32,340 @@
           }
         </ol>
       </nav>
-      <span class="tbc-medium text-xs text-blue-30">
-        {{ data?.result?.totalCount }} {{ t('post.listings') }}
-      </span>
+      @if (data?.result?.totalCount) {
+        <span class="tbc-medium text-xs text-blue-30">
+          {{ data?.result?.totalCount }} {{ t('post.listings') }}
+        </span>
+      }
     </div>
   </div>
-  <div class="z-40 mt-4 flex items-start justify-between">
-    <aside class="hidden h-fit w-60 shrink-0 rounded-lg bg-white pb-10 pt-3 lg:block xl:ml-0">
+  <div class="z-40 pt-4 flex items-start justify-between">
+    <aside
+      *transloco="let t"
+      class="hidden h-fit w-60 shrink-0 rounded-lg bg-white pb-10 pt-3 lg:block xl:ml-0"
+    >
+      @if (postsState?.loading() && isFirstLoad()) {
+        <div class="flex flex-col gap-3 px-4">
+          @for (item of [].constructor(10); track $index) {
+            <div class="w-full h-5 bg-gray-130 rounded-xl"></div>
+          }
+        </div>
+      } @else {
+        <div class="mb-6 flex flex-col items-start gap-3 px-4">
+          @if (data && data.breadcrumb) {
+            <div (click)="navigateBack()" class="flex items-center gap-1 hover:cursor-pointer">
+              <svg-icon src="assets/arrow-back.svg" />
+              <h1 class="tbc-medium text-base text-blue-30">
+                {{ data.breadcrumb.at(data.breadcrumb.at(-1)?.hasChildren ? -1 : -2)?.name }}
+              </h1>
+            </div>
+          }
+
+          <ul class="flex flex-col items-start gap-3">
+            @for (category of data?.categories; track $index) {
+              <a routerLink="/search" [queryParams]="{ catId: category.id }" queryParamsHandling="merge">
+                <h2
+                  class="tbc-medium text-sm block w-full text-[#454b57] md:hover:text-blue-30 transition-colors duration-300"
+                  [class.text-blue-30!]="currentCategory == category.id"
+                >
+                  {{ category.name }} ({{ category.count }})
+                </h2>
+              </a>
+            }
+          </ul>
+        </div>
+        <div class="pt-5">
+          <hr class="mx-5 text-gray-180" />
+          <form [formGroup]="sf.form" class="mt-4 flex flex-col items-start gap-4">
+            <ng-container
+              *ngTemplateOutlet="
+                sfsHeader;
+                context: {
+                  control: 'price',
+                  titleKey: 'post.price',
+                }
+              "
+            />
+
+            <div [class.hidden]="!sfs.get('price')" class="w-full px-5">
+              <div class="relative flex w-full items-center md:w-50">
+                <input
+                  [formControl]="sf.getControl('priceFrom')"
+                  type="number"
+                  maxlength="9"
+                  [placeholder]="t('post.from')"
+                  class="h-12.5 w-1/2 rounded-l-lg border border-r-0 border-gray-20 text-center tbc-regular text-[12px] placeholder:text-raisin-150"
+                />
+                <hr
+                  class="absolute left-1/2 top-1/2 h-6 w-px -translate-x-1/2 -translate-y-1/2 bg-gray-20 border-t-0"
+                />
+                <input
+                  [formControl]="sf.getControl('priceTo')"
+                  type="number"
+                  maxlength="9"
+                  [placeholder]="t('post.to')"
+                  class="h-12.5 w-1/2 rounded-r-lg border border-l-0 border-gray-20 text-center tbc-regular text-[12px] placeholder:text-raisin-150"
+                />
+              </div>
+              <div class="mt-3 flex flex-col items-start gap-3">
+                <div class="flex h-fit cursor-pointer items-center gap-2">
+                  <switch [submitted]="sf.submitted" [control]="sf.getControl('offerPrice')" />
+                  <span class="tbc-regular text-xs">{{ t('post.offerPrice') }}</span>
+                </div>
+                <div class="flex h-fit cursor-pointer items-center gap-2">
+                  <switch [submitted]="sf.submitted" [control]="sf.getControl('discount')" />
+                  <span class="tbc-regular text-xs">{{ t('post.discount') }}</span>
+                </div>
+              </div>
+            </div>
+
+            <ng-container
+              *ngTemplateOutlet="
+                sfsHeader;
+                context: {
+                  control: 'location',
+                  titleKey: 'post.location',
+                }
+              "
+            />
+
+            <div [class.hidden]="!sfs.get('location')" class="w-full px-5">
+              <app-select [control]="sf.getControl('locId')" [submitted]="sf.submitted" endpoint="cities" />
+            </div>
+
+            <ng-container
+              *ngTemplateOutlet="
+                sfsHeader;
+                context: {
+                  control: 'condType',
+                  titleKey: 'post.condition',
+                }
+              "
+            />
+
+            <div [class.hidden]="!sfs.get('condType')" class="w-full px-5">
+              <ul class="flex flex-wrap gap-2">
+                @for (cond of condTypes; track cond.value) {
+                  <div (click)="toggleCondType(cond.value)">
+                    <ng-container
+                      *ngTemplateOutlet="
+                        chip;
+                        context: {
+                          selected: sf.getControl('condType').value?.includes(cond.value),
+                          title: cond.label,
+                          mode: 'multi',
+                        }
+                      "
+                    />
+                  </div>
+                }
+              </ul>
+            </div>
+
+            <ng-container
+              *ngTemplateOutlet="
+                sfsHeader;
+                context: {
+                  control: 'postType',
+                  titleKey: 'post.postType',
+                }
+              "
+            />
+
+            <div [class.hidden]="!sfs.get('postType')" class="w-full px-5">
+              <ul class="flex flex-wrap gap-2">
+                @for (cond of postTypes; track cond.value) {
+                  <div (click)="togglePostType(cond.value)">
+                    <ng-container
+                      *ngTemplateOutlet="
+                        chip;
+                        context: {
+                          selected: sf.getControl('postType').value === cond.value,
+                          title: cond.label,
+                          mode: 'single',
+                        }
+                      "
+                    />
+                  </div>
+                }
+              </ul>
+            </div>
+
+            <ng-container
+              *ngTemplateOutlet="
+                sfsHeader;
+                context: {
+                  control: 'forPsn',
+                  titleKey: 'post.forPsn',
+                }
+              "
+            />
+
+            <div [class.hidden]="!sfs.get('forPsn')" class="w-full px-5">
+              <ul class="flex flex-wrap gap-2">
+                @for (cond of psnTypes; track cond.value) {
+                  <div (click)="togglePsnType(cond.value)">
+                    <ng-container
+                      *ngTemplateOutlet="
+                        chip;
+                        context: {
+                          selected: sf.getControl('forPsn').value === cond.value,
+                          title: cond.label,
+                          mode: 'single',
+                        }
+                      "
+                    />
+                  </div>
+                }
+              </ul>
+            </div>
+          </form>
+        </div>
+      }
+    </aside>
+    <div class="w-full overflow-x-hidden lg:ml-4">
+      <div
+        class="z-50 mb-4 flex w-full flex-col items-start justify-between lg:flex-row lg:items-center min-h-7"
+      >
+        @if (data?.result?.totalCount) {
+          <div class="flex items-center gap-1">
+            <h4 class="tbc-medium text-lg">{{ data?.result?.totalCount }}</h4>
+            <h5 class="tbc-regular text-sm">{{ t('post.listings') }}</h5>
+          </div>
+        }
+        <div class="mt-3 flex w-full items-center justify-between md:mt-0 lg:justify-end">
+          <div class="flex items-center">
+            <div class="relative z-40 h-fit w-fit">
+              <button
+                inject
+                trigger="click"
+                [hoverable]="true"
+                [content]="sortType"
+                class="relative flex items-center"
+                type="button"
+              >
+                <span class="tbc-medium text-sm text-raisin-150">
+                  {{ sortMapTypes()[currentSortType().value] }}
+                </span>
+              </button>
+            </div>
+          </div>
+          <div class="flex items-center">
+            <div (click)="openFilters()" class="flex cursor-pointer items-center lg:hidden">
+              <svg-icon src="assets/filter.svg" />
+              <h4 class="tbc-medium text-sm">
+                {{ t('post.filter') }}
+              </h4>
+            </div>
+            <hr class="ml-2.5 mr-1.5 hidden h-6.25 w-px bg-gray-180 md:inline-block" />
+            <div class="flex items-center">
+              <hr class="mx-2.5 h-6.25 w-px bg-gray-180 md:hidden border-y-0" />
+              <div
+                (click)="sfs.toggle('viewType')"
+                class="select-none flex cursor-pointer items-center justify-center rounded-full bg-transparent h-6.25 w-6.25 transition-colors duration-100 hover:bg-yellow"
+              >
+                @if (sfs.get('viewType')) {
+                  <svg-icon src="assets/menu-list.svg" />
+                } @else {
+                  <svg-icon src="assets/menu-cards.svg" />
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <main>
+          <div
+            [class.card-small]="!sfs.get('viewType')"
+            class="flex w-full flex-wrap flex-col items-center justify-center gap-2 min-h-45 md:gap-4 lg:pl-0"
+          >
+            @if (postsState?.loading()) {
+              @for (item of [].constructor(32); track $index) {
+                <search-post-card-skeleton [size]="sfs.get('viewType') ? 'list' : 'card'" />
+              }
+            } @else if (data?.result?.items) {
+              @for (item of data?.result?.items!; track $index) {
+                <search-post-card [size]="sfs.get('viewType') ? 'list' : 'card'" [data]="item" />
+              }
+            }
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #sfsHeader let-control="control" let-titleKey="titleKey">
+  <button
+    (click)="sfs.toggle(control)"
+    class="flex w-full cursor-pointer flex-nowrap items-center justify-between px-5"
+    type="button"
+  >
+    <span class="tbc-regular text-sm text-start text-raisin-150">{{ titleKey | transloco }}</span>
+    <svg-icon [class.rotate-180]="sfs.get(control)" src="assets/profile-arrow.svg" />
+  </button>
+</ng-template>
+
+<ng-template #chip let-selected="selected" let-title="title" let-mode="mode">
+  <li
+    [class.bg-yellow-10]="selected"
+    [class.border-yellow!]="selected"
+    class="flex shrink-0 items-center gap-1 rounded-3xl border border-gray-180 px-3 py-2 text-raisin-150 hover:cursor-pointer"
+  >
+    @if (mode == 'multi') {
+      <span class="min-w-4.25">
+        @if (selected) {
+          <svg-icon src="assets/chip-selected.svg" />
+        } @else {
+          <svg-icon src="assets/chip-plus.svg" />
+        }
+      </span>
+    }
+
+    <span class="tbc-regular text-xs">{{ title }}</span>
+  </li>
+</ng-template>
+
+<ng-template #sortType>
+  <div
+    class="absolute top-8 flex w-37.5 flex-col items-start rounded-lg border border-[#e0e2ea] bg-white py-1 shadow-2xl"
+  >
+    @for (item of sortMapTypes() | keyvalue; track $index) {
+      <div
+        (click)="sf.getControl('sortType').setValue($any(item.key))"
+        [class.text-blue-100]="sf.getControl('sortType').value == $any(item.key)"
+        class="flex h-10 w-full cursor-pointer items-center justify-start hover:bg-gray-10 hover:text-blue-100 transition-colors duration-100"
+      >
+        <span class="tbc-medium text-xs ml-3">
+          {{ item.value }}
+        </span>
+      </div>
+    }
+  </div>
+</ng-template>
+
+<ng-template #filters>
+  <div *transloco="let t" class="fixed inset-0 z-1000 h-screen w-full bg-white">
+    <div
+      class="h-18.25 flex items-center justify-between bg-white pt-4 pr-4 pb-4 pl-5 border-b border-gray-180"
+    >
+      <span class="tbc-bold text-base">
+        {{ t('post.filters') }}
+      </span>
+      <span (click)="closeFilters()" class="cursor-pointer rounded-full bg-[#f2f2f6]">
+        <div class="p-1">
+          <svg-icon src="assets/close-cross.svg" class="h-6 w-6 block" />
+        </div>
+      </span>
+    </div>
+    <aside
+      *transloco="let t"
+      class="h-[calc(100%-155px)] w-full shrink-0 overflow-y-auto default-scrollbar bg-white pt-1 block xl:ml-0"
+    >
+      <div class="mx-4 mb-3 mt-4 rounded-lg bg-blue-10 px-1.5 py-1.75">
+        <span class="tbc-regular text-sm text-blue-100">{{ t('post.selectCategory') }}</span>
+      </div>
       <div class="mb-6 flex flex-col items-start gap-3 px-4">
         @if (data && data.breadcrumb) {
           <div (click)="navigateBack()" class="flex items-center gap-1 hover:cursor-pointer">
@@ -76,13 +403,13 @@
           />
 
           <div [class.hidden]="!sfs.get('price')" class="w-full px-5">
-            <div class="relative flex w-full items-center md:w-50">
+            <div class="relative flex w-full items-center">
               <input
                 [formControl]="sf.getControl('priceFrom')"
                 type="number"
                 maxlength="9"
                 [placeholder]="t('post.from')"
-                class="h-12.5 w-1/2 rounded-l-lg border border-r-0 border-gray-20 text-center tbc-regular text-[12px] placeholder:text-raisin-150"
+                class="h-12.5 w-full rounded-l-lg border border-r-0 border-gray-20 text-center tbc-regular text-[12px] placeholder:text-raisin-150"
               />
               <hr
                 class="absolute left-1/2 top-1/2 h-6 w-px -translate-x-1/2 -translate-y-1/2 bg-gray-20 border-t-0"
@@ -92,7 +419,7 @@
                 type="number"
                 maxlength="9"
                 [placeholder]="t('post.to')"
-                class="h-12.5 w-1/2 rounded-r-lg border border-l-0 border-gray-20 text-center tbc-regular text-[12px] placeholder:text-raisin-150"
+                class="h-12.5 w-full rounded-r-lg border border-l-0 border-gray-20 text-center tbc-regular text-[12px] placeholder:text-raisin-150"
               />
             </div>
             <div class="mt-3 flex flex-col items-start gap-3">
@@ -210,83 +537,23 @@
         </form>
       </div>
     </aside>
-
-    <div class="w-full overflow-x-hidden lg:ml-4">
-      <div class="z-50 mb-4 flex w-full flex-col items-start justify-between md:flex-row md:items-center">
-        <div class="flex items-center gap-1">
-          <h4 class="tbc-medium text-lg">{{ data?.result?.totalCount }}</h4>
-          <h5 class="tbc-regular text-sm">{{ t('post.listings') }}</h5>
-        </div>
-        <div class="mt-3 flex w-full items-center justify-between md:mt-0 md:justify-end">
-          <div class="flex items-center">
-            <div class="relative z-40 h-fit w-fit">
-              <button class="flex items-center" type="button">
-                <span class="tbc-medium text-sm text-black-100">Date decreasing</span>
-              </button>
-            </div>
-          </div>
-          <div class="flex items-center">
-            <hr class="ml-2.5 mr-1.5 hidden h-6.25 w-px bg-gray-180 md:inline-block" />
-            <div class="flex items-center">
-              <hr class="mx-2.5 h-6.25 w-px bg-gray-180 md:hidden border-y-0" />
-              <div
-                (click)="sfs.toggle('viewType')"
-                class="select-none flex cursor-pointer items-center justify-center rounded-full bg-transparent h-6.25 w-6.25 transition-colors duration-100 hover:bg-yellow"
-              >
-                @if (sfs.get('viewType')) {
-                  <svg-icon src="assets/menu-list.svg" />
-                } @else {
-                  <svg-icon src="assets/menu-cards.svg" />
-                }
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div>
-        <main>
-          <div class="flex w-full flex-col items-center justify-center gap-2 min-h-45 md:gap-4 lg:pl-0">
-            @if (postsState?.loading()) {
-              123
-            } @else if (data?.result?.items) {
-              @for (item of data?.result?.items!; track $index) {
-                <search-post-card class="block w-full" [data]="item" />
-              }
-            }
-          </div>
-        </main>
-      </div>
+    <div
+      class="h-22.5 flex items-center justify-between bg-white pt-4 pr-4 pb-4 pl-5 border-t border-gray-180"
+    >
+      <button
+        (click)="sf.form.reset()"
+        class="tbc-regular flex cursor-pointer items-center text-[12px] text-red min-[400px]:text-[14px]"
+      >
+        <svg-icon src="assets/bin.svg" />
+        {{ t('post.clear') }}
+      </button>
+      <button
+        class="flex items-center justify-center outline-none p-3.5 rounded-lg bg-yellow hover:bg-yellow/80 text-raisin-150 transition-all px-6.5"
+      >
+        <span class="tbc-medium text-nowrap text-[12px] min-[400px]:text-[14px]">
+          {{ data?.result?.totalCount }} {{ t('post.viewProduct') }}</span
+        >
+      </button>
     </div>
   </div>
-</div>
-
-<ng-template #sfsHeader let-control="control" let-titleKey="titleKey">
-  <button
-    (click)="sfs.toggle(control)"
-    class="flex w-full cursor-pointer flex-nowrap items-center justify-between px-5"
-    type="button"
-  >
-    <span class="tbc-regular text-sm text-start text-raisin-150">{{ titleKey | transloco }}</span>
-    <svg-icon [class.rotate-180]="sfs.get(control)" src="assets/profile-arrow.svg" />
-  </button>
-</ng-template>
-
-<ng-template #chip let-selected="selected" let-title="title" let-mode="mode">
-  <li
-    [class.bg-yellow-10]="selected"
-    [class.border-yellow!]="selected"
-    class="flex shrink-0 items-center gap-1 rounded-3xl border border-gray-180 px-3 py-2 text-raisin-150 hover:cursor-pointer"
-  >
-    @if (mode == 'multi') {
-      <span class="min-w-4.25">
-        @if (selected) {
-          <svg-icon src="assets/chip-selected.svg" />
-        } @else {
-          <svg-icon src="assets/chip-plus.svg" />
-        }
-      </span>
-    }
-
-    <span class="tbc-regular text-xs">{{ title }}</span>
-  </li>
 </ng-template>

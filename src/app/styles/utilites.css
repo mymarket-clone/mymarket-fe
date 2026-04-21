@@ -49,7 +49,7 @@
     background: linear-gradient(180deg, #fcc000, #fdcd33) !important;
   }
 
-  .dynamic-dropdown > div > label {
+  .dynamic-dropdown>div>label {
     margin-bottom: 4px;
     margin-top: 8px;
   }
@@ -77,7 +77,7 @@
   }
 
   .post-detail-main-slider-arrow {
-    @apply select-none w-9 h-9 border border-gray-40 cursor-pointer transition-all rounded-full lg:flex items-center justify-center absolute top-1/2 z-10  flex -translate-y-1/2 transform bg-white;
+    @apply select-none w-9 h-9 border border-gray-40 cursor-pointer transition-all rounded-full lg:flex items-center justify-center absolute top-1/2 z-10 flex -translate-y-1/2 transform bg-white;
   }
 
   .header-icon {
@@ -101,5 +101,26 @@
 
   .switch {
     scrollbar-color: auto !important;
+  }
+
+  .card-small {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+
+    @media (width <=1280px) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    @media (width <=640px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @media (width <=400px) {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+  }
+
+  .default-scrollbar {
+    scrollbar-color: #9ca3af #f1f1f1 !important;
   }
 }

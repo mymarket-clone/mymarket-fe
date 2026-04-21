@@ -1,1 +1,22 @@
-123
+@if (size() == 'list') {
+  <article
+    class="product-card group/product relative flex h-38 w-full cursor-pointer items-start border border-transparent bg-white px-2 py-3 transition-colors duration-300 ease-in-out hover:border-blue-40 md:h-52.5 md:rounded-lg"
+  >
+    <div class="animate-pulse rounded-md bg-gray-195 h-31.5 w-30 md:h-46 md:w-54"></div>
+    <div class="ml-2 w-full">
+      <div class="animate-pulse rounded-md bg-gray-195 h-6 w-full"></div>
+      <div class="animate-pulse rounded-md bg-gray-195 mt-4 h-6 w-full"></div>
+      <div class="animate-pulse rounded-md bg-gray-195 mt-4 h-6 w-full"></div>
+      <div class="animate-pulse rounded-md bg-gray-195 mt-4 hidden h-6 w-full md:block"></div>
+    </div>
+  </article>
+} @else if (size() == 'card') {
+  <article
+    class="product-card group/product w-full relative flex h-97.25 md:h-94.25 cursor-pointer flex-col items-center overflow-hidden rounded-lg border border-transparent bg-white p-2 transition-colors duration-300 ease-in-out hover:border-blue-40 md:p-3"
+  >
+    <div class="animate-pulse rounded-md bg-gray-195 h-48 w-full"></div>
+    <div class="animate-pulse rounded-md bg-gray-195 mt-4 h-6 w-full"></div>
+    <div class="animate-pulse rounded-md bg-gray-195 mt-4 h-6 w-full"></div>
+    <div class="animate-pulse rounded-md bg-gray-195 mt-4 h-6 w-full"></div>
+  </article>
+}

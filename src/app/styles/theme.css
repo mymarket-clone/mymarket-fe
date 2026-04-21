@@ -48,6 +48,7 @@
   --color-gray-180: #e5e7eb;
   --color-gray-185: #b3b3b3;
   --color-gray-190: #909090;
+  --color-gray-195: #e6e8ee;
   --color-blue-gray: #8996ae;
   --color-blue-gray-20: #8996ae26;
   --color-blue: #5890ff;
@@ -58,6 +59,7 @@
   --color-yellow-30: #ffefb2;
   --color-yellow: #fec900;
   --color-yellow-10: #fefaea;
+  --color-red: #df2935;
 
   --animate-slide-progress: slideProgress 30s linear forwards;
   --animate-fade-progress: fadeProgress 1s ease-in-out 0ms infinite normal none running;
@@ -78,11 +80,13 @@
 }
 
 @keyframes fadeProgress {
+
   0%,
   80%,
   100% {
     opacity: 0;
   }
+
   40% {
     opacity: 1;
   }

@@ -51,7 +51,6 @@ html {
   scroll-behavior: smooth;
   overflow-y: hidden;
   height: 100vh;
-
   scrollbar-color: #686868 #424242;
 }
 
@@ -69,7 +68,7 @@ app-main-layout {
   }
 }
 
-#editorEl > div {
+#editorEl>div {
   height: 100%;
 }
 

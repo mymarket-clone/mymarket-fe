@@ -1,5 +1,16 @@
+import qs from 'qs'
 import { ApiService } from '@app/services/http/api.service'
-import { Component, computed, DestroyRef, inject } from '@angular/core'
+import {
+  Component,
+  computed,
+  DestroyRef,
+  effect,
+  inject,
+  signal,
+  TemplateRef,
+  viewChild,
+  ViewContainerRef,
+} from '@angular/core'
 import { IHttpService } from '@app/interfaces/common/IHttpService'
 import { HttpMethod } from '@app/types/enums/HttpMethod'
 import { CategoryLite, IPostSearch } from '@app/interfaces/response/IPostSearch'
@@ -12,14 +23,18 @@ import { ISearchForm } from '@app/interfaces/forms/ISearchForm'
 import { FormService } from '@app/services/form.service'
 import { Switch } from '@app/components/switch/switch'
 import { SearchFormStore } from '@app/stores/search-form.store'
-import { NgTemplateOutlet } from '@angular/common'
+import { CommonModule, NgTemplateOutlet } from '@angular/common'
 import { Select } from '@app/components/select/select'
-import qs from 'qs'
 import { debounceTime, skip } from 'rxjs'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { ConditionType } from '@app/types/enums/ConditionType'
 import { PostType } from '@app/types/enums/PostType'
 import { SortTypes } from '@app/types/enums/SortTypes'
+import { InjectElementDirective } from '@app/modules/directives/injectElement.directive'
+import { SearchPostCardSkeleton } from './components/search-post-card-skeleton/search-post-card-skeleton'
+import { PortalService } from '@app/services/portal.service'
+import { TemplatePortal } from '@angular/cdk/portal'
+import { LayoutService } from '@app/services/layout.service'
 
 @Component({
   selector: 'app-search',
@@ -34,6 +49,9 @@ import { SortTypes } from '@app/types/enums/SortTypes'
     Switch,
     NgTemplateOutlet,
     Select,
+    InjectElementDirective,
+    CommonModule,
+    SearchPostCardSkeleton,
   ],
   providers: [FormService],
   styles: [
@@ -48,14 +66,20 @@ import { SortTypes } from '@app/types/enums/SortTypes'
 export class Search {
   private readonly actR = inject(ActivatedRoute)
   private readonly ts = inject(TranslocoService)
+
   public postsState?: IHttpService<IPostSearch>
+  public filter = viewChild.required<TemplateRef<unknown>>('filters')
+  public isFirstLoad = signal<boolean>(true)
 
   public constructor(
     private readonly apiService: ApiService,
     private readonly router: Router,
     private readonly destroyRef: DestroyRef,
+    private readonly vcr: ViewContainerRef,
+    private readonly layoutService: LayoutService,
     public readonly sf: FormService<ISearchForm>,
-    public readonly sfs: SearchFormStore
+    public readonly sfs: SearchFormStore,
+    public readonly portal: PortalService
   ) {
     const currentParams = this.actR.snapshot.queryParams
     const condType = [...(this.actR.snapshot.queryParams['condType'] ?? [])]?.map((x: unknown) => Number(x))
@@ -63,6 +87,10 @@ export class Search {
 
     this.sf.setForm(
       new FormGroup<ISearchForm>({
+        sortType: new FormControl(
+          currentParams['sortType'] ? Number(currentParams['sortType']) : SortTypes.DateAsc,
+          { nonNullable: true }
+        ),
         priceFrom: new FormControl(currentParams['priceFrom'] ? Number(currentParams['priceFrom']) : null),
         priceTo: new FormControl(currentParams['priceTo'] ? Number(currentParams['priceTo']) : null),
         offerPrice: new FormControl(currentParams['offerPrice'] === 'true', { nonNullable: true }),
@@ -108,6 +136,16 @@ export class Search {
           state: this.postsState,
         })
       })
+
+    effect(() => {
+      if (this.layoutService.isDesktop()) this.portal.close()
+    })
+
+    effect(() => {
+      if (this.postsState?.stableData()) {
+        this.isFirstLoad.set(false)
+      }
+    })
   }
 
   public get currentCategory(): number {
@@ -149,15 +187,33 @@ export class Search {
     })
   }
 
+  public openFilters(): void {
+    const portal = new TemplatePortal(this.filter(), this.vcr)
+    this.portal.open(portal, undefined, true)
+    console.log(portal)
+  }
+
+  public closeFilters(): void {
+    this.portal.close()
+  }
+
+  public currentSortType = computed(() => {
+    return this.sf.getControl('sortType') || SortTypes.DateDesc
+  })
+
+  public clearForm(): void {
+    this.sf.form.reset()
+  }
+
   public sortMapTypes = computed(() => {
     return {
-      [SortTypes.DateAsc]: this.ts.translate('post.sotLabels.dateAsc'),
-      [SortTypes.DateDesc]: this.ts.translate('post.sotLabels.dateDesc'),
-      [SortTypes.PriceAsc]: this.ts.translate('post.sotLabels.priceAsc'),
-      [SortTypes.PriceDesc]: this.ts.translate('post.sotLabels.priceDesc'),
-      [SortTypes.ViewsAsc]: this.ts.translate('post.sotLabels.viewsAsc'),
-      [SortTypes.ViewsDesc]: this.ts.translate('post.sotLabels.viewsDesc'),
-      [SortTypes.WithDiscount]: this.ts.translate('post.sotLabels.withDiscount'),
+      [SortTypes.DateAsc]: this.ts.translate('post.sortLabels.dateAsc'),
+      [SortTypes.DateDesc]: this.ts.translate('post.sortLabels.dateDesc'),
+      [SortTypes.PriceAsc]: this.ts.translate('post.sortLabels.priceAsc'),
+      [SortTypes.PriceDesc]: this.ts.translate('post.sortLabels.priceDesc'),
+      [SortTypes.ViewsAsc]: this.ts.translate('post.sortLabels.viewsAsc'),
+      [SortTypes.ViewsDesc]: this.ts.translate('post.sortLabels.viewsDesc'),
+      [SortTypes.WithDiscount]: this.ts.translate('post.sortLabels.withDiscount'),
     }
   })
 

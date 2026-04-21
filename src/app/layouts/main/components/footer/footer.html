@@ -225,7 +225,7 @@
     class="absolute z-50 mt-3 rounded-2xl border border-gray-30 bg-white shadow-[0_6px_18px_0_rgba(0,0,0,0.2)] bottom-12 left-0 w-65 md:-left-34"
   >
     <div class="my-3">
-      <span class="tbc-regular text-xs mb-2 block px-7 text-[#b3b3b3]">{{ 'language' | transloco }}</span>
+      <span class="tbc-regular text-xs mb-2 block px-7 text-gray-185">{{ 'language' | transloco }}</span>
 
       @for (lang of languageService.languages; track lang.code) {
         <div (click)="switchLang(lang.code)" class="language-switcher-item">

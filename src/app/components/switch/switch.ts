@@ -11,6 +11,10 @@ export class Switch extends BaseInput implements OnInit {
   public ngOnInit(): void {
     const raw = this.control().value
     this.toggled.set(this.toBoolean(raw))
+
+    this.control().valueChanges.subscribe((value: unknown) => {
+      this.toggled.set(this.toBoolean(value))
+    })
   }
 
   private toBoolean(value: unknown): boolean {

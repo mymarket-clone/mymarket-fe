@@ -218,8 +218,8 @@
   "post": {
     "listings": "Listings",
     "save": "Save",
-    "from": "from",
-    "to": "to",
+    "from": "From",
+    "to": "To",
     "offerPrice": "Without - \"Price negotiable\"",
     "discount": "Discounted",
     "price": "Price",
@@ -238,6 +238,11 @@
       "viewsAsc": "Views decreasing",
       "viewsDesc": "Views ascending",
       "withDiscount": "With discount"
-    }
+    },
+    "selectCategory": "Select a category to see more filters",
+    "filter": "Filter",
+    "filters": "Filters",
+    "clear": "Clear",
+    "viewProduct": "View Product"
   }
 }

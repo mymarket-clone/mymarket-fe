@@ -1,6 +1,8 @@
 import { FormControl } from '@angular/forms'
+import { SortTypes } from '@app/types/enums/SortTypes'
 
 export interface ISearchForm {
+  sortType: FormControl<SortTypes>
   priceFrom: FormControl<number | null>
   priceTo: FormControl<number | null>
   offerPrice: FormControl<boolean>
