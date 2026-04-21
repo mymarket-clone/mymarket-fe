@@ -282,7 +282,10 @@
           >
             @if (postsState?.loading()) {
               @for (item of [].constructor(32); track $index) {
-                <search-post-card-skeleton [size]="sfs.get('viewType') ? 'list' : 'card'" />
+                <search-post-card-skeleton
+                  [class.w-full]="sfs.get('viewType')"
+                  [size]="sfs.get('viewType') ? 'list' : 'card'"
+                />
               }
             } @else if (data?.result?.items) {
               @for (item of data?.result?.items!; track $index) {
