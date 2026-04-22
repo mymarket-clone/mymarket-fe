@@ -10,13 +10,10 @@ import { ConditionType } from '@app/types/enums/ConditionType'
 import { CurrencyType } from '@app/types/enums/CurrencyType'
 import { HttpMethod } from '@app/types/enums/HttpMethod'
 import { PromoType } from '@app/types/enums/PromoType'
+import { MetaMap } from '@app/types/MetaMap'
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco'
 import { SvgIconComponent } from 'angular-svg-icon'
 
-type MetaMap = {
-  label: string
-  color: string
-}
 @Component({
   selector: 'post.html',
   templateUrl: 'post.html',
