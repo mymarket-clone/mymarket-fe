@@ -1,0 +1,84 @@
+@let data = allCategoriesState?.stableData();
+
+<div
+  class="cdk-portal bg-black/25 fixed z-9999 right-3.75 top-0 left-0 bottom-0 flex items-center justify-center p-4"
+>
+  <div
+    *transloco="let t"
+    class="flex max-h-full flex-col overflow-y-auto bg-white w-full h-full rounded-none md:w-auto md:h-auto md:rounded-xl"
+  >
+    <div class="flex flex-col p-4 pt-0 md:overflow-hidden md:p-6 h-172">
+      <div class="hidden max-h-160 overflow-hidden md:flex">
+        <div
+          class="flex flex-col mr-6 shrink-0 overflow-y-auto overflow-x-hidden default-scrollbar border-r border-gray-180 pr-6 w-80"
+        >
+          <h3 class="tbc-bold text-lg mb-2">
+            {{ t('allCategories.categories') }}
+          </h3>
+          @if (allCategoriesState?.loading()) {
+            @for (item of [].constructor(10); track $index) {
+              <div [class.mt-1]="$first" class="animate-pulse rounded-md bg-gray-195 mt-6 h-10 w-75"></div>
+            }
+          } @else {
+            @for (item of parentCategories(); track $index) {
+              <div
+                (mousemove)="onHover(item)"
+                class="group/category mb-2 flex w-70 cursor-pointer items-center rounded-lg px-2 py-1 last-of-type:mb-0 hover:bg-secondary-10"
+              >
+                <div class="flex h-11 w-11 min-w-11 min-h-11 items-center justify-center">
+                  <img [src]="item.logoUrl" width="44" height="44" [alt]="item.name" />
+                </div>
+                <span class="tbc-regular text-sm ml-6">{{ item.name }}</span>
+              </div>
+            }
+          }
+        </div>
+        <div class="flex w-225 flex-col overflow-hidden default-scrollbar!">
+          <div class="flex items-center justify-between">
+            @if (data) {
+              <span class="font-tbcx-bold text-lg">
+                {{ currentCategory()?.name }}
+              </span>
+              <span (click)="closePortal()" class="cursor-pointer rounded-full bg-[#f2f2f6]">
+                <div class="p-1">
+                  <svg-icon src="assets/close-cross.svg" class="h-6 w-6 block" />
+                </div>
+              </span>
+            }
+          </div>
+          <div class="mt-6 overflow-y-auto default-scrollbar">
+            <div class="grid grid-cols-2 lg:grid-cols-3">
+              @if (allCategoriesState?.loading()) {
+                @for (item of [].constructor(6); track $index) {
+                  <div class="mb-8 flex flex-col gap-3 mr-3">
+                    <div class="bg-gray-195 animate-pulse rounded-md mt-2 h-3 w-full"></div>
+                    @for (item of [].constructor(7); track $index) {
+                      <div class="bg-gray-195 animate-pulse rounded-md mt-2 h-2 w-full"></div>
+                    }
+                  </div>
+                }
+              } @else {
+                @for (item of categoryTree(); track $index) {
+                  <div class="mb-8 flex flex-col gap-3">
+                    <a class="cursor-pointer" (item)="navigateTo(item.id)">
+                      <span class="tbc-bold text-sm mb-3 block w-62.5 truncate hover:underline">
+                        {{ item.name }}
+                      </span>
+                    </a>
+                    @for (nested of item.children; track $index) {
+                      <a class="cursor-pointer" (click)="navigateTo(nested.id)">
+                        <span class="tbc-regular text-sm text-[#636363] hover:underline">
+                          {{ nested.name }}
+                        </span>
+                      </a>
+                    }
+                  </div>
+                }
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

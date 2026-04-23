@@ -79,7 +79,7 @@ export class Search {
     private readonly layoutService: LayoutService,
     public readonly sf: FormService<ISearchForm>,
     public readonly sfs: SearchFormStore,
-    public readonly portal: PortalService
+    public readonly portalService: PortalService
   ) {
     const currentParams = this.actR.snapshot.queryParams
     const condType = [...(this.actR.snapshot.queryParams['condType'] ?? [])]?.map((x: unknown) => Number(x))
@@ -138,7 +138,7 @@ export class Search {
       })
 
     effect(() => {
-      if (this.layoutService.isDesktop()) this.portal.close()
+      if (this.layoutService.isDesktop()) this.portalService.close()
     })
 
     effect(() => {
@@ -189,12 +189,11 @@ export class Search {
 
   public openFilters(): void {
     const portal = new TemplatePortal(this.filter(), this.vcr)
-    this.portal.open(portal, undefined, true)
-    console.log(portal)
+    this.portalService.open(portal, undefined, true)
   }
 
   public closeFilters(): void {
-    this.portal.close()
+    this.portalService.close()
   }
 
   public currentSortType = computed(() => {

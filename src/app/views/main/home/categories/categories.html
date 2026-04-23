@@ -74,6 +74,7 @@
 <ng-template #allCategoryCard>
   <div *transloco="let t" class="flex h-25 overflow-hidden rounded-xl bg-black-20">
     <div
+      (click)="openAllCategories()"
       class="mr-3 h-25! w-33! cursor-pointer flex-col rounded-xl bg-black-100 px-4 py-4 transition-all hover:bg-black-90"
     >
       <span class="min-h-8 block">

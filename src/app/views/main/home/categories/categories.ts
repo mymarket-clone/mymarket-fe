@@ -7,6 +7,9 @@ import { TranslocoDirective, TranslocoService } from '@jsverse/transloco'
 import { Swiper } from '@app/components/swiper/swiper'
 import { HomeCategoryCard } from '@app/types/CategoryRoute'
 import { HomeCategoriesService } from '@app/services/home-categories.service'
+import { ComponentPortal } from '@angular/cdk/portal'
+import { PortalService } from '@app/services/portal.service'
+import { AllCategories } from '@app/modals/all-categories-modal/all-categories'
 
 @Component({
   selector: 'app-categories',
@@ -16,7 +19,8 @@ import { HomeCategoriesService } from '@app/services/home-categories.service'
 export class Categories extends Swiper {
   public constructor(
     private readonly ts: TranslocoService,
-    public readonly homeCategories: HomeCategoriesService
+    public readonly homeCategories: HomeCategoriesService,
+    public readonly portalService: PortalService
   ) {
     super()
   }
@@ -32,6 +36,11 @@ export class Categories extends Swiper {
   public groupedCategories = computed<HomeCategoryCard[][]>(() => {
     return chunkItems(this.categoryCards())
   })
+
+  public openAllCategories(): void {
+    const portal = new ComponentPortal(AllCategories)
+    this.portalService.open(portal, undefined, true)
+  }
 
   private specialCards = computed(() => {
     return {

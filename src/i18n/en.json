@@ -167,7 +167,7 @@
   },
   "home": {
     "categories": {
-      "all": "All",
+      "all": "All categories",
       "installments": "Installments",
       "discount": "Discount"
     },
@@ -244,5 +244,8 @@
     "filters": "Filters",
     "clear": "Clear",
     "viewProduct": "View Product"
+  },
+  "allCategories": {
+    "categories": "Categories"
   }
 }

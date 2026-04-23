@@ -37,7 +37,8 @@ export class UserStore {
   }
 
   public logout(): void {
-    this.user.set(null)
+    window.location.href = '/'
     window.localStorage.removeItem('user')
+    this.user.set(null)
   }
 }

@@ -11,6 +11,15 @@
             <svg-icon src="assets/logo-big.svg" alt="Logo" />
           </a>
         </div>
+        <div
+          (click)="openAllCategories()"
+          class="mr-6 hidden cursor-pointer items-center rounded-xl border border-gray-30 px-3 py-2.25 transition-all hover:bg-gray-10 xl:flex"
+        >
+          <span class="tbc-regular text-sm block">
+            {{ t('home.categories.all') }}
+          </span>
+          <svg-icon class="ml-2 min-w-2" src="assets/profile-arrow.svg" />
+        </div>
         <div [class]="isSearchVisible() ? 'block' : 'hidden'">
           <form
             autocorrect="off"
@@ -176,7 +185,7 @@
 </ng-template>
 
 <ng-template #burgerMenu>
-  <div *transloco="let t" class="fixed bg-white z-9999 right-3.75 top-0 left-0 bottom-0">
+  <div *transloco="let t" class="cdk-portal fixed bg-white z-9999 right-3.75 top-0 left-0 bottom-0">
     <div class="py-7 px-3">
       <div class="flex justify-between items-center select-none">
         <div class="text-sm text-blue-gray">{{ t('meta.menu') }}</div>

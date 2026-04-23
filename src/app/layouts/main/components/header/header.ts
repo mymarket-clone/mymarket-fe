@@ -1,4 +1,5 @@
-import { Component, computed, signal, TemplateRef, viewChild, ViewContainerRef } from '@angular/core'
+import { LayoutService } from '@app/services/layout.service'
+import { Component, computed, effect, signal, TemplateRef, viewChild, ViewContainerRef } from '@angular/core'
 import { SvgIconComponent } from 'angular-svg-icon'
 import { Router, RouterLink } from '@angular/router'
 import { TranslocoDirective, TranslocoPipe, TranslocoService } from '@jsverse/transloco'
@@ -9,10 +10,11 @@ import { UserDetail } from '@app/types/User'
 import { ApiService } from '@app/services/http/api.service'
 import { HttpMethod } from '@app/types/enums/HttpMethod'
 import { PortalService } from '@app/services/portal.service'
-import { TemplatePortal } from '@angular/cdk/portal'
+import { ComponentPortal, TemplatePortal } from '@angular/cdk/portal'
 import { NavbarItem } from '@app/types/NavbarItem'
 import { LanguageService } from '@app/services/language.service'
 import { Language } from '@app/types/Language'
+import { AllCategories } from '@app/modals/all-categories-modal/all-categories'
 
 @Component({
   selector: 'app-header',
@@ -25,12 +27,14 @@ export class Header {
   public currentUserState?: IHttpService<UserDetail>
 
   public burgerMenu = viewChild.required<TemplateRef<unknown>>('burgerMenu')
+  public allCategories = viewChild.required<TemplateRef<unknown>>('allCategories')
 
   public constructor(
     private readonly ts: TranslocoService,
     private readonly router: Router,
     private readonly apiService: ApiService,
     private readonly vcr: ViewContainerRef,
+    private readonly layoutService: LayoutService,
     public readonly languageService: LanguageService,
     public readonly portalService: PortalService,
     public readonly userStore: UserStore
@@ -41,6 +45,10 @@ export class Header {
         method: HttpMethod.GET,
       })
     }
+
+    effect(() => {
+      if (this.layoutService.isDesktop()) this.portalService.close()
+    })
   }
 
   public switchLang(lang: Language): void {
@@ -54,6 +62,15 @@ export class Header {
   }
 
   public closeBurger(): void {
+    this.portalService.close()
+  }
+
+  public openAllCategories(): void {
+    const portal = new ComponentPortal(AllCategories)
+    this.portalService.open(portal, undefined, true)
+  }
+
+  public closeAllCategories(): void {
     this.portalService.close()
   }
 

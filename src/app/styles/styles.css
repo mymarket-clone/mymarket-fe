@@ -68,7 +68,7 @@ app-main-layout {
   }
 }
 
-#editorEl>div {
+#editorEl > div {
   height: 100%;
 }
 
@@ -132,6 +132,10 @@ input[type='number'] {
 .no-scroll {
   overflow: hidden;
   margin-right: 15px;
+}
+
+.cdk-portal {
+  opacity: 0;
 }
 
 .fade-in {
