@@ -17,7 +17,10 @@ export class Navbar {
     { label: this.ts.translate('navbar.shops'), key: 'shops', iconPath: null },
     {
       label: this.ts.translate('navbar.sale'),
-      key: 'sale',
+      key: 'search',
+      queryParams: {
+        discount: true,
+      },
       iconPath: 'assets/discount.svg',
     },
     {
