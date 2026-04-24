@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core'
+import { Component, input, output } from '@angular/core'
 import { SvgIconComponent } from 'angular-svg-icon'
 import { RouterLink } from '@angular/router'
 import { TranslocoDirective } from '@jsverse/transloco'
@@ -20,12 +20,14 @@ export class PostSwiper extends Swiper {
     color: string
   }>()
 
-  public constructor() {
-    super()
-  }
+  public favoriteChange = output<{ id: number; value: boolean }>()
 
   protected override get maxIndex(): number {
     const length = this.data()?.length ?? 0
     return Math.max(Math.ceil(length / 6) - 1, 0)
+  }
+
+  public onFavoriteChange(event: { id: number; value: boolean }): void {
+    this.favoriteChange.emit(event)
   }
 }

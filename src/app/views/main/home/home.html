@@ -5,6 +5,7 @@
       <app-brands class="overflow-hidden" />
       <app-post-swiper
         [data]="postsState.data()?.superVip"
+        (favoriteChange)="onFavoriteChange('superVip', $event)"
         [meta]="{
           title: 'Super Vip',
           query: { promoType: 3 },
@@ -14,6 +15,7 @@
       />
       <app-post-swiper
         [data]="postsState.data()?.vipPlus"
+        (favoriteChange)="onFavoriteChange('vipPlus', $event)"
         [meta]="{
           title: 'Vip+',
           query: { promoType: 2 },
@@ -23,6 +25,7 @@
       />
       <app-post-swiper
         [data]="postsState.data()?.vip"
+        (favoriteChange)="onFavoriteChange('vip', $event)"
         [meta]="{ title: 'Vip', query: { promoType: 1 }, icon: 'assets/vip.svg', color: '#3C74FF' }"
       />
     </div>

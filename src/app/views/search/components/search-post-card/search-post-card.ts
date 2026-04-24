@@ -1,4 +1,4 @@
-import { Component, HostBinding, input } from '@angular/core'
+import { Component, HostBinding, input, output } from '@angular/core'
 import { RouterLink } from '@angular/router'
 import { Swiper } from '@app/components/swiper/swiper'
 import { IPostDetails } from '@app/interfaces/response/IPostDetails'
@@ -8,6 +8,10 @@ import { Utils } from '@app/utils/Utils'
 import { ConditionType } from '@app/types/enums/ConditionType'
 import { MetaMap } from '@app/types/MetaMap'
 import { PromoType } from '@app/types/enums/PromoType'
+import { ApiService } from '@app/services/http/api.service'
+import { UserStore } from '@app/stores/user.store'
+import { HttpMethod } from '@app/types/enums/HttpMethod'
+import { IHttpService } from '@app/interfaces/common/IHttpService'
 
 @Component({
   selector: 'search-post-card',
@@ -34,12 +38,19 @@ import { PromoType } from '@app/types/enums/PromoType'
           max-width: 237px;
         }
       }
+
+      :host ::ng-deep svg-icon.active svg path {
+        fill: white !important;
+      }
     `,
   ],
 })
 export class SearchPostCard extends Swiper {
   public size = input<'card' | 'list'>('card')
   public data = input.required<IPostDetails>()
+  public favouriteState?: IHttpService<void>
+
+  public favoriteChange = output<{ id: number; value: boolean }>()
 
   protected override get maxIndex(): number {
     return this.data().images.length - 1
@@ -47,9 +58,43 @@ export class SearchPostCard extends Swiper {
 
   public constructor(
     private readonly ts: TranslocoService,
+    private readonly apiService: ApiService,
+    private readonly userStore: UserStore,
     public readonly utils: Utils
   ) {
     super()
+  }
+
+  public toggleFavorite(): void {
+    if (this.favouriteState?.loading()) return
+
+    const post = this.data()
+    const previousValue = post.isFavorite
+    const nextValue = !previousValue
+
+    this.favoriteChange.emit({
+      id: post.id,
+      value: nextValue,
+    })
+
+    const delta = nextValue ? 1 : -1
+    this.userStore.setFavorites(delta)
+
+    const method = nextValue ? HttpMethod.POST : HttpMethod.DELETE
+
+    this.favouriteState = this.apiService.request({
+      method,
+      endpoint: `posts/${post.id}/favorite`,
+
+      onError: () => {
+        this.favoriteChange.emit({
+          id: post.id,
+          value: previousValue,
+        })
+
+        this.userStore.setFavorites(-delta)
+      },
+    })
   }
 
   @HostBinding('class.list')

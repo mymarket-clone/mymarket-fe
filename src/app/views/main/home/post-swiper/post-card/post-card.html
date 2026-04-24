@@ -1,10 +1,12 @@
+@let data = post();
+
 <div *transloco="let t" class="block transform shrink-0 w-47.5 h-60.5">
   <div class="product-card group/product w-full overflow-hidden h-60.5 relative">
-    <a class="flex flex-col h-full" [routerLink]="['/post', post().id]">
+    <a class="flex flex-col h-full" [routerLink]="['/post', data.id]">
       <div>
         <div class="ease-in-out mx-0 my-auto relative">
           <div #swiper class="overflow-hidden relative w-full h-full flex z-1 rounded-2xl">
-            @for (image of post().images; track $index) {
+            @for (image of data.images; track $index) {
               <div
                 [attr.data-slide-index]="$index"
                 class="h-39.5! w-47.5! rounded-2xl flex relative shrink-0"
@@ -20,7 +22,7 @@
             }
           </div>
 
-          @if ((post().images?.length ?? 0) > 1) {
+          @if ((data.images?.length ?? 0) > 1) {
             <div class="absolute top-[40%] z-50 flex w-full items-center justify-between px-1">
               <div (click)="prev($event)" class="post-card-arrow">
                 <svg-icon src="assets/left-arrow-white.svg" />
@@ -33,21 +35,21 @@
         </div>
       </div>
       <p class="tbc-medium text-sm mt-2 line-clamp-2 shrink-0">
-        {{ post().title }}
+        {{ data.title }}
       </p>
       <div class="flex mt-auto">
         <div class="flex items-center">
           <span class="tbc-bold text-base mr-1.5">
-            @if (post().price && !post().isNegotiable) {
-              @if (post().priceAfterDiscount) {
-                {{ post().priceAfterDiscount.toFixed(2) }}
+            @if (data.price && !data.isNegotiable) {
+              @if (data.priceAfterDiscount) {
+                {{ data.priceAfterDiscount.toFixed(2) }}
                 {{ utils.getCurrencySymbol(this.post()) }}
                 <span class="tbc-medium text-sm text-black-70 line-through ml-2">
-                  {{ post().price.toFixed(2) }}
+                  {{ data.price.toFixed(2) }}
                   {{ utils.getCurrencySymbol(this.post()) }}
                 </span>
               } @else {
-                {{ post().price.toFixed(2) }}
+                {{ data.price.toFixed(2) }}
                 {{ utils.getCurrencySymbol(this.post()) }}
               }
             } @else {
@@ -61,10 +63,14 @@
       class="absolute -bottom-11.25 hidden w-full opacity-0 transition-all delay-100 group-hover/product:bottom-px group-hover/product:opacity-100 md:block"
     >
       <button
-        class="cursor-pointer outline-none p-3.5 rounded-lg text-black-20 transition-all flex w-full items-center justify-center bg-yellow py-2.5"
+        (click)="toggleFavorite()"
+        [class.bg-gray-165!]="data.isFavorite"
+        class="cursor-pointer bg-yellow outline-none p-3.5 rounded-lg text-black-20 transition-all flex w-full items-center justify-center py-2.5"
       >
-        <svg-icon src="assets/heart.svg" />
-        <span class="tbc-medium text-sm ml-2 block">{{ t('post.save') }}</span>
+        <svg-icon [src]="data.isFavorite ? 'assets/heart-filled-yellow.svg' : 'assets/heart.svg'" />
+        <span [class.text-gray-120]="data.isFavorite" class="tbc-medium text-sm ml-2 block">
+          {{ data.isFavorite ? t('post.remove') : t('post.save') }}
+        </span>
       </button>
     </div>
   </div>

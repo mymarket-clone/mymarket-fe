@@ -1,4 +1,5 @@
 @let user = currentUserState?.data();
+@let favoritesCount = userStore.getFavorites();
 
 <div *transloco="let t">
   <div class="border-b border-gray-10 bg-white">
@@ -13,7 +14,7 @@
         </div>
         <div
           (click)="openAllCategories()"
-          class="mr-6 hidden cursor-pointer items-center rounded-xl border border-gray-30 px-3 py-2.25 transition-all hover:bg-gray-10 xl:flex"
+          class="mr-6 hidden cursor-pointer items-center rounded-xl border border-gray-155 px-3 py-2.25 transition-all hover:bg-gray-10 xl:flex"
         >
           <span class="tbc-regular text-sm block">
             {{ t('home.categories.all') }}
@@ -53,15 +54,19 @@
             <span class="tbc-medium text-xs text-nowrap">{{ t('header.addListing') }}</span>
           </button>
 
-          <div class="mr-4 flex items-center min-w-31.5">
+          <div class="mr-4 flex items-center min-w-15.75">
             <div routerLink="/menu/my-messages" class="header-icon">
               <svg-icon src="assets/message-s.svg" />
             </div>
-            <div routerLink="/menu/my-favourites" class="header-icon ml-1 mr-0.5">
+            <div routerLink="/menu/my-favorites" class="relative header-icon ml-1 mr-0.5">
               <svg-icon src="assets/favourite-s.svg" />
-            </div>
-            <div routerLink="/menu/my-cart" class="header-icon">
-              <svg-icon src="assets/cart-s.svg" />
+              @if (favoritesCount && favoritesCount > 0) {
+                <div
+                  class="absolute right-1 top-1 h-4 w-4 tbc-regular text-[10px] flex items-center justify-center text-white rounded-full bg-red-10 text-center"
+                >
+                  <span class="block">{{ favoritesCount }}</span>
+                </div>
+              }
             </div>
           </div>
 

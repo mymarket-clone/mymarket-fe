@@ -51,6 +51,7 @@ export class HttpService {
     }
 
     loading.set(true)
+    NProgress.configure({ showSpinner: false })
     NProgress.start()
 
     obs$.subscribe({

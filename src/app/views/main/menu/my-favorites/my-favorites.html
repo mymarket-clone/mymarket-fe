@@ -1,0 +1,15 @@
+@let data = favoritesState?.data();
+
+<div
+  class="flex w-full flex-wrap flex-col items-center justify-center gap-2 min-h-45 md:gap-4 lg:pl-0 card-small mt-6"
+>
+  @if (favoritesState?.loading()) {
+    @for (item of [].constructor(32); track $index) {
+      <search-post-card-skeleton size="card" />
+    }
+  } @else if (data?.items) {
+    @for (item of data?.items!; track $index) {
+      <search-post-card [data]="item" size="card" />
+    }
+  }
+</div>

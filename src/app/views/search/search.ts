@@ -148,6 +148,22 @@ export class Search {
     })
   }
 
+  public onFavoriteChange(event: { id: number; value: boolean }): void {
+    this.postsState?.data.update((state) => {
+      if (!state) return state
+
+      return {
+        ...state,
+        result: {
+          ...state.result,
+          items: state.result.items.map((post) =>
+            post.id === event.id ? { ...post, isFavorite: event.value } : post
+          ),
+        },
+      }
+    })
+  }
+
   public get currentCategory(): number {
     return Number(this.actR.snapshot.paramMap.get('catId'))
   }

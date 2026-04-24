@@ -57,6 +57,12 @@
               </div>
             }
           </div>
+          <div
+            (click)="toggleFavorite()"
+            class="absolute right-3 top-5 z-40 cursor-pointer bg-gray-90 rounded-full"
+          >
+            <svg-icon [class.active]="postState?.data()?.isFavorite" src="assets/heart2.svg" />
+          </div>
           @if (post?.images!.length > 1) {
             <div
               (click)="prev()"

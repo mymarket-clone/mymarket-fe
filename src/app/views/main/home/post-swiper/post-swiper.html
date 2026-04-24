@@ -51,7 +51,7 @@
         @for (post of [...(data() ?? [])]; track $index) {
           <div [attr.data-slide-index]="$index">
             <div class="mr-5" [class.mr-0!]="$last">
-              <post-card [post]="post" />
+              <post-card [post]="post" (favoriteChange)="onFavoriteChange($event)" />
             </div>
           </div>
         }

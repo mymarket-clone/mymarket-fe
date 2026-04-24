@@ -32,6 +32,10 @@ export class Menu {
     })
   }
 
+  public renderRightSide(): boolean {
+    return window.location.href.includes('/menu/add-advertisement')
+  }
+
   public scrollToTop(): void {
     getScrollableElement()?.scrollTo({
       top: 0,
@@ -100,10 +104,9 @@ export class Menu {
       [
         {
           label: this.ts.translate('menu.myFavourites'),
-          route: '/menu/my-favourites',
+          route: '/menu/my-favorites',
           iconPath: 'assets/my-favourites.svg',
         },
-        { label: this.ts.translate('menu.myCart'), route: '/menu/my-cart', iconPath: 'assets/my-cart.svg' },
         {
           label: this.ts.translate('menu.myOrders'),
           route: '/menu/my-orders',

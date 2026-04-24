@@ -218,6 +218,7 @@
   "post": {
     "listings": "Listings",
     "save": "Save",
+    "remove": "Remove",
     "from": "From",
     "to": "To",
     "offerPrice": "Without - \"Price negotiable\"",

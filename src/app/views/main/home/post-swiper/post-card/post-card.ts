@@ -1,4 +1,5 @@
-import { Component, input } from '@angular/core'
+import { ApiService } from './../../../../../services/http/api.service'
+import { Component, input, output } from '@angular/core'
 import { RouterLink } from '@angular/router'
 import { SvgIconComponent } from 'angular-svg-icon'
 import { TranslocoDirective } from '@jsverse/transloco'
@@ -6,6 +7,9 @@ import { Swiper } from '@app/components/swiper/swiper'
 import { IPostLite } from '@app/interfaces/response/IPostLite'
 import { CurrencyType } from '@app/types/enums/CurrencyType'
 import { Utils } from '@app/utils/Utils'
+import { UserStore } from '@app/stores/user.store'
+import { HttpMethod } from '@app/types/enums/HttpMethod'
+import { IHttpService } from '@app/interfaces/common/IHttpService'
 
 @Component({
   selector: 'post-card',
@@ -15,12 +19,50 @@ import { Utils } from '@app/utils/Utils'
 export class ProuductCard extends Swiper {
   public post = input.required<IPostLite>()
   public currencyType = CurrencyType
+  public favouriteState?: IHttpService<void>
+
+  public favoriteChange = output<{ id: number; value: boolean }>()
+
+  public constructor(
+    public readonly utils: Utils,
+    public readonly userStore: UserStore,
+    public readonly apiService: ApiService
+  ) {
+    super()
+  }
 
   protected override get maxIndex(): number {
     return (this.post().images?.length ?? 1) - 1
   }
 
-  public constructor(public readonly utils: Utils) {
-    super()
+  public toggleFavorite(): void {
+    if (this.favouriteState?.loading()) return
+
+    const post = this.post()
+    const previousValue = post.isFavorite
+    const nextValue = !previousValue
+
+    this.favoriteChange.emit({
+      id: post.id,
+      value: nextValue,
+    })
+
+    const delta = nextValue ? 1 : -1
+    this.userStore.setFavorites(delta)
+
+    const method = nextValue ? HttpMethod.POST : HttpMethod.DELETE
+
+    this.apiService.request({
+      method,
+      endpoint: `posts/${post.id}/favorite`,
+      onError: () => {
+        this.favoriteChange.emit({
+          id: post.id,
+          value: previousValue,
+        })
+
+        this.userStore.setFavorites(-delta)
+      },
+    })
   }
 }

@@ -19,6 +19,24 @@ export class UserStore {
     return this.user()
   }
 
+  public setFavorites(delta: number): void {
+    this.user.update((prev) => {
+      if (!prev) return prev
+
+      return {
+        ...prev,
+        user: {
+          ...prev.user,
+          favoritesCount: (prev.user.favoritesCount ?? 0) + delta,
+        },
+      }
+    })
+  }
+
+  public getFavorites(): number {
+    return this.user()?.user.favoritesCount ?? 0
+  }
+
   public get accessToken(): string | null {
     return this.user()?.accessToken ?? null
   }

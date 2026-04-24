@@ -8,4 +8,5 @@ export interface IPostLite {
   currencyType: CurrencyType
   isNegotiable: boolean
   images: string[] | null
+  isFavorite: boolean
 }

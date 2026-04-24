@@ -1,4 +1,4 @@
-@let data = postsState?.stableData();
+@let data = postsState?.data();
 
 <div *transloco="let t" class="pb-13 container mx-auto">
   <div class="hidden sm:block">
@@ -289,7 +289,11 @@
               }
             } @else if (data?.result?.items) {
               @for (item of data?.result?.items!; track $index) {
-                <search-post-card [size]="sfs.get('viewType') ? 'list' : 'card'" [data]="item" />
+                <search-post-card
+                  (favoriteChange)="onFavoriteChange($event)"
+                  [size]="sfs.get('viewType') ? 'list' : 'card'"
+                  [data]="item"
+                />
               }
             }
           </div>

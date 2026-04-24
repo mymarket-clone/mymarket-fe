@@ -5,6 +5,7 @@ import { Swiper } from '@app/components/swiper/swiper'
 import { IHttpService } from '@app/interfaces/common/IHttpService'
 import { IPostDetails } from '@app/interfaces/response/IPostDetails'
 import { ApiService } from '@app/services/http/api.service'
+import { UserStore } from '@app/stores/user.store'
 import { AttributeType } from '@app/types/enums/AttributeType'
 import { ConditionType } from '@app/types/enums/ConditionType'
 import { CurrencyType } from '@app/types/enums/CurrencyType'
@@ -18,6 +19,17 @@ import { SvgIconComponent } from 'angular-svg-icon'
   selector: 'post.html',
   templateUrl: 'post.html',
   imports: [RouterLink, TranslocoDirective, SvgIconComponent, NgTemplateOutlet],
+  styles: [
+    `
+      :host ::ng-deep svg-icon.active > svg > rect {
+        fill: #fec900 !important;
+      }
+
+      :host ::ng-deep svg-icon.active svg path {
+        fill: white !important;
+      }
+    `,
+  ],
 })
 export class Post extends Swiper {
   protected readonly swiperMini = viewChild<ElementRef<HTMLElement>>('swiperMini')
@@ -31,6 +43,7 @@ export class Post extends Swiper {
 
   public postState?: IHttpService<IPostDetails>
   public phoneNumberState?: IHttpService<string | null>
+  public favouriteState?: IHttpService<void>
 
   protected override get maxIndex(): number {
     const length = this.postState?.data()?.images?.length ?? 0
@@ -40,7 +53,8 @@ export class Post extends Swiper {
   public constructor(
     private readonly ts: TranslocoService,
     private readonly apiService: ApiService,
-    private readonly actR: ActivatedRoute
+    private readonly actR: ActivatedRoute,
+    private readonly userStore: UserStore
   ) {
     super()
     this.postState = this.apiService.request({
@@ -49,6 +63,45 @@ export class Post extends Swiper {
     })
 
     effect(() => this.syncThumbnailSlider())
+  }
+
+  public toggleFavorite(): void {
+    if (this.favouriteState?.loading()) return
+
+    const post = this.postState?.data()
+    if (!post) return
+
+    const previousValue = post.isFavorite
+    const nextValue = !previousValue
+
+    this.postState?.data.update((prev) => {
+      if (!prev) return prev
+      return {
+        ...prev,
+        isFavorite: nextValue,
+      }
+    })
+
+    const delta = nextValue ? 1 : -1
+    this.userStore.setFavorites(delta)
+
+    const method = nextValue ? HttpMethod.POST : HttpMethod.DELETE
+
+    this.favouriteState = this.apiService.request({
+      method,
+      endpoint: `posts/${post.id}/favorite`,
+      onError: () => {
+        this.postState?.data.update((prev) => {
+          if (!prev) return prev
+          return {
+            ...prev,
+            isFavorite: previousValue,
+          }
+        })
+
+        this.userStore.setFavorites(-delta)
+      },
+    })
   }
 
   public formatNumber(value: number | string): string {

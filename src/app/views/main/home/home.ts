@@ -21,4 +21,17 @@ export class HomeComponent {
       endpoint: 'posts/lite',
     })
   }
+
+  public onFavoriteChange(type: 'superVip' | 'vipPlus' | 'vip', event: { id: number; value: boolean }): void {
+    this.postsState.data.update((state) => {
+      if (!state) return state
+
+      return {
+        ...state,
+        [type]: state[type].map((post) =>
+          post.id === event.id ? { ...post, isFavorite: event.value } : post
+        ),
+      }
+    })
+  }
 }

@@ -11,4 +11,5 @@ export type UserDetail = {
   lastname: string
   email: string
   emailVerified: boolean
+  favoritesCount: number
 }
