@@ -1,10 +1,14 @@
+import { ComponentPortal } from '@angular/cdk/portal'
 import { NgTemplateOutlet } from '@angular/common'
-import { Component, effect, ElementRef, signal, viewChild } from '@angular/core'
+import { Component, effect, ElementRef, Injector, signal, viewChild } from '@angular/core'
 import { ActivatedRoute, RouterLink } from '@angular/router'
 import { Swiper } from '@app/components/swiper/swiper'
+import { POST_DATA } from '@app/configs/injector-token.config'
 import { IHttpService } from '@app/interfaces/common/IHttpService'
 import { IPostDetails } from '@app/interfaces/response/IPostDetails'
+import { PostImagesModal } from '@app/modals/post-images-modal/post-images-modal'
 import { ApiService } from '@app/services/http/api.service'
+import { PortalService } from '@app/services/portal.service'
 import { UserStore } from '@app/stores/user.store'
 import { AttributeType } from '@app/types/enums/AttributeType'
 import { ConditionType } from '@app/types/enums/ConditionType'
@@ -54,7 +58,8 @@ export class Post extends Swiper {
     private readonly ts: TranslocoService,
     private readonly apiService: ApiService,
     private readonly actR: ActivatedRoute,
-    private readonly userStore: UserStore
+    private readonly userStore: UserStore,
+    private readonly portalService: PortalService
   ) {
     super()
     this.postState = this.apiService.request({
@@ -63,6 +68,22 @@ export class Post extends Swiper {
     })
 
     effect(() => this.syncThumbnailSlider())
+  }
+
+  public openImages(): void {
+    const injector = Injector.create({
+      providers: [
+        {
+          provide: POST_DATA,
+          useValue: {
+            post: this.postState?.data(),
+          },
+        },
+      ],
+    })
+
+    const portal = new ComponentPortal(PostImagesModal, null, injector)
+    this.portalService.open(portal, undefined, true)
   }
 
   public toggleFavorite(): void {

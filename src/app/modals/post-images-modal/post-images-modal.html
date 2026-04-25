@@ -1,0 +1,50 @@
+@let data = post();
+
+<div
+  class="cdk-portal bg-black/25 fixed z-9999 right-3.75 top-0 left-0 bottom-0 flex items-center justify-center p-4"
+>
+  <div
+    *transloco="let t"
+    class="flex max-h-full flex-col overflow-y-auto bg-white w-full h-full rounded-none md:w-auto md:h-auto md:rounded-xl"
+  >
+    <div class="flex flex-col p-4 pt-0 md:overflow-hidden md:p-6 w-7xl h-175">
+      <div class="hidden max-h-160 overflow-hidden md:flex">
+        <div class="flex w-full flex-col overflow-hidden default-scrollbar!">
+          <div class="flex items-center justify-end">
+            <span (click)="closePortal()" class="cursor-pointer rounded-full bg-[#f2f2f6]">
+              <div class="p-1">
+                <svg-icon src="assets/close-cross.svg" class="h-6 w-6 block" />
+              </div>
+            </span>
+          </div>
+          <div class="overflow-y-auto default-scrollbar max-h-150">
+            <div class="w-full">
+              <div class="relative flex flex-wrap lg:flex-nowrap max-w-200">
+                <div
+                  #swiper
+                  class="mr-3 w-full flex-1 flex flex-row overflow-x-auto no-scrollbar scroll-smooth"
+                >
+                  @for (item of data?.images; track $index) {
+                    <div class="w-full h-150 shrink-0" [attr.data-slide-index]="$index">
+                      <img class="h-full w-full" [src]="item" />
+                    </div>
+                  }
+                </div>
+                @if ((data?.images?.length ?? 0) > 1) {
+                  <div class="absolute top-[40%] z-50 flex w-full items-center justify-between px-1">
+                    <div (click)="prev($event)" class="post-card-arrow opacity-100!">
+                      <svg-icon src="assets/left-arrow-white.svg" />
+                    </div>
+                    <div (click)="next($event)" class="post-card-arrow opacity-100!">
+                      <svg-icon src="assets/right-arrow-white.svg" />
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -48,7 +48,7 @@ body {
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: smooth !important;
   overflow-y: hidden;
   height: 100vh;
   scrollbar-color: #686868 #424242;
