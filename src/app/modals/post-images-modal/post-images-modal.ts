@@ -15,7 +15,8 @@ export class PostImagesModal extends Swiper {
   public post = signal<IPostDetails | null>(null)
 
   protected override get maxIndex(): number {
-    return 2
+    const length = this.post()?.images?.length ?? 0
+    return Math.max(length - 1, 1)
   }
 
   public constructor(

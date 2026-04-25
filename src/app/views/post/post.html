@@ -1,4 +1,5 @@
 @let post = postState?.data();
+@let loading = postState?.loading();
 
 <div class="container" *transloco="let t">
   <div class="md:mx-auto">
@@ -28,6 +29,8 @@
             </li>
           }
         </ol>
+      } @else if (loading) {
+        <div class="animate-pulse rounded-md bg-gray-195 h-4 w-70"></div>
       }
     </div>
   </div>
@@ -39,7 +42,7 @@
             (click)="openImages()"
             #swiper
             id="test"
-            class="flex h-83.25 w-full lg:w-100 overflow-x-auto rounded-xl border border-gray-180"
+            class="flex h-83.25 w-full lg:w-100 overflow-x-auto rounded-xl no-scrollbar border border-gray-180"
           >
             @for (item of post?.images; track $index) {
               <div [attr.data-slide-index]="$index" class="flex justify-center shrink-0 w-full">
@@ -88,20 +91,30 @@
               <svg-icon src="assets/right-arrow.svg" />
             </div>
           }
+        } @else if (loading) {
+          <div
+            class="animate-pulse rounded-md bg-gray-195 relative h-full w-full lg:w-100 lg:max-w-100 min-h-82.75"
+          ></div>
         }
       </div>
 
       <div class="no-scrollbar mt-4 overflow-auto scroll-smooth min-h-15 mr-0!">
         <div #swiperMini class="flex flex-row lg:max-w-100">
-          @for (item of post?.images; track $index) {
-            <div
-              [attr.data-slide-index-mini]="$index"
-              (click)="goTo($index)"
-              class="border border-transparent mr-3 shrink-0 h-15 w-18.5 cursor-pointer overflow-hidden rounded-sm"
-              [class.border-yellow]="$index == slideIndex()"
-            >
-              <img class="h-full w-full object-cover" [src]="item" fallback="assets/no-image.png" />
-            </div>
+          @if (post) {
+            @for (item of post?.images; track $index) {
+              <div
+                [attr.data-slide-index-mini]="$index"
+                (click)="goTo($index)"
+                class="border border-transparent mr-3 shrink-0 h-15 w-18.5 cursor-pointer overflow-hidden rounded-sm"
+                [class.border-yellow]="$index == slideIndex()"
+              >
+                <img class="h-full w-full object-cover" [src]="item" fallback="assets/no-image.png" />
+              </div>
+            }
+          } @else if (loading) {
+            @for (item of [].constructor(5); track $index) {
+              <div class="animate-pulse rounded-md mr-3 bg-gray-195 shrink-0 h-15 w-18.5"></div>
+            }
           }
         </div>
       </div>
@@ -109,63 +122,85 @@
 
     <div class="mt-5 lg:mt-0 flex justify-between w-full">
       <div class="flex w-full flex-wrap items-start md:flex-nowrap max-w-full lg:max-w-136.25">
-        @if (post) {
-          <div class="mr-0 w-full md:mr-5 lg:mx-5">
-            <div class="flex items-start justify-between">
-              <div class="flex flex-wrap items-center">
+        <div class="mr-0 w-full md:mr-5 lg:mx-5">
+          <div class="flex items-start justify-between">
+            <div class="flex flex-wrap items-center">
+              @if (post) {
                 <span class="tbc-medium text-xs mr-5 block shrink-0">ID {{ post?.id }}</span>
-              </div>
-              <div class="-translate-y-1/4">
-                <div class="relative">
-                  <div
-                    (click)="copyCurrentUrl()"
-                    class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg transition-colors duration-300"
-                    [class.bg-blue-100-20/10]="copied()"
-                    [class.hover:bg-gray-10]="!copied()"
-                  >
-                    <svg-icon src="assets/share.svg" />
-                  </div>
+              } @else if (loading) {
+                <div class="animate-pulse rounded-md mr-5 bg-gray-195 h-4 w-12"></div>
+              }
+            </div>
+            <div class="-translate-y-1/4">
+              <div class="relative">
+                <div
+                  (click)="copyCurrentUrl()"
+                  class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg transition-colors duration-300"
+                  [class.bg-blue-100-20/10]="copied()"
+                  [class.hover:bg-gray-10]="!copied()"
+                >
+                  <svg-icon src="assets/share.svg" />
                 </div>
               </div>
             </div>
+          </div>
 
-            <div>
-              <span class="tbc-bold text-xl mt-3 block break-all border-b-gray-20 pb-4 md:border-b">
+          <div>
+            <span class="tbc-bold text-xl mt-3 block break-all border-b-gray-20 min-h-11.25 pb-4 md:border-b">
+              @if (post) {
                 {{ post?.title }}
-              </span>
-            </div>
+              } @else if (loading) {
+                <div class="animate-pulse rounded-md mr-5 bg-gray-195 h-4 w-40"></div>
+              }
+            </span>
+          </div>
 
-            <div class="block md:hidden">
-              <ng-container *ngTemplateOutlet="asideBuy; context: { post }" />
-            </div>
+          <div class="block md:hidden">
+            <ng-container *ngTemplateOutlet="asideBuy; context: { post }" />
+          </div>
 
-            <div
-              class="flex flex-col flex-wrap items-start lg:items-center justify-between border-b border-b-gray-20 py-4 md:flex-row"
-            >
-              <div class="flex flex-col items-start">
-                <div class="mb-1 flex items-center rounded-xl bg-gray-40 px-2 py-1">
+          <div
+            class="flex flex-col flex-wrap items-start lg:items-center justify-between border-b border-b-gray-20 py-4 md:flex-row"
+          >
+            <div class="flex flex-col items-start">
+              <div class="mb-1 flex items-center rounded-xl bg-gray-40 px-2 py-1">
+                @if (post) {
                   <svg-icon src="assets/private-person.svg" />
                   <span class="tbc-regular text-[10px] block">
                     {{ t('postDetails.privatePerson') }}
                   </span>
-                </div>
-                <div class="mb-1 flex items-center">
+                } @else if (loading) {
+                  <div class="animate-pulse rounded-md bg-gray-195 h-3.75 w-21.25"></div>
+                }
+              </div>
+              <div class="mb-1 flex items-center">
+                @if (post) {
                   <span class="tbc-regular text-xs block">
-                    {{ post.user.firstName }} {{ post.user.lastname }}
+                    {{ post?.user?.firstName }} {{ post?.user?.lastname }}
                   </span>
-                </div>
-                <a [routerLink]="`/users/${post.user.id}`">
+                } @else if (loading) {
+                  <div class="animate-pulse rounded-md bg-gray-195 h-3 mb-1 mt-1 w-21.25"></div>
+                }
+              </div>
+
+              @if (post) {
+                <a [routerLink]="`/users/${post?.user?.id}`">
                   <span class="tbc-regular text-xs mb-1 block text-gray-160 underline">
-                    {{ post.user.postsCount }} განცხადება
+                    {{ post?.user?.postsCount }} განცხადება
                   </span>
                 </a>
                 <span class="tbc-regular text-xs mb-2 block">
-                  {{ post.city }}
+                  {{ post?.city }}
                 </span>
-              </div>
+              } @else if (loading) {
+                <div class="animate-pulse rounded-md bg-gray-195 h-3 w-22"></div>
+                <div class="animate-pulse rounded-md bg-gray-195 h-3 w-16 mt-1.5 mb-2.5"></div>
+              }
+            </div>
 
-              <div class="w-full md:w-auto">
-                <div class="flex w-full md:w-auto">
+            <div class="w-full md:w-auto">
+              <div class="flex w-full md:w-auto">
+                @if (post) {
                   <div
                     class="relative flex w-full cursor-pointer items-center text-nowrap rounded-lg border border-blue-100 p-3 md:min-w-45.5"
                   >
@@ -174,11 +209,14 @@
                       {{
                         phoneNumberState?.data()
                           ? `(+995) ${formatNumber(phoneNumberState?.data()!)}`
-                          : post.phoneNumber
+                          : post?.phoneNumber
                       }}
                     </span>
                     @if (!phoneNumberState?.data() && !phoneNumberState?.loading()) {
-                      <span (click)="phoneNumber(post.user.id)" class="tbc-regular text-[10px] text-blue-100">
+                      <span
+                        (click)="phoneNumber(post?.user?.id!)"
+                        class="tbc-regular text-[10px] text-blue-100"
+                      >
                         Show phone number
                       </span>
                     } @else if (phoneNumberState?.loading()) {
@@ -190,19 +228,35 @@
                   <div class="ml-2 cursor-pointer rounded-lg border p-4 border-gray-180">
                     <svg-icon src="assets/chat.svg" />
                   </div>
-                </div>
+                } @else if (loading) {
+                  <div class="flex w-full md:min-w-45.5 h-12.5 gap-2">
+                    <div class="animate-pulse rounded-md bg-gray-195 md:min-w-45.5 h-12.5 w-53.25"></div>
+                    <div class="animate-pulse rounded-md bg-gray-195 h-12.5 w-12.5"></div>
+                  </div>
+                }
               </div>
             </div>
+          </div>
 
-            <div class="mt-4">
+          <div class="mt-4">
+            @if (post) {
               <span
-                [innerHTML]="post.description"
+                [innerHTML]="post?.description"
                 class="tbc-regular text-xs block truncate text-wrap md:max-w-125"
               >
               </span>
-            </div>
+            } @else if (loading) {
+              <div class="flex flex-col gap-2">
+                <div class="animate-pulse rounded-md bg-gray-195 h-3 w-120"></div>
+                <div class="animate-pulse rounded-md bg-gray-195 h-3 w-100"></div>
+                <div class="animate-pulse rounded-md bg-gray-195 h-3 w-110"></div>
+                <div class="animate-pulse rounded-md bg-gray-195 h-3 w-90"></div>
+                <div class="animate-pulse rounded-md bg-gray-195 h-3 w-115"></div>
+                <div class="animate-pulse rounded-md bg-gray-195 h-3 w-120"></div>
+              </div>
+            }
           </div>
-        }
+        </div>
       </div>
 
       @if (post) {
@@ -211,6 +265,8 @@
         >
           <ng-container *ngTemplateOutlet="asideBuy; context: { post }" />
         </div>
+      } @else if (loading) {
+        <div class="animate-pulse rounded-md bg-gray-195 hidden md:block w-73.75 h-33.5"></div>
       }
     </div>
   </div>

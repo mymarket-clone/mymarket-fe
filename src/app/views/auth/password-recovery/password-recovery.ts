@@ -78,7 +78,7 @@ export class PasswordRecovery {
 
     this.sendPasswordRecoveryState = this.authService.request({
       method: HttpMethod.POST,
-      endpoint: 'send-password-recovery',
+      endpoint: 'auth/send-password-recovery',
       body: { email: emailControl.value as string },
       onSuccess: () => {
         this.codeSendLoading.set(false)
@@ -108,7 +108,7 @@ export class PasswordRecovery {
       onSuccess: () => {
         this.verifyPasswordCodeState = this.authService.request({
           method: HttpMethod.POST,
-          endpoint: 'verify-password-code',
+          endpoint: 'auth/verify-password-code',
           body: this.sendPasswordRecoveryFs.getValues(),
           form: this.sendPasswordRecoveryFs.form,
           onSuccess: () => {
@@ -128,7 +128,7 @@ export class PasswordRecovery {
       onSuccess: () => {
         this.passwordRecoveryState = this.authService.request({
           method: HttpMethod.POST,
-          endpoint: 'password-recovery',
+          endpoint: 'auth/password-recovery',
           body: this.passwordEnterFs.getValues(),
           form: this.passwordEnterFs.form,
           onSuccess: () => this.router.navigate(['/user/login']),
