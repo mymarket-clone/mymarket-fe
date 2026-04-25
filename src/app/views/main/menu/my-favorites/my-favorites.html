@@ -9,7 +9,7 @@
     }
   } @else if (data?.items) {
     @for (item of data?.items!; track $index) {
-      <search-post-card [data]="item" size="card" />
+      <search-post-card (favoriteChange)="onFavoriteChange($event)" [data]="item" size="card" />
     }
   }
 </div>

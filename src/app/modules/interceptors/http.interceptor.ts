@@ -23,6 +23,7 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
       ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
       'Accept-Language': transloco.getActiveLang(),
     },
+    credentials: 'include',
   })
 
   if (req.url.includes('/refresh')) return next(authReq)

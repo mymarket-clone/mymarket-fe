@@ -2,7 +2,7 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/
 import { provideRouter } from '@angular/router'
 import { routes } from './app.routes'
 import { provideAngularSvgIcon } from 'angular-svg-icon'
-import { provideHttpClient, withInterceptors } from '@angular/common/http'
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http'
 import { httpInterceptor } from './modules/interceptors/http.interceptor'
 import { provideI18n } from './modules/providers/transloco.provider'
 import { provideImg } from './modules/providers/img.provider'
@@ -12,7 +12,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideI18n(),
     provideRouter(routes),
-    provideHttpClient(withInterceptors([httpInterceptor])),
+    provideHttpClient(withInterceptors([httpInterceptor]), withFetch()),
     provideAngularSvgIcon(),
     provideImg(),
   ],

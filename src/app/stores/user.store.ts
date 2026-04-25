@@ -19,6 +19,20 @@ export class UserStore {
     return this.user()
   }
 
+  public setFavoritesBase(number: number): void {
+    this.user.update((prev) => {
+      if (!prev) return prev
+
+      return {
+        ...prev,
+        user: {
+          ...prev.user,
+          favoritesCount: number,
+        },
+      }
+    })
+  }
+
   public setFavorites(delta: number): void {
     this.user.update((prev) => {
       if (!prev) return prev

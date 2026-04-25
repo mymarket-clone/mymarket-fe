@@ -23,7 +23,7 @@
             @for (item of parentCategories(); track $index) {
               <div
                 (mousemove)="onHover(item)"
-                class="group/category mb-2 flex w-70 cursor-pointer items-center rounded-lg px-2 py-1 last-of-type:mb-0 hover:bg-secondary-10"
+                class="group/category mb-2 flex w-70 cursor-pointer items-center rounded-lg px-2 py-1 last-of-type:mb-0 hover:bg-gray-60"
               >
                 <div class="flex h-11 w-11 min-w-11 min-h-11 items-center justify-center">
                   <img [src]="item.logoUrl" width="44" height="44" [alt]="item.name" />

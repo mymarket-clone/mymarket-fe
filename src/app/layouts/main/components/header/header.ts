@@ -43,6 +43,9 @@ export class Header {
       this.currentUserState = this.apiService.request({
         endpoint: 'users/current',
         method: HttpMethod.GET,
+        onSuccess: (data) => {
+          this.userStore.setFavoritesBase(data.favoritesCount)
+        },
       })
     }
 

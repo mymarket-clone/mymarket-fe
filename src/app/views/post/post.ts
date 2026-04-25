@@ -65,6 +65,12 @@ export class Post extends Swiper {
     this.postState = this.apiService.request({
       method: HttpMethod.GET,
       endpoint: `posts/${this.actR.snapshot.paramMap.get('id')}`,
+      onSuccess: (data) => {
+        this.apiService.request({
+          method: HttpMethod.GET,
+          endpoint: `posts/${data.id}/view`,
+        })
+      },
     })
 
     effect(() => this.syncThumbnailSlider())

@@ -244,7 +244,8 @@
     "filter": "Filter",
     "filters": "Filters",
     "clear": "Clear",
-    "viewProduct": "View Product"
+    "viewProduct": "View Product",
+    "view": "View"
   },
   "allCategories": {
     "categories": "Categories"

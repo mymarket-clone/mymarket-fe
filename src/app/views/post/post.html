@@ -5,7 +5,7 @@
   <div class="md:mx-auto">
     <div class="my-6 min-h-4">
       @if (post) {
-        <ol class="flex flex-wrap items-center gap-y-1.5 wrap-break-word">
+        <ol class="flex items-center gap-y-1.5 wrap-break-word">
           <li class="inline-flex items-center">
             <a routerLink="/">
               <span class="tbc-regular text-xs block text-gray-160 group-last-of-type:text-black-20">
@@ -41,7 +41,6 @@
           <div
             (click)="openImages()"
             #swiper
-            id="test"
             class="flex h-83.25 w-full lg:w-100 overflow-x-auto rounded-xl no-scrollbar border border-gray-180"
           >
             @for (item of post?.images; track $index) {
@@ -127,8 +126,13 @@
             <div class="flex flex-wrap items-center">
               @if (post) {
                 <span class="tbc-medium text-xs mr-5 block shrink-0">ID {{ post?.id }}</span>
+                <p class="tbc-medium text-xs mr-5 flex shrink-0 items-center">
+                  <svg-icon class="min-w-7 min-h-6" src="assets/views.svg" />
+                  {{ post?.viewsCount }} ნახვა
+                </p>
               } @else if (loading) {
-                <div class="animate-pulse rounded-md mr-5 bg-gray-195 h-4 w-12"></div>
+                <div class="animate-pulse rounded-md mr-5 mt-1 bg-gray-195 h-4 w-12"></div>
+                <div class="animate-pulse rounded-md mt-1 bg-gray-195 h-4 w-12"></div>
               }
             </div>
             <div class="-translate-y-1/4">

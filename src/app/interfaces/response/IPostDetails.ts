@@ -25,6 +25,7 @@ export interface IPostDetails {
   images: string[]
   user: IUserInfo
   isFavorite: boolean
+  viewsCount: number
 }
 
 export interface IBreadcrumbItem {

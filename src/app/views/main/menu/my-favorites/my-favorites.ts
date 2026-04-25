@@ -21,4 +21,15 @@ export class MyFavorites {
       endpoint: 'posts/favorite',
     })
   }
+
+  public onFavoriteChange(event: { id: number; value: boolean }): void {
+    this.favoritesState?.data.update((state) => {
+      if (!state) return state
+
+      return {
+        ...state,
+        items: event.value ? state.items : state.items.filter((post) => post.id !== event.id),
+      }
+    })
+  }
 }
