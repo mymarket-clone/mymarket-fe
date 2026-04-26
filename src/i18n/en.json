@@ -232,12 +232,12 @@
     "no": "No",
     "forPsn": "Adapted for PSN",
     "sortLabels": {
-      "dateAsc": "Date decreasing",
-      "dateDesc": "Date ascending",
-      "priceAsc": "Price decreasing",
-      "priceDesc": "Price ascending",
-      "viewsAsc": "Views decreasing",
-      "viewsDesc": "Views ascending",
+      "dateAsc": "Date ascending",
+      "dateDesc": "Date decreasing",
+      "priceAsc": "Price  ascending",
+      "priceDesc": "Price decreasing",
+      "viewsAsc": "Views ascending",
+      "viewsDesc": "Views decreasing",
       "withDiscount": "With discount"
     },
     "selectCategory": "Select a category to see more filters",

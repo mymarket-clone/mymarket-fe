@@ -26,6 +26,7 @@ export interface IPostDetails {
   user: IUserInfo
   isFavorite: boolean
   viewsCount: number
+  createdAt: Date
 }
 
 export interface IBreadcrumbItem {

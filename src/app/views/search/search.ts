@@ -222,12 +222,12 @@ export class Search {
 
   public sortMapTypes = computed(() => {
     return {
-      [SortTypes.DateAsc]: this.ts.translate('post.sortLabels.dateAsc'),
       [SortTypes.DateDesc]: this.ts.translate('post.sortLabels.dateDesc'),
-      [SortTypes.PriceAsc]: this.ts.translate('post.sortLabels.priceAsc'),
+      [SortTypes.DateAsc]: this.ts.translate('post.sortLabels.dateAsc'),
       [SortTypes.PriceDesc]: this.ts.translate('post.sortLabels.priceDesc'),
-      [SortTypes.ViewsAsc]: this.ts.translate('post.sortLabels.viewsAsc'),
+      [SortTypes.PriceAsc]: this.ts.translate('post.sortLabels.priceAsc'),
       [SortTypes.ViewsDesc]: this.ts.translate('post.sortLabels.viewsDesc'),
+      [SortTypes.ViewsAsc]: this.ts.translate('post.sortLabels.viewsAsc'),
       [SortTypes.WithDiscount]: this.ts.translate('post.sortLabels.withDiscount'),
     }
   })

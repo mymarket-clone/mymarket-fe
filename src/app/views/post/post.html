@@ -130,9 +130,14 @@
                   <svg-icon class="min-w-7 min-h-6" src="assets/views.svg" />
                   {{ post?.viewsCount }} ნახვა
                 </p>
+                <span class="font-tbcx-medium text-xs flex shrink-0 items-center">
+                  <svg-icon class="min-w-7 min-h-6" src="assets/clock.svg" />
+                  {{ post.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+                </span>
               } @else if (loading) {
                 <div class="animate-pulse rounded-md mr-5 mt-1 bg-gray-195 h-4 w-12"></div>
-                <div class="animate-pulse rounded-md mt-1 bg-gray-195 h-4 w-12"></div>
+                <div class="animate-pulse rounded-md mr-5 mt-1 bg-gray-195 h-4 w-12"></div>
+                <div class="animate-pulse rounded-md mt-1 bg-gray-195 h-4 w-22"></div>
               }
             </div>
             <div class="-translate-y-1/4">

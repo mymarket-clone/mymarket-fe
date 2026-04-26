@@ -5,94 +5,96 @@
     <article
       class="product-card-search group/product relative flex w-full cursor-pointer items-start border border-transparent bg-white px-2 py-3 transition-colors duration-300 ease-in-out hover:border-blue-40 rounded-lg md:p-3 md:pt-3"
     >
-      <div class="relative shrink-0 lg:max-w-55">
-        <div #swiper class="w-30 overflow-hidden md:w-54 flex">
-          @for (img of post.images; track $index) {
-            <div class="shrink-0" [attr.data-slide-index]="$index">
-              <div class="mr-5" [class.mr-0!]="$last">
-                <img
-                  [src]="img"
-                  width="216"
-                  height="180"
-                  alt="default-image"
-                  class="block h-31.5 w-30 shrink-0 rounded-md object-cover md:h-45 md:w-54"
-                  fallback="https://nf.mymarket.ge/no-image-min.png"
-                />
+      <div class="flex flex-1" [routerLink]="`/post/${post.id}`">
+        <div class="relative shrink-0 lg:max-w-55">
+          <div #swiper class="w-30 overflow-hidden md:w-54 flex">
+            @for (img of post.images; track $index) {
+              <div class="shrink-0" [attr.data-slide-index]="$index">
+                <div class="mr-5" [class.mr-0!]="$last">
+                  <img
+                    [src]="img"
+                    width="216"
+                    height="180"
+                    alt="default-image"
+                    class="block h-31.5 w-30 shrink-0 rounded-md object-cover md:h-45 md:w-54"
+                    fallback="https://nf.mymarket.ge/no-image-min.png"
+                  />
+                </div>
               </div>
-            </div>
-          }
+            }
 
-          @if (this.data().images.length > 1) {
-            <div class="absolute top-[40%] z-50 flex w-full items-center justify-between px-1">
-              <div (click)="prev($event)" class="post-card-arrow">
-                <svg-icon src="assets/left-arrow-white.svg" />
+            @if (this.data().images.length > 1) {
+              <div class="absolute top-[40%] z-50 flex w-full items-center justify-between px-1">
+                <div (click)="prev($event)" class="post-card-arrow">
+                  <svg-icon src="assets/left-arrow-white.svg" />
+                </div>
+                <div (click)="next($event)" class="post-card-arrow">
+                  <svg-icon src="assets/right-arrow-white.svg" />
+                </div>
               </div>
-              <div (click)="next($event)" class="post-card-arrow">
-                <svg-icon src="assets/right-arrow-white.svg" />
-              </div>
-            </div>
-          }
+            }
 
-          @if (promo()) {
-            <div
-              class="absolute rounded-xl py-0.75 px-2.5 left-1.5 top-2 z-10 flex items-center gap-1 md:left-2"
-              [style.background]="promo()?.color"
-            >
-              <span class="tbc-medium text-[10px] block text-white">{{ promo()?.label }}</span>
-            </div>
-          }
-          @if (condition()) {
-            <div
-              class="absolute rounded-xl py-0.75 px-2.5 right-2 top-2 z-10 hidden md:block"
-              [style.background]="condition()?.color"
-            >
-              <span class="tbc-medium text-[10px] block text-white">{{ condition()?.label }}</span>
-            </div>
-          }
-        </div>
-      </div>
-      <div class="item ml-2 flex w-full flex-col overflow-hidden md:ml-3 md:gap-2">
-        <div class="w-full border-b border-gray-130 pb-2 md:border-b-0 md:pb-2">
-          <div class="flex w-full items-center justify-between">
-            <div class="flex items-center gap-1">
-              <svg-icon src="assets/private-person-2.svg" />
-              <span class="tbc-medium text-[10px] text-blue-gray">
-                {{ t('postDetails.privatePerson') }}
-              </span>
-            </div>
+            @if (promo()) {
+              <div
+                class="absolute rounded-xl py-0.75 px-2.5 left-1.5 top-2 z-10 flex items-center gap-1 md:left-2"
+                [style.background]="promo()?.color"
+              >
+                <span class="tbc-medium text-[10px] block text-white">{{ promo()?.label }}</span>
+              </div>
+            }
+            @if (condition()) {
+              <div
+                class="absolute rounded-xl py-0.75 px-2.5 right-2 top-2 z-10 hidden md:block"
+                [style.background]="condition()?.color"
+              >
+                <span class="tbc-medium text-[10px] block text-white">{{ condition()?.label }}</span>
+              </div>
+            }
           </div>
-          <span class="tbc-regular text-sm mt-2 line-clamp-1 text-black md:line-clamp-2">
-            {{ post.title }}
-          </span>
-          <span
-            [innerHTML]="post.description"
-            class="tbc-regular font-normal! text-xs line-clamp-2 hidden max-h-15 w-full overflow-hidden leading-5 text-gray-135 md:line-clamp-3 md:block"
-          >
-          </span>
         </div>
-        <div class="mt-2 flex w-full items-center justify-between md:hidden">
-          <div class="flex flex-col items-start">
-            <div class="flex items-center gap-1">
-              @if (post.canOfferPrice) {
-                <span class="tbc-medium text-sm text-end text-raisin-150">{{
-                  t('addPost.priceNegotiable')
-                }}</span>
-              } @else {
-                <span class="tbc-medium text-sm text-raisin-150">
-                  {{ post.price }}
-                  {{ utils.getCurrencySymbol(this.data()) }}
+        <div class="item ml-2 flex w-full flex-col overflow-hidden md:ml-3 md:gap-2">
+          <div class="w-full border-b border-gray-130 pb-2 md:border-b-0 md:pb-2">
+            <div class="flex w-full items-center justify-between">
+              <div class="flex items-center gap-1">
+                <svg-icon src="assets/private-person-2.svg" />
+                <span class="tbc-medium text-[10px] text-blue-gray">
+                  {{ t('postDetails.privatePerson') }}
                 </span>
-              }
+              </div>
             </div>
-          </div>
-          <div class="flex items-center gap-1">
-            <button
-              (click)="toggleFavorite()"
-              [class.bg-yellow-20]="post.isFavorite"
-              class="h-9 md:h-auto cursor-pointer flex items-center justify-center outline-none rounded-lg bg-gray-10 transition-all p-2 hover:bg-yellow hover:fill-white"
+            <span class="tbc-regular text-sm mt-2 line-clamp-1 text-black md:line-clamp-2">
+              {{ post.title }}
+            </span>
+            <span
+              [innerHTML]="post.description"
+              class="tbc-regular font-normal! text-xs line-clamp-2 hidden max-h-15 w-full overflow-hidden leading-5 text-gray-135 md:line-clamp-3 md:block"
             >
-              <svg-icon [class.active]="post.isFavorite" class="min-w-4 min-h-4" src="assets/heart-s.svg" />
-            </button>
+            </span>
+          </div>
+          <div class="mt-2 flex w-full items-center justify-between md:hidden">
+            <div class="flex flex-col items-start">
+              <div class="flex items-center gap-1">
+                @if (post.isNegotiable) {
+                  <span class="tbc-medium text-sm text-end text-raisin-150">{{
+                    t('addPost.priceNegotiable')
+                  }}</span>
+                } @else {
+                  <span class="tbc-medium text-sm text-raisin-150">
+                    {{ post.price }}
+                    {{ utils.getCurrencySymbol(this.data()) }}
+                  </span>
+                }
+              </div>
+            </div>
+            <div class="flex items-center gap-1">
+              <button
+                (click)="toggleFavorite()"
+                [class.bg-yellow-20]="post.isFavorite"
+                class="h-9 md:h-auto cursor-pointer flex items-center justify-center outline-none rounded-lg bg-gray-10 transition-all p-2 hover:bg-yellow hover:fill-white"
+              >
+                <svg-icon [class.active]="post.isFavorite" class="min-w-4 min-h-4" src="assets/heart-s.svg" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -101,7 +103,7 @@
       >
         <div class="flex flex-col items-start">
           <div class="flex flex-col items-center gap-1">
-            @if (post.canOfferPrice) {
+            @if (post.isNegotiable) {
               <span class="tbc-medium text-sm text-end text-raisin-150">{{
                 t('addPost.priceNegotiable')
               }}</span>
@@ -195,9 +197,9 @@
           <hr class="my-4 block w-full border-t border-blue-gray-20" />
         </div>
         <div class="flex w-full flex-col items-center justify-between md:flex-row">
-          <div class="flex flex-col items-center md:items-start" data-testid="productcard-price-container">
+          <div class="flex flex-col items-center md:items-start">
             <div class="flex items-center gap-1">
-              @if (post.canOfferPrice) {
+              @if (post.isNegotiable) {
                 <span class="tbc-medium text-sm text-end text-raisin-150">{{
                   t('addPost.priceNegotiable')
                 }}</span>

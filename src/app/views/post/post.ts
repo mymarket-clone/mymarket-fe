@@ -1,5 +1,5 @@
 import { ComponentPortal } from '@angular/cdk/portal'
-import { NgTemplateOutlet } from '@angular/common'
+import { CommonModule, NgTemplateOutlet } from '@angular/common'
 import { Component, effect, ElementRef, Injector, signal, viewChild } from '@angular/core'
 import { ActivatedRoute, RouterLink } from '@angular/router'
 import { Swiper } from '@app/components/swiper/swiper'
@@ -22,7 +22,7 @@ import { SvgIconComponent } from 'angular-svg-icon'
 @Component({
   selector: 'post.html',
   templateUrl: 'post.html',
-  imports: [RouterLink, TranslocoDirective, SvgIconComponent, NgTemplateOutlet],
+  imports: [RouterLink, TranslocoDirective, SvgIconComponent, NgTemplateOutlet, CommonModule],
   styles: [
     `
       :host ::ng-deep svg-icon.active > svg > rect {
