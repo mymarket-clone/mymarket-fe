@@ -249,5 +249,12 @@
   },
   "allCategories": {
     "categories": "Categories"
+  },
+  "myListing": {
+    "title": "Title / ID / SKU",
+    "price": "Price",
+    "views": "Viewvs",
+    "promotion": "Promototion",
+    "term": "Term"
   }
 }

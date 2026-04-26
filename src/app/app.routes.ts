@@ -12,6 +12,7 @@ import { Post } from './views/post/post'
 import { Search } from './views/search/search'
 import { Users } from './views/users/users'
 import { MyFavorites } from './views/main/menu/my-favorites/my-favorites'
+import { MyListing } from './views/main/menu/my-listing/my-listing'
 
 export const routes: Routes = [
   {
@@ -38,6 +39,12 @@ export const routes: Routes = [
           {
             path: 'add-advertisement',
             component: AddAdvertisement,
+            canActivate: [loggedGuard],
+            data: { requiresAuth: true },
+          },
+          {
+            path: 'my-listing',
+            component: MyListing,
             canActivate: [loggedGuard],
             data: { requiresAuth: true },
           },

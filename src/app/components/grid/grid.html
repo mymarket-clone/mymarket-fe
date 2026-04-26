@@ -1,0 +1,17 @@
+<div class="p-0 m-0 bg-white border-0 rounded-3xl">
+  <div class="w-full" style="display: grid" [style.gridTemplateColumns]="gridTemplate">
+    @for (col of columns(); track $index) {
+      <div class="px-3 py-3 text-xs text-center font-medium border-b">
+        {{ col.title }}
+      </div>
+    }
+
+    @for (row of data(); track $index; let rowIndex = $index) {
+      @for (col of columns(); track $index; let colIndex = $index) {
+        <div class="px-3 py-2 text-center border-b">
+          {{ col.render ? col.render(getCellValue(row, col), row, rowIndex) : getCellValue(row, col) }}
+        </div>
+      }
+    }
+  </div>
+</div>
