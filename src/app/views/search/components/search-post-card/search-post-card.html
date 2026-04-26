@@ -87,9 +87,11 @@
           </div>
           <div class="flex items-center gap-1">
             <button
-              class="cursor-pointer flex items-center justify-center outline-none rounded-lg bg-gray-10 transition-all fill-black-100 p-2 hover:bg-yellow"
+              (click)="toggleFavorite()"
+              [class.bg-yellow-20]="post.isFavorite"
+              class="h-9 md:h-auto cursor-pointer flex items-center justify-center outline-none rounded-lg bg-gray-10 transition-all p-2 hover:bg-yellow hover:fill-white"
             >
-              <svg-icon src="assets/heart.svg" />
+              <svg-icon [class.active]="post.isFavorite" class="min-w-4 min-h-4" src="assets/heart-s.svg" />
             </button>
           </div>
         </div>
@@ -124,9 +126,11 @@
         </div>
         <div class="flex items-center gap-1">
           <button
-            class="cursor-pointer flex items-center justify-center outline-none rounded-lg bg-gray-10 transition-all fill-black-100 p-2 hover:bg-yellow"
+            (click)="toggleFavorite()"
+            [class.bg-yellow-20]="post.isFavorite"
+            class="h-9 md:h-auto cursor-pointer flex items-center justify-center outline-none rounded-lg bg-gray-10 transition-all p-2 hover:bg-yellow hover:fill-white"
           >
-            <svg-icon src="assets/heart.svg" />
+            <svg-icon [class.active]="post.isFavorite" class="min-w-4 min-h-4" src="assets/heart.svg" />
           </button>
         </div>
       </div>
@@ -220,7 +224,7 @@
             <button
               (click)="toggleFavorite()"
               [class.bg-yellow-20]="post.isFavorite"
-              class="h-9 md:h-auto cursor-pointer flex items-center justify-center outline-none rounded-lg bg-gray-10 transition-all fill-black-100 p-2 hover:bg-yellow hover:fill-white"
+              class="h-9 md:h-auto cursor-pointer flex items-center justify-center outline-none rounded-lg bg-gray-10 transition-all p-2 hover:bg-yellow hover:fill-white"
             >
               <svg-icon [class.active]="post.isFavorite" class="min-w-4 min-h-4" src="assets/heart-s.svg" />
             </button>
