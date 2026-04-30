@@ -71,31 +71,6 @@ export class Menu {
           iconPath: 'assets/my-listing.svg',
         },
         {
-          label: this.ts.translate('menu.myCards'),
-          route: '/menu/my-cards',
-          iconPath: 'assets/my-cards.svg',
-        },
-        {
-          label: this.ts.translate('menu.myAuction'),
-          route: '/menu/my-auction',
-          iconPath: 'assets/my-auction.svg',
-        },
-        {
-          label: this.ts.translate('menu.incomingOffers'),
-          route: '/menu/incoming-offers',
-          iconPath: 'assets/incoming-offers.svg',
-        },
-        {
-          label: this.ts.translate('menu.onlineOrders'),
-          route: '/menu/online-orders',
-          iconPath: 'assets/online-orders.svg',
-        },
-        {
-          label: this.ts.translate('menu.myFinances'),
-          route: '/menu/my-finances',
-          iconPath: 'assets/my-finances.svg',
-        },
-        {
           label: this.ts.translate('menu.myMessages'),
           route: '/menu/my-messages',
           iconPath: 'assets/my-messages.svg',
@@ -106,26 +81,6 @@ export class Menu {
           label: this.ts.translate('menu.myFavourites'),
           route: '/menu/my-favorites',
           iconPath: 'assets/my-favourites.svg',
-        },
-        {
-          label: this.ts.translate('menu.myOrders'),
-          route: '/menu/my-orders',
-          iconPath: 'assets/my-orders.svg',
-        },
-        {
-          label: this.ts.translate('menu.sentOffers'),
-          route: '/menu/sent-offers',
-          iconPath: 'assets/incoming-offers.svg',
-        },
-        {
-          label: this.ts.translate('menu.myAddresses'),
-          route: '/menu/my-addresses',
-          iconPath: 'assets/my-addresses.svg',
-        },
-        {
-          label: this.ts.translate('menu.myBankAccounts'),
-          route: '/menu/my-bank-accounts',
-          iconPath: 'assets/my-bank-accounts.svg',
         },
       ],
       [

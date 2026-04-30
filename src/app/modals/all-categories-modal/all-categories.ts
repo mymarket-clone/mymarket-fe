@@ -20,6 +20,7 @@ interface ICategoryNode extends ICategory {
 export class AllCategories {
   public allCategoriesState?: IHttpService<ICategory[]>
   public currentCategory = signal<ICategory | null>(null)
+  public mobileCategoryStack = signal<ICategoryNode[]>([])
 
   public constructor(
     private readonly apiService: ApiService,
@@ -35,20 +36,21 @@ export class AllCategories {
     })
   }
 
-  private buildTree(categories: ICategory[], rootId: number): ICategoryNode[] {
-    const map = new Map<number, ICategoryNode[]>()
+  private buildTree(categories: ICategory[], rootId: number | null): ICategoryNode[] {
+    const map = new Map<number | null, ICategoryNode[]>()
 
     for (const cat of categories) {
       const node: ICategoryNode = { ...cat, children: [] }
+      const parentId = cat.parentId ?? null
 
-      if (!map.has(cat.parentId)) {
-        map.set(cat.parentId, [])
+      if (!map.has(parentId)) {
+        map.set(parentId, [])
       }
 
-      map.get(cat.parentId)!.push(node)
+      map.get(parentId)!.push(node)
     }
 
-    const attach = (parentId: number): ICategoryNode[] => {
+    const attach = (parentId: number | null): ICategoryNode[] => {
       const children = map.get(parentId) || []
 
       for (const child of children) {
@@ -62,6 +64,7 @@ export class AllCategories {
   }
 
   public closePortal(): void {
+    document.querySelector('app-main-layout')?.classList.add('no-scroll')
     this.portalService.close()
   }
 
@@ -90,4 +93,26 @@ export class AllCategories {
   public parentCategories = computed(() => {
     return this.allCategoriesState?.stableData()?.filter((x) => !x.parentId)
   })
+
+  public mobileCategoryTree = computed(() => {
+    const categories = this.allCategoriesState?.stableData?.()
+    if (!categories?.length) return []
+
+    return this.buildTree(categories, null)
+  })
+
+  public currentMobileCategory = computed(() => this.mobileCategoryStack().at(-1) ?? null)
+
+  public visibleMobileCategories = computed(() => {
+    const current = this.currentMobileCategory()
+    return current ? current.children : this.mobileCategoryTree()
+  })
+
+  public openMobileCategory(category: ICategoryNode): void {
+    this.mobileCategoryStack.update((stack) => [...stack, category])
+  }
+
+  public goBackMobileCategory(): void {
+    this.mobileCategoryStack.update((stack) => stack.slice(0, -1))
+  }
 }

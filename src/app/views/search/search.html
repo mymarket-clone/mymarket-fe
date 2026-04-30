@@ -56,7 +56,7 @@
             <div (click)="navigateBack()" class="flex items-center gap-1 hover:cursor-pointer">
               <svg-icon src="assets/arrow-back.svg" />
               <h1 class="tbc-medium text-base text-blue-30">
-                {{ data.breadcrumb.at(data.breadcrumb.at(-1)?.hasChildren ? -1 : -2)?.name }}
+                {{ categoryTitle(data) }}
               </h1>
             </div>
           }
@@ -378,7 +378,7 @@
           <div (click)="navigateBack()" class="flex items-center gap-1 hover:cursor-pointer">
             <svg-icon src="assets/arrow-back.svg" />
             <h1 class="tbc-medium text-base text-blue-30">
-              {{ data.breadcrumb.at(data.breadcrumb.at(-1)?.hasChildren ? -1 : -2)?.name }}
+              {{ categoryTitle(data) }}
             </h1>
           </div>
         }

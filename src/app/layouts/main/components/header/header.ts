@@ -69,8 +69,8 @@ export class Header {
   }
 
   public openAllCategories(): void {
-    const portal = new ComponentPortal(AllCategories)
-    this.portalService.open(portal, undefined, true)
+    const portal = new ComponentPortal(AllCategories, this.vcr)
+    this.portalService.open(portal, undefined, false)
   }
 
   public closeAllCategories(): void {

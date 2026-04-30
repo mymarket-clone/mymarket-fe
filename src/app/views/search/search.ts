@@ -165,7 +165,14 @@ export class Search {
   }
 
   public get currentCategory(): number {
-    return Number(this.actR.snapshot.paramMap.get('catId'))
+    return Number(this.actR.snapshot.queryParamMap.get('catId'))
+  }
+
+  public categoryTitle(data: IPostSearch | null | undefined): string | null {
+    const breadcrumb = data?.breadcrumb
+    if (!breadcrumb?.length) return null
+
+    return breadcrumb.at(-1)?.name ?? null
   }
 
   public categoryMap = computed(() => {

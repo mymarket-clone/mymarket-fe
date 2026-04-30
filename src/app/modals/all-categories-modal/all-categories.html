@@ -1,13 +1,75 @@
 @let data = allCategoriesState?.stableData();
 
 <div
-  class="cdk-portal bg-black/25 fixed z-9999 right-3.75 top-0 left-0 bottom-0 flex items-center justify-center p-4"
+  class="cdk-portal bg-black/25 fixed z-9999 right-0 top-0 left-0 bottom-0 flex items-center justify-center p-0 md:p-4"
 >
   <div
     *transloco="let t"
     class="flex max-h-full flex-col overflow-y-auto bg-white w-full h-full rounded-none md:w-auto md:h-auto md:rounded-xl"
   >
-    <div class="flex flex-col p-4 pt-0 md:overflow-hidden md:p-6 h-172">
+    <div class="flex flex-col p-4 pt-0 md:overflow-hidden md:p-6 h-full md:h-172">
+      <div class="md:hidden flex w-full h-full flex-col">
+        <div
+          class="sticky top-0 z-40 mb-5 flex items-center justify-between border-b border-b-gray-70 bg-white py-5 w-full"
+        >
+          <span class="tbc-medium"> {{ t('allCategories.categories') }}</span>
+          <span (click)="closePortal()" class="cursor-pointer rounded-full bg-[#f2f2f6]">
+            <div class="p-1">
+              <svg-icon src="assets/close-cross.svg" class="h-6 w-6 block" />
+            </div>
+          </span>
+        </div>
+        <div class="min-h-0 overflow-y-auto">
+          @if (allCategoriesState?.loading() || !data) {
+            @for (item of [].constructor(10); track $index) {
+              <div class="flex h-12.5 items-center justify-between border-b border-b-gray-70">
+                <div class="flex items-center w-full">
+                  <div class="mr-6 h-10 min-w-10 animate-pulse rounded-md bg-gray-195"></div>
+                  <div class="h-4 w-40 animate-pulse rounded-md bg-gray-195"></div>
+                </div>
+                <div class="h-6.25 w-6.25 animate-pulse rounded-lg bg-gray-195"></div>
+              </div>
+            }
+          } @else {
+            @if (currentMobileCategory(); as mobileCategory) {
+              <button
+                (click)="goBackMobileCategory()"
+                type="button"
+                class="flex w-full cursor-pointer items-center gap-2 border-b border-b-gray-70 py-3 text-left"
+              >
+                <svg-icon src="assets/arrow-back.svg" />
+                <span class="tbc-medium text-sm text-blue-30">{{ mobileCategory.name }}</span>
+              </button>
+            }
+
+            @for (item of visibleMobileCategories(); track item.id) {
+              <div class="flex h-12.5 cursor-pointer items-center justify-between border-b border-b-gray-70">
+                <div (click)="navigateTo(item.id)" class="flex min-w-0 w-full items-center">
+                  @if (!currentMobileCategory()) {
+                    <div class="mr-6 h-10 min-w-10 flex items-center">
+                      <img class="w-10" [src]="item.logoUrl" width="44" height="44" [alt]="item.name" />
+                    </div>
+                  }
+                  <span class="tbc-regular text-sm block w-full truncate hover:text-blue-100 transition-colors">
+                    {{ item.name }}
+                  </span>
+                </div>
+
+                @if (item.children.length) {
+                  <button
+                    (click)="openMobileCategory(item)"
+                    type="button"
+                    class="ml-3 flex h-6.25 w-6.25 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-[#f2f2f6] outline-none"
+                  >
+                    <svg-icon src="assets/arrow-d.svg" />
+                  </button>
+                }
+              </div>
+            }
+          }
+        </div>
+      </div>
+
       <div class="hidden max-h-160 overflow-hidden md:flex">
         <div
           class="flex flex-col mr-6 shrink-0 overflow-y-auto overflow-x-hidden default-scrollbar border-r border-gray-180 pr-6 w-80"
@@ -60,7 +122,7 @@
               } @else {
                 @for (item of categoryTree(); track $index) {
                   <div class="mb-8 flex flex-col gap-3">
-                    <a class="cursor-pointer" (item)="navigateTo(item.id)">
+                    <a class="cursor-pointer" (click)="navigateTo(item.id)">
                       <span class="tbc-bold text-sm mb-3 block w-62.5 truncate hover:underline">
                         {{ item.name }}
                       </span>

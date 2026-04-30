@@ -1,4 +1,4 @@
-import { Component, computed } from '@angular/core'
+import { Component, computed, ViewContainerRef } from '@angular/core'
 import { NgTemplateOutlet } from '@angular/common'
 import { SvgIconComponent } from 'angular-svg-icon'
 import { RouterLink } from '@angular/router'
@@ -19,6 +19,7 @@ import { AllCategories } from '@app/modals/all-categories-modal/all-categories'
 export class Categories extends Swiper {
   public constructor(
     private readonly ts: TranslocoService,
+    private readonly vcr: ViewContainerRef,
     public readonly homeCategories: HomeCategoriesService,
     public readonly portalService: PortalService
   ) {
@@ -38,8 +39,8 @@ export class Categories extends Swiper {
   })
 
   public openAllCategories(): void {
-    const portal = new ComponentPortal(AllCategories)
-    this.portalService.open(portal, undefined, true)
+    const portal = new ComponentPortal(AllCategories, this.vcr)
+    this.portalService.open(portal, undefined, false)
   }
 
   private specialCards = computed(() => {
