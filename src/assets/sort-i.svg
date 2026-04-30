@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="6.828" height="10.828" viewBox="0 0 6.828 10.828">
+    <defs>
+        <style>
+            .prefix__cls-2{opacity:.5}.prefix__cls-3{fill:none;stroke:#8996ae;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-width:2px}
+        </style>
+    </defs>
+    <g id="prefix__Group_6829" data-name="Group 6829" transform="translate(-1404.586 -294.586)">
+        <path id="prefix__Rectangle_3702" d="M0 0H6V10H0z" data-name="Rectangle 3702" transform="translate(1405 295)" style="fill:red;opacity:0"/>
+        <g id="prefix__Group_6827" class="prefix__cls-2" data-name="Group 6827" transform="translate(68 1)">
+            <path id="prefix__Stroke_47" d="M0 0l2 2" class="prefix__cls-3" data-name="Stroke 47" transform="translate(1338 301)"/>
+            <path id="prefix__Stroke_48" d="M0 2l2-2" class="prefix__cls-3" data-name="Stroke 48" transform="translate(1340 301)"/>
+        </g>
+        <g id="prefix__Group_6828" class="prefix__cls-2" data-name="Group 6828" transform="translate(1406 296)">
+            <path id="prefix__Stroke_47-2" d="M0 2l2-2" class="prefix__cls-3" data-name="Stroke 47"/>
+            <path id="prefix__Stroke_48-2" d="M0 0l2 2" class="prefix__cls-3" data-name="Stroke 48" transform="translate(2)"/>
+        </g>
+    </g>
+</svg>

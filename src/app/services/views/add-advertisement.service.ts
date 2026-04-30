@@ -3,7 +3,7 @@ import { PromoType } from '@app/types/enums/PromoType'
 
 @Injectable({ providedIn: 'root' })
 export class AddAdvertisementService {
-  private _mainImage = signal<Blob | null>(null)
+  private _mainImage = signal<Blob | string | null>(null)
   private _title = signal<string | null>(null)
   private _views = signal<number>(10)
   private _calls = signal<number>(10)
@@ -11,16 +11,17 @@ export class AddAdvertisementService {
   private _selectedService = signal<PromoType | null>(null)
   public _colorSelected = signal<boolean>(false)
 
-  public set mainImage(v: Blob | null) {
+  public set mainImage(v: Blob | string | null) {
     this._mainImage.set(v)
   }
-  public get mainImage(): Blob | null {
+  public get mainImage(): Blob | string | null {
     return this._mainImage()
   }
 
   public mainImageUrl = computed(() => {
     const file = this._mainImage()
-    return file ? URL.createObjectURL(file) : null
+    if (!file) return null
+    return typeof file === 'string' ? file : URL.createObjectURL(file)
   })
 
   public set title(v: string | null) {

@@ -16,7 +16,7 @@ export class HttpService {
   public request<Data, Body = undefined>(
     options: HttpRequestOptions<Data, Body> & { state?: IHttpService<Data> }
   ): IHttpService<Data> {
-    const { method, endpoint, searchParams, body, formData, onSuccess, onError, form } = options
+    const { method, endpoint, searchParams, body, formData, onSuccess, onError, onFinally, form } = options
 
     const loading = options.state?.loading ?? signal(false)
     const error = options.state?.error ?? signal<string | null>(null)
@@ -58,10 +58,12 @@ export class HttpService {
       next: (response) => {
         data.set(response)
         stableData.set(response)
+        error.set(null)
 
         loading.set(false)
         NProgress.done(true)
         onSuccess?.(response)
+        onFinally?.()
       },
       error: (errors) => {
         const serverErrors = errors.error?.errors || null
@@ -85,6 +87,7 @@ export class HttpService {
             }
           })
         }
+        onFinally?.()
       },
     })
 

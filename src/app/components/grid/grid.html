@@ -1,17 +1,74 @@
 <div class="p-0 m-0 bg-white border-0 rounded-3xl">
-  <div class="w-full" style="display: grid" [style.gridTemplateColumns]="gridTemplate">
+  <div [class.p-0!]="loading()" class="w-full grid pb-8.25" [style.gridTemplateColumns]="gridTemplate">
     @for (col of columns(); track $index) {
-      <div class="px-3 py-3 text-xs text-center font-medium border-b">
+      <div
+        class="select-none px-3 py-3 text-xs text-left flex items-center text-blue-gray font-medium border-b border-gray-70"
+        [class.sorting]="col.sorter"
+        [class.cursor-pointer]="col.sorter"
+        [class.sorting-up]="sortState().key === (col.key ?? col.dataIndex) && sortState().direction === 'asc'"
+        [class.sorting-down]="
+          sortState().key === (col.key ?? col.dataIndex) && sortState().direction === 'desc'
+        "
+        (click)="toggleSort(col)"
+      >
         {{ col.title }}
       </div>
     }
 
-    @for (row of data(); track $index; let rowIndex = $index) {
-      @for (col of columns(); track $index; let colIndex = $index) {
-        <div class="px-3 py-2 text-center border-b">
-          {{ col.render ? col.render(getCellValue(row, col), row, rowIndex) : getCellValue(row, col) }}
-        </div>
+    @if (!loading()) {
+      @for (row of sortedData(); track $index; let rowIndex = $index) {
+        @for (col of columns(); track $index; let colIndex = $index) {
+          <div class="text-nowrap text-center tbc-regular text-xs text-raisin-150 h-full">
+            <div class="px-3 py-2 text-center border-b border-gray-70 h-full flex items-center">
+              @let value = resolveValue(row, col);
+              @let template = col.template;
+
+              @if (template) {
+                <ng-container
+                  *ngTemplateOutlet="
+                    template;
+                    context: {
+                      $implicit: row,
+                      value: value,
+                    }
+                  "
+                >
+                </ng-container>
+              } @else {
+                {{ value ?? '-' }}
+              }
+            </div>
+          </div>
+        }
       }
     }
   </div>
+
+  @if (loading()) {
+    <div class="flex flex-col gap-4 w-full p-4">
+      @for (item of [].constructor(7); track $index) {
+        <div class="flex flex-row gap-4 flex-1 w-full">
+          <div class="animate-pulse rounded-md mt-1 bg-gray-195 h-4 w-full"></div>
+          <div class="animate-pulse rounded-md mt-1 bg-gray-195 h-4 w-12"></div>
+        </div>
+        <div class="animate-pulse rounded-md mt-1 bg-gray-195 h-4 w-1/3"></div>
+      }
+    </div>
+  } @else if (!loading() && !data().length) {
+    <div class="mt-2 px-3.75 pb-1.75">
+      <div class="rounded-2xl pb-50 pt-20 bg-white">
+        <div class="flex flex-col justify-center items-center">
+          <svg-icon src="assets/empty.svg" class="mb-6" />
+          <div class="mb-4 text-[16px] tbc-bold capitalize text-raisin-150">
+            {{ 'myListing.noListing' | transloco }}
+          </div>
+          <a
+            class="cursor-pointer bg-yellow hover:bg-yellow/80 px-14 py-5 text-white text-[13px] tbc-bold capitalize rounded-xl mt-5 transition-colors"
+          >
+            {{ 'header.addListing' | transloco }}
+          </a>
+        </div>
+      </div>
+    </div>
+  }
 </div>

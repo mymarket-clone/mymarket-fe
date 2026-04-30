@@ -88,6 +88,7 @@
     "balance": "Balance",
     "topUp": "Top up",
     "addAdvertisement": "Add an advertisement",
+    "editAdvertisement": "Edit an advertisement",
     "myListing": "My Listing",
     "myCards": "My Cards",
     "myAuction": "My Auction",
@@ -255,6 +256,7 @@
     "price": "Price",
     "views": "Viewvs",
     "promotion": "Promototion",
-    "term": "Term"
+    "term": "Term",
+    "noListing": "You have no listings"
   }
 }

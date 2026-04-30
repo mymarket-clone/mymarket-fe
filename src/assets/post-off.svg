@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <style>
+      .prefix__cls-2 {
+        fill: none;
+        stroke: #d7dce4;
+        strokeLinecap: round;
+        strokeLinejoin: round;
+        strokeMiterlimit: 10;
+        strokeWidth: 2px
+      }
+    </style>
+  </defs>
+  <g id="prefix__Group_11787" data-name="Group 11787" transform="translate(-1643 -330)">
+    <g id="prefix__Group_11786" data-name="Group 11786">
+      <path id="prefix__Stroke_322" d="M0 3V0" class="prefix__cls-2" data-name="Stroke 322"
+        transform="translate(1655 336)" />
+      <path id="prefix__Stroke_323"
+        d="M1.815 0A5.731 5.731 0 0 0 0 4.167 5.919 5.919 0 0 0 6 10a5.918 5.918 0 0 0 6-5.833A5.735 5.735 0 0 0 10.2 0"
+        class="prefix__cls-2" data-name="Stroke 323" transform="translate(1649 338)" />
+    </g>
+  </g>
+</svg>

@@ -12,4 +12,5 @@ export type HttpRequestOptions<DataType, BodyType> = {
   formData?: FormData
   onSuccess?: (data: DataType) => void
   onError?: (errors: Record<string, string[]>, record?: IBaseError) => void
+  onFinally?: () => void
 }

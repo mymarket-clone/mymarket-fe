@@ -49,7 +49,7 @@
     background: linear-gradient(180deg, #fcc000, #fdcd33) !important;
   }
 
-  .dynamic-dropdown>div>label {
+  .dynamic-dropdown > div > label {
     margin-bottom: 4px;
     margin-top: 8px;
   }
@@ -122,5 +122,33 @@
 
   .default-scrollbar {
     scrollbar-color: #9ca3af #f1f1f1 !important;
+  }
+
+  .sorting.sorting-up:after {
+    background-image: url('./../../assets/sort-up.svg');
+  }
+
+  .sorting.sorting-down:after {
+    background-image: url('./../../assets/sort-down.svg');
+  }
+
+  .sorting:after {
+    background-image: url('./../../assets/sort-i.svg');
+    background-position: 50%;
+    background-repeat: no-repeat;
+    content: '';
+    display: block;
+    height: 12px;
+    margin-left: 7px;
+    position: static;
+    width: 7px;
+  }
+
+  .pt-green {
+    @apply border-green-40;
+  }
+
+  .pt-yellow {
+    @apply border-yellow;
   }
 }

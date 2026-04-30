@@ -4,13 +4,15 @@ import { CurrencyType } from '@app/types/enums/CurrencyType'
 import { PostType } from '@app/types/enums/PostType'
 import { PromoType } from '@app/types/enums/PromoType'
 
+export type PostImageValue = File | string
+
 export interface IAddPostForm {
   postType: FormControl<PostType>
   categoryId: FormControl<string | null>
   brandId: FormControl<string | null>
   conditionType: FormControl<ConditionType>
-  images: FormControl<File[] | null>
-  mainImage: FormControl<File | null>
+  images: FormControl<PostImageValue[] | null>
+  mainImage: FormControl<PostImageValue | null>
   youtubeLink: FormControl<string | null>
   title: FormControl<string | null>
   description: FormControl<string | null>

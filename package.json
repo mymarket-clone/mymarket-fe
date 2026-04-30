@@ -26,6 +26,7 @@
     "@tiptap/starter-kit": "^3.17.0",
     "@types/qs": "^6.14.0",
     "angular-svg-icon": "^19.1.1",
+    "dayjs": "^1.11.20",
     "nprogress": "^0.2.0",
     "qs": "^6.15.1",
     "rxjs": "~7.8.0",

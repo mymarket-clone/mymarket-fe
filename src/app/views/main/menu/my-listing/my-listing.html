@@ -1,3 +1,217 @@
-<div class="">
-  <grid [columns]="columns()" [data]="data"> </grid>
+@let data = postsState()?.data();
+
+<div class="mt-6 flex flex-col gap-4 lg:block">
+  <div class="flex gap-3 mb-0 lg:mb-6 flex-col sm:flex-row">
+    @for (filter of postStateFilters(); track filter.status) {
+      @if (postsState()?.loading()) {
+        <div class="animate-pulse rounded-full bg-gray-195 h-8 w-25"></div>
+      } @else {
+        @if (filter.status === postStatus.Active || filter.amount > 0 || filter.status === postType()) {
+          <button
+            (click)="onPostStateChange(filter.status)"
+            [class.pt-green]="
+              currentPostState()?.status === filter.status && currentPostState()?.status == postStatus.Active
+            "
+            [class.pt-yellow]="
+              currentPostState()?.status === filter.status && currentPostState()?.status != postStatus.Active
+            "
+            [class.text-[#6f7383]]="currentPostState()?.status != filter.status"
+            class="flex items-center py-1.25 pl-2 pr-3 cursor-pointer rounded-full border border-gray-40 min-w-25"
+          >
+            <svg-icon [src]="filter.icon" class="mr-1 min-w-4.5" />
+            <span class="text-sm tbc-medium w-full flex justify-between sm:block">
+              <span>{{ filter.label }} </span>
+              <span>{{ filter.amount }}</span>
+            </span>
+          </button>
+        }
+      }
+    }
+  </div>
+
+  <grid
+    class="hidden lg:block"
+    [columns]="columns()"
+    [data]="data?.result?.items || []"
+    [loading]="postsState()?.loading() || false"
+  ></grid>
+  @for (item of data?.result?.items; track $index) {
+    <div class="block lg:hidden bg-white rounded-xl">
+      <div class="py-4">
+        <div class="flex items-center flex-col px-3 lg:px-4 relative w-full gap-3">
+          <div class="flex justify-between w-full">
+            <ng-container
+              *ngTemplateOutlet="
+                product;
+                context: {
+                  $implicit: item,
+                  value: item,
+                  index: $index,
+                }
+              "
+            >
+            </ng-container>
+
+            <ng-container
+              *ngTemplateOutlet="
+                edit;
+                context: {
+                  $implicit: item,
+                  value: item,
+                  index: $index,
+                  showDate: false,
+                }
+              "
+            >
+            </ng-container>
+          </div>
+          @let price = item.priceAfterDiscount || item.price;
+          <div class="flex justify-between w-full gap-3">
+            <ng-container
+              *ngTemplateOutlet="
+                detailInfo;
+                context: {
+                  icon: 'assets/gel.svg',
+                  title: 'myListing.price',
+                  value: `${price} ${utils.getCurrencySymbol(item)}`,
+                }
+              "
+            >
+            </ng-container>
+
+            <ng-container
+              *ngTemplateOutlet="
+                detailInfo;
+                context: {
+                  icon: 'assets/date.svg',
+                  title: 'myListing.term',
+                  value: formattedDate($any(item.createdAt)),
+                }
+              "
+            >
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
 </div>
+
+<ng-template #product let-row let-value="value" let-index="index">
+  <div class="flex items-center ml-1 w-57.5 md:w-54 lg:w-62 shrink mr-3 lg:mr-6">
+    <div class="lg:w-17.5 shrink-0 rounded-sm relative mr-3">
+      <a [routerLink]="`/post/${row.id}`" class="w-17.5">
+        <img class="h-16 w-17.5 object-scale-down" [src]="row.imageUrl" />
+      </a>
+    </div>
+    <div>
+      <div class="flex items-center mb-1">
+        <div class="text-xs tbc-regular text-blue-gray mr-2">ID{{ row.id }}</div>
+      </div>
+      <a
+        title="Mobile Phone Apple"
+        class="text-xs tbc-medium text-raisin-150 block break-all truncate max-w-40"
+      >
+        {{ row.title }}
+      </a>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #edit let-row let-value="value" let-index="index" let-showDate="showDate">
+  @if (showDate !== false) {
+    <div class="w-17.5">
+      {{ row.createdAt ? formattedDate(row.createdAt) : null }}
+    </div>
+  }
+
+  <div class="flex w-fit md:w-18 ml-3">
+    <div
+      (click)="openDisable(row.id, row.status)"
+      class="cursor-pointer select-none relative decoration-0 text-raisin-150 w-8 h-8 mr-2 bg-gray-70 flex items-center justify-center rounded-full"
+    >
+      <svg-icon class="flex items-center justify-center w-8 h-8" src="assets/pt-inactive-b.svg" />
+    </div>
+
+    <div
+      (click)="openDelete(row.id)"
+      class="cursor-pointer select-none relative decoration-0 text-raisin-150 w-8 h-8 bg-gray-70 flex items-center justify-center rounded-full"
+    >
+      <svg-icon class="flex items-center justify-center w-8 h-8" src="assets/post-delete.svg" />
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #detailInfo let-icon="icon" let-title="title" let-value="value">
+  <div class="w-full flex-1 px-1 flex bg-[#F6F7FA] rounded-lg justify-between p-2">
+    <svg-icon [src]="icon" />
+    <div class="flex flex-col items-end w-full">
+      <div class="text-[11px] tbc-regular text-raisin-150 mb-1">
+        {{ title | transloco }}
+      </div>
+      <div class="text-xs tbc-medium leading-6 mb-1">
+        {{ value }}
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #promoServices>
+  <div class="justify-between items-center mt-0 text-sm tbc-regular text-blue-gray">
+    <div class="w-fit lg:mr-6 flex items-center justify-between ml-0">
+      <button class="cursor-pointer w-8 h-8 p-2 mr-1 md:mr-2 rounded-full bg-gray-70">
+        <span class="flex items-center justify-center">
+          <svg-icon src="assets/lightning.svg" />
+        </span>
+      </button>
+      <button class="cursor-pointer w-8 h-8 p-2 mr-1 md:mr-2 rounded-full bg-gray-70">
+        <span class="flex items-center justify-center">
+          <svg-icon src="assets/color-p.svg" />
+        </span>
+      </button>
+      <button class="cursor-pointer w-8 h-8 p-2 mr-1 md:mr-2 rounded-full bg-gray-70">
+        <span class="flex items-center justify-center">
+          <svg-icon src="assets/refresh-g.svg" />
+        </span>
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #confirmModal>
+  @let modalState = modal();
+
+  <div
+    class="cdk-portal fixed opacity-0 z-9999 bg-black/50 right-3.75 top-0 left-0 bottom-0 flex justify-center items-center"
+  >
+    <div class="bg-white rounded-[14px] mx-1.75 max-w-158.5 p-6 relative w-full h-70">
+      <button (click)="closeModal()" class="absolute top-0 right-0" style="padding: inherit">
+        <div class="p-2 bg-gray-10 rounded-full cursor-pointer">
+          <svg-icon src="assets/close-cross.svg" class="h-6 w-6 block" />
+        </div>
+      </button>
+
+      <div class="py-8 text-center">
+        <div class="py-8 text-center">
+          {{ modalState?.message }}
+        </div>
+      </div>
+
+      <div class="pb-7 mt-0 flex justify-center">
+        <button
+          (click)="handleConfirm()"
+          class="rounded-xl cursor-pointer text-sm px-9 py-4 bg-gray-60 mx-2 hover:bg-gray-70 transition-colors"
+        >
+          Yes
+        </button>
+
+        <button
+          (click)="closeModal()"
+          class="rounded-xl cursor-pointer text-sm px-9 py-4 bg-gray-60 mx-2 hover:bg-gray-70 transition-colors"
+        >
+          No
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -1,231 +1,272 @@
-import { Component, computed } from '@angular/core'
+import {
+  Component,
+  computed,
+  effect,
+  signal,
+  TemplateRef,
+  viewChild,
+  ChangeDetectionStrategy,
+  ViewContainerRef,
+} from '@angular/core'
 import { Grid } from '@app/components/grid/grid'
 import { ColumnsType } from '@app/types/ColumnsType'
-import { TranslocoService } from '@jsverse/transloco'
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco'
+import { ActivatedRoute, Router, RouterLink } from '@angular/router'
+import { ApiService } from '@app/services/http/api.service'
+import { IHttpService } from '@app/interfaces/common/IHttpService'
+import { IMyPost } from '@app/interfaces/response/IMyPost'
+import { HttpMethod } from '@app/types/enums/HttpMethod'
+import { PostStatus } from '@app/types/enums/PostStatus'
+import { Utils } from '@app/utils/Utils'
+import { IMyPostItem } from '@app/interfaces/response/IMyPostItem'
+import { SvgIconComponent } from 'angular-svg-icon'
+import dayjs from 'dayjs'
+import { NgTemplateOutlet } from '@angular/common'
+import { TemplatePortal } from '@angular/cdk/portal'
+import { PortalService } from '@app/services/portal.service'
+
+type ModalState = {
+  message: string
+  action: () => void
+  loading?: () => boolean
+} | null
 
 @Component({
   selector: 'my-listing',
   templateUrl: 'my-listing.html',
-  imports: [Grid],
+  imports: [Grid, TranslocoPipe, SvgIconComponent, NgTemplateOutlet, RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: [
+    `
+      ::ng-deep .pt-green > svg-icon svg circle {
+        fill: #0ec604;
+      }
+
+      ::ng-deep .pt-yellow > svg-icon svg path {
+        fill: #fec900 !important;
+      }
+    `,
+  ],
 })
 export class MyListing {
-  public constructor(private readonly ts: TranslocoService) {}
+  public product = viewChild.required<TemplateRef<unknown>>('product')
+  public edit = viewChild.required<TemplateRef<unknown>>('edit')
+  public promoServices = viewChild.required<TemplateRef<unknown>>('promoServices')
+  public confirmModal = viewChild.required<TemplateRef<unknown>>('confirmModal')
 
-  public columns = computed((): ColumnsType<unknown>[] => {
+  public modal = signal<ModalState>(null)
+
+  public postStatus = PostStatus
+  public postType = signal<PostStatus>(PostStatus.Active)
+
+  public postsState = signal<IHttpService<IMyPost> | null>(null)
+  public postDeleteState!: IHttpService<void>
+  public postDisableState!: IHttpService<void>
+
+  public initalLoading = signal<boolean>(true)
+
+  public openModal(config: ModalState): void {
+    this.modal.set(config)
+
+    const portal = new TemplatePortal(this.confirmModal(), this.vcr)
+    this.portalService.open(portal, undefined, true)
+  }
+
+  public closeModal(): void {
+    this.portalService.close()
+    this.modal.set(null)
+  }
+
+  public handleConfirm(): void {
+    const modal = this.modal()
+    if (!modal || modal.loading?.()) return
+
+    modal.action()
+  }
+
+  public readonly postStateFilters = computed(() => {
+    const data = this.postsState()?.data()
+
     return [
       {
-        title: this.ts.translate('myListing.title'),
-        dataIndex: 'id',
+        status: PostStatus.Active,
+        label: 'Active',
+        icon: 'assets/pt-active.svg',
+        amount: data?.activeCount ?? 0,
       },
       {
-        title: this.ts.translate('myListing.price'),
-        dataIndex: 'price',
+        status: PostStatus.Blocked,
+        label: 'Blocked',
+        icon: 'assets/pt-blocked.svg',
+        amount: data?.blocked ?? 0,
       },
       {
-        title: this.ts.translate('myListing.views'),
-        dataIndex: 'viewsCount',
-      },
-      {
-        title: this.ts.translate('myListing.promotion'),
-      },
-      {
-        title: this.ts.translate('myListing.term'),
+        status: PostStatus.InActive,
+        label: 'Inactive',
+        icon: 'assets/pt-inactive.svg',
+        amount: data?.inactiveCount ?? 0,
       },
     ]
   })
 
-  public data = [
-    {
-      id: 52,
-      autoRenewal: false,
-      canOfferPrice: false,
-      categoryId: 113,
-      conditionType: 2,
-      currencyType: 1,
-      description: '',
-      forDisabledPerson: false,
-      isColored: false,
-      isNegotiable: false,
-      name: 'Nika',
-      phoneNumber: '555123123',
-      postType: 1,
-      price: 1699,
-      promoType: 3,
-      salePercentage: 0,
-      priceAfterDiscount: 1699,
-      title: 'TEST 1',
-      brandId: 9,
-      images: [
-        'https://pnxbarolplsopfmvimmp.supabase.co/storage/v1/object/public/Images/b6b2a4f5-9932-4524-899e-6ea7d7a974d7.jpg',
-      ],
-      isFavorite: false,
-    },
-    {
-      id: 58,
-      autoRenewal: true,
-      canOfferPrice: true,
-      categoryId: 94,
-      conditionType: 1,
-      currencyType: 1,
-      description: '<p>some description</p>',
-      forDisabledPerson: true,
-      isColored: true,
-      isNegotiable: false,
-      name: 'Aleko',
-      phoneNumber: '555551231',
-      postType: 1,
-      price: 1299,
-      promoType: 2,
-      salePercentage: 0,
-      priceAfterDiscount: 1299,
-      title: 'Test houshold',
-      brandId: null,
-      images: [
-        'https://pnxbarolplsopfmvimmp.supabase.co//storage/v1/object/public/Images/57733032-e2a6-4b3a-a922-530763b469fc.webp',
-      ],
-      isFavorite: true,
-    },
-    {
-      id: 53,
-      autoRenewal: false,
-      canOfferPrice: false,
-      categoryId: 104,
-      conditionType: 1,
-      currencyType: 1,
-      description:
-        '<p><strong>TRINX ის ველოსიპედების ოფიციალურ მაღაზიათა ქსელი, გთავაზობთ ველოსიპედების უდიდეს არჩევანს.</strong></p><p><strong>ანგარიშსწორება: ნაღდი, უნაღდო(გადარიცხვა/ ბარათი), განვადება(თიბისი;კრედო; საქართველოს ბანკი)</strong></p><p><strong>გარანტია: 5 წელი ჩარჩოზე. 6 თვე მაკომპლექტებლებზე</strong></p><p>სამთო ველოსიპედი ტრინქსი TRINX M116elite27.5x18x21s 2020</p><p></p><p>სიჩქარეების რ ბა: 21 სიჩქარე; ჩარჩო : TRINX 27.5"*16"/18" Alloy Special-Shaped Tubes; ჩანგალი : Suspension , Travel: 100MM; სიჩქარის გადამრთველი : SHIMANO ST-EF41; წინა გადამრთველი : TRINX FD-QD-35; უკანა გადამრთველი : SHIMANO RD-TY21; კასეტა : 7S 14-28T; ჯაჭვი : M30 7S; მუხრუჭი : TRINX Alloy Mechanical Disc; დისკი : TRINX Alloy Double Wall; საბურავი : KENDA 27.5"*1.95"; ჯაჭვის კბილანა: 24/34/42T*170L; ჰაბი :Disc HUB; სკამი : TRINX Sport; სკამის ღერძი: TRINX Hi-Ten Steel; ვინუსი : TRINX Alloy; საჭე : TRINX Small Rise;</p>',
-      forDisabledPerson: false,
-      isColored: false,
-      isNegotiable: false,
-      name: 'Nika',
-      phoneNumber: '555131232',
-      postType: 1,
-      price: 755,
-      promoType: 2,
-      salePercentage: 20,
-      priceAfterDiscount: 604,
-      title: '123',
-      brandId: null,
-      images: [
-        'https://pnxbarolplsopfmvimmp.supabase.co/storage/v1/object/public/Images/a3305b91-9820-465d-b96d-da8184b04b5f.jpg',
-        'https://pnxbarolplsopfmvimmp.supabase.co/storage/v1/object/public/Images/fbba52f8-f264-4cf6-8ba8-a99380fb56cb.jpg',
-        'https://pnxbarolplsopfmvimmp.supabase.co/storage/v1/object/public/Images/415d8596-d51d-446a-9487-2762cac2634a.jpg',
-        'https://pnxbarolplsopfmvimmp.supabase.co/storage/v1/object/public/Images/7d57ec5e-32f5-46e1-90a3-767862646ed8.jpg',
-      ],
-      isFavorite: true,
-    },
-    {
-      id: 55,
-      autoRenewal: false,
-      canOfferPrice: true,
-      categoryId: 89,
-      conditionType: 1,
-      currencyType: 1,
-      description:
-        '<p>descriptiondescriptiondescriptiondescriptiondescriptiondescriptio<br>weqweqweqweqeqweqweqwe<strong>23123123</strong></p>',
-      forDisabledPerson: false,
-      isColored: false,
-      isNegotiable: true,
-      name: 'Nika',
-      phoneNumber: '555134452',
-      postType: 1,
-      price: 0,
-      promoType: 2,
-      salePercentage: 0,
-      priceAfterDiscount: 0,
-      title: 'Laptop Test',
-      brandId: 16,
-      images: [
-        'https://pnxbarolplsopfmvimmp.supabase.co/storage/v1/object/public/Images/62101874-ced2-4652-9f6d-b309ef7fd151.jpg',
-      ],
-      isFavorite: true,
-    },
-    {
-      id: 56,
-      autoRenewal: false,
-      canOfferPrice: false,
-      categoryId: 89,
-      conditionType: 1,
-      currencyType: 1,
-      description: '',
-      forDisabledPerson: true,
-      isColored: false,
-      isNegotiable: false,
-      name: 'Gio',
-      phoneNumber: '555431412',
-      postType: 1,
-      price: 5000,
-      promoType: 2,
-      salePercentage: 0,
-      priceAfterDiscount: 5000,
-      title: 'Test Laptop 4',
-      brandId: 14,
-      images: [
-        'https://pnxbarolplsopfmvimmp.supabase.co/storage/v1/object/public/Images/bf8257cc-dc3f-490e-a245-ee145d337b98.jpg',
-      ],
-      isFavorite: true,
-    },
-    {
-      id: 57,
-      autoRenewal: false,
-      canOfferPrice: true,
-      categoryId: 89,
-      conditionType: 2,
-      currencyType: 2,
-      description:
-        '<p>Description </p><p>Description </p><p>Description </p><p>Description </p><p>Description </p><p>Description </p><p>Description </p><p>Description </p><p>Description </p><p>Description </p><p>Description </p><p>Description </p><p>Description </p>',
-      forDisabledPerson: false,
-      isColored: false,
-      isNegotiable: false,
-      name: 'Vasya',
-      phoneNumber: '555555555',
-      postType: 1,
-      price: 50000,
-      promoType: 2,
-      salePercentage: 25,
-      priceAfterDiscount: 37500,
-      title: 'Laptopi Magari HP',
-      brandId: 14,
-      images: [
-        'https://pnxbarolplsopfmvimmp.supabase.co/storage/v1/object/public/Images/d7cf9184-059b-4d98-b1af-d45c0d1e56f6.jpg',
-        'https://pnxbarolplsopfmvimmp.supabase.co/storage/v1/object/public/Images/b0617a2b-6fa9-4f76-92e9-f74350150391.jpg',
-        'https://pnxbarolplsopfmvimmp.supabase.co/storage/v1/object/public/Images/1700edcc-52a9-40f7-a6f3-ec93123ffef5.png',
-        'https://pnxbarolplsopfmvimmp.supabase.co/storage/v1/object/public/Images/1cb8cf3c-6cd0-4e34-a2cc-ea7968dbb818.jpg',
-        'https://pnxbarolplsopfmvimmp.supabase.co/storage/v1/object/public/Images/fb9251c8-d68f-42b1-afc5-b585d3f95d09.jpg',
-        'https://pnxbarolplsopfmvimmp.supabase.co/storage/v1/object/public/Images/f2c19c31-d942-4e46-99ee-4aeee34ce24a.jpg',
-        'https://pnxbarolplsopfmvimmp.supabase.co/storage/v1/object/public/Images/4d74b51b-1ae6-49dc-bc14-bc87ce170e64.jpg',
-        'https://pnxbarolplsopfmvimmp.supabase.co/storage/v1/object/public/Images/6f013268-58c0-4118-aecd-1808ff4b37ca.jpg',
-      ],
-      isFavorite: false,
-    },
-    {
-      id: 54,
-      autoRenewal: false,
-      canOfferPrice: false,
-      categoryId: 104,
-      conditionType: 1,
-      currencyType: 1,
-      description:
-        '<p><strong>TRINX ის ველოსიპედების ოფიციალურ მაღაზიათა ქსელი, გთავაზობთ ველოსიპედების უდიდეს არჩევანს.</strong></p><p><strong>ანგარიშსწორება: ნაღდი, უნაღდო(გადარიცხვა/ ბარათი), განვადება(თიბისი;კრედო; საქართველოს ბანკი)</strong></p><p><strong>გარანტია: 5 წელი ჩარჩოზე. 6 თვე მაკომპლექტებლებზე</strong></p><p>სამთო ველოსიპედი ტრინქსი TRINX M116elite27.5x18x21s 2020</p><p></p><p>სიჩქარეების რ ბა: 21 სიჩქარე; ჩარჩო : TRINX 27.5"*16"/18" Alloy Special-Shaped Tubes; ჩანგალი : Suspension , Travel: 100MM; სიჩქარის გადამრთველი : SHIMANO ST-EF41; წინა გადამრთველი : TRINX FD-QD-35; უკანა გადამრთველი : SHIMANO RD-TY21; კასეტა : 7S 14-28T; ჯაჭვი : M30 7S; მუხრუჭი : TRINX Alloy Mechanical Disc; დისკი : TRINX Alloy Double Wall; საბურავი : KENDA 27.5"*1.95"; ჯაჭვის კბილანა: 24/34/42T*170L; ჰაბი :Disc HUB; სკამი : TRINX Sport; სკამის ღერძი: TRINX Hi-Ten Steel; ვინუსი : TRINX Alloy; საჭე : TRINX Small Rise;</p>',
-      forDisabledPerson: false,
-      isColored: false,
-      isNegotiable: true,
-      name: 'Nika',
-      phoneNumber: '555131232',
-      postType: 1,
-      price: 755,
-      promoType: 1,
-      salePercentage: 20,
-      priceAfterDiscount: 604,
-      title: 'სამთო 222',
-      brandId: null,
-      images: [
-        'https://pnxbarolplsopfmvimmp.supabase.co/storage/v1/object/public/Images/a3305b91-9820-465d-b96d-da8184b04b5f.jpg',
-        'https://pnxbarolplsopfmvimmp.supabase.co/storage/v1/object/public/Images/fbba52f8-f264-4cf6-8ba8-a99380fb56cb.jpg',
-        'https://pnxbarolplsopfmvimmp.supabase.co/storage/v1/object/public/Images/415d8596-d51d-446a-9487-2762cac2634a.jpg',
-        'https://pnxbarolplsopfmvimmp.supabase.co/storage/v1/object/public/Images/7d57ec5e-32f5-46e1-90a3-767862646ed8.jpg',
-      ],
-      isFavorite: false,
-    },
-  ]
+  public currentPostState = computed(() => this.postStateFilters().find((f) => f.status === this.postType()))
+
+  public constructor(
+    private readonly ts: TranslocoService,
+    private readonly apiService: ApiService,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+    private readonly portalService: PortalService,
+    private readonly vcr: ViewContainerRef,
+    public readonly utils: Utils
+  ) {
+    const statusParam = this.route.snapshot.queryParamMap.get('status')
+    if (statusParam) {
+      const statusValue = parseInt(statusParam, 10)
+      if (Object.values(PostStatus).includes(statusValue as PostStatus)) {
+        this.postType.set(statusValue as PostStatus)
+      }
+    }
+
+    effect(() => {
+      const status = this.postType()
+
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { status },
+        queryParamsHandling: 'merge',
+      })
+
+      const request = this.apiService.request({
+        endpoint: `posts/my?postStatus=${status}`,
+        method: HttpMethod.GET,
+        onFinally: () => this.initalLoading.set(false),
+      })
+
+      this.postsState.set(request as IHttpService<IMyPost>)
+    })
+  }
+
+  public openDelete(postId: number): void {
+    this.openModal({
+      message: 'Are you sure you want to delete?',
+      loading: () => this.postDeleteState?.loading(),
+      action: () => {
+        this.postDeleteState = this.apiService.request({
+          method: HttpMethod.DELETE,
+          endpoint: `posts/${postId}`,
+          onSuccess: () => this.removeFromList(postId),
+          onFinally: () => this.closeModal(),
+        })
+      },
+    })
+  }
+
+  public openDisable(postId: number, postStatus: PostStatus): void {
+    const endpoint = postStatus === PostStatus.Active ? `posts/${postId}/disable` : `posts/${postId}/enable`
+
+    this.openModal({
+      message: 'Are you sure you want to change status?',
+      loading: () => this.postDisableState?.loading(),
+      action: () => {
+        this.postDisableState = this.apiService.request({
+          method: HttpMethod.POST,
+          endpoint,
+          onSuccess: () => this.updatePostAfterStatusChange(postId, postStatus),
+          onFinally: () => this.closeModal(),
+        })
+      },
+    })
+  }
+
+  private removeFromList(postId: number): void {
+    const currentData = this.postsState()?.data()
+    if (!currentData?.result.items) return
+
+    this.postsState()?.data.set({
+      ...currentData,
+      result: {
+        ...currentData.result,
+        items: currentData.result.items.filter((item) => item.id !== postId),
+      },
+    })
+  }
+
+  private updatePostAfterStatusChange(postId: number, previousStatus: PostStatus): void {
+    const currentData = this.postsState()?.data()
+    if (!currentData) return
+
+    const isActive = previousStatus === PostStatus.Active
+    const updatedItems = currentData.result.items.filter((i) => i.id !== postId)
+
+    const nextActiveCount = currentData.activeCount + (isActive ? -1 : 1)
+    const nextInactiveCount = currentData.inactiveCount + (isActive ? 1 : -1)
+
+    this.postsState()?.data.set({
+      ...currentData,
+      activeCount: Math.max(0, nextActiveCount),
+      inactiveCount: Math.max(0, nextInactiveCount),
+      result: {
+        ...currentData.result,
+        items: updatedItems,
+      },
+    })
+  }
+
+  public onPostStateChange(state: PostStatus): void {
+    if (this.postType() === state) return
+    this.postType.set(state)
+  }
+
+  public formattedDate(v: Date): string {
+    return dayjs(v).format('DD/MM/YYYY')
+  }
+
+  public columns = computed((): ColumnsType<IMyPostItem>[] => {
+    return [
+      {
+        title: this.ts.translate('myListing.title'),
+        dataIndex: 'title',
+        template: this.product(),
+        width: 250,
+        sorter: (a, b) => a.id - b.id,
+      },
+      {
+        title: this.ts.translate('myListing.price'),
+        dataIndex: 'price',
+        render: (_, r): string => {
+          const currency = this.utils.getCurrencySymbol(r)
+          const finalPrice = r.priceAfterDiscount ?? r.price
+
+          if (r.isNegotiable) return 'Price negotiable'
+
+          return `${finalPrice.toFixed(2)} ${currency}`
+        },
+        sorter: (a, b): number => {
+          const getPrice = (r: IMyPostItem): number => {
+            if (r.isNegotiable) return -Infinity
+            return r.priceAfterDiscount ?? r.price ?? 0
+          }
+
+          return getPrice(a) - getPrice(b)
+        },
+      },
+      {
+        title: this.ts.translate('myListing.views'),
+        dataIndex: 'viewsCount',
+        sorter: (a, b) => a.viewsCount - b.viewsCount,
+      },
+      {
+        title: this.ts.translate('myListing.term'),
+        dataIndex: 'endDate',
+        template: this.edit(),
+        sorter: (a, b): number => {
+          const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0
+          const bTime = b.createdAt ? new Date(b.createdAt).getTime() : 0
+
+          return aTime - bTime
+        },
+      },
+    ]
+  })
 }

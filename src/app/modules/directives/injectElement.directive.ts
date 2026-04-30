@@ -104,6 +104,9 @@ export class InjectElementDirective {
 
       this.hasView = true
       this.stateChange.emit(true)
+    } else if (this.tooltipEl) {
+      this.renderer.removeClass(this.tooltipEl, 'opacity-0')
+      this.renderer.addClass(this.tooltipEl, 'opacity-100')
     }
   }
 
