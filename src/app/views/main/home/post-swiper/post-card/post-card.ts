@@ -1,6 +1,6 @@
 import { ApiService } from './../../../../../services/http/api.service'
 import { Component, input, output } from '@angular/core'
-import { RouterLink } from '@angular/router'
+import { Router, RouterLink } from '@angular/router'
 import { SvgIconComponent } from 'angular-svg-icon'
 import { TranslocoDirective } from '@jsverse/transloco'
 import { Swiper } from '@app/components/swiper/swiper'
@@ -26,7 +26,8 @@ export class ProuductCard extends Swiper {
   public constructor(
     public readonly utils: Utils,
     public readonly userStore: UserStore,
-    public readonly apiService: ApiService
+    public readonly apiService: ApiService,
+    private readonly router: Router
   ) {
     super()
   }
@@ -37,6 +38,13 @@ export class ProuductCard extends Swiper {
 
   public toggleFavorite(): void {
     if (this.favouriteState?.loading()) return
+
+    if (!this.userStore.accessToken) {
+      this.router.navigate(['/user/login'], {
+        queryParams: { returnUrl: this.router.url },
+      })
+      return
+    }
 
     const post = this.post()
     const previousValue = post.isFavorite

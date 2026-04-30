@@ -1,5 +1,5 @@
 import { Component, HostBinding, input, output } from '@angular/core'
-import { RouterLink } from '@angular/router'
+import { Router, RouterLink } from '@angular/router'
 import { Swiper } from '@app/components/swiper/swiper'
 import { IPostDetails } from '@app/interfaces/response/IPostDetails'
 import { SvgIconComponent } from 'angular-svg-icon'
@@ -60,6 +60,7 @@ export class SearchPostCard extends Swiper {
     private readonly ts: TranslocoService,
     private readonly apiService: ApiService,
     private readonly userStore: UserStore,
+    private readonly router: Router,
     public readonly utils: Utils
   ) {
     super()
@@ -67,6 +68,13 @@ export class SearchPostCard extends Swiper {
 
   public toggleFavorite(): void {
     if (this.favouriteState?.loading()) return
+
+    if (!this.userStore.accessToken) {
+      this.router.navigate(['/user/login'], {
+        queryParams: { returnUrl: this.router.url },
+      })
+      return
+    }
 
     const post = this.data()
     const previousValue = post.isFavorite

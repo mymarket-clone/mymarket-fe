@@ -1,7 +1,7 @@
 import { ComponentPortal } from '@angular/cdk/portal'
 import { CommonModule, NgTemplateOutlet } from '@angular/common'
 import { Component, effect, ElementRef, Injector, signal, viewChild } from '@angular/core'
-import { ActivatedRoute, RouterLink } from '@angular/router'
+import { ActivatedRoute, Router, RouterLink } from '@angular/router'
 import { Swiper } from '@app/components/swiper/swiper'
 import { POST_DATA } from '@app/configs/injector-token.config'
 import { IHttpService } from '@app/interfaces/common/IHttpService'
@@ -58,6 +58,7 @@ export class Post extends Swiper {
     private readonly ts: TranslocoService,
     private readonly apiService: ApiService,
     private readonly actR: ActivatedRoute,
+    private readonly router: Router,
     private readonly userStore: UserStore,
     private readonly portalService: PortalService
   ) {
@@ -94,6 +95,13 @@ export class Post extends Swiper {
 
   public toggleFavorite(): void {
     if (this.favouriteState?.loading()) return
+
+    if (!this.userStore.accessToken) {
+      this.router.navigate(['/user/login'], {
+        queryParams: { returnUrl: this.router.url },
+      })
+      return
+    }
 
     const post = this.postState?.data()
     if (!post) return

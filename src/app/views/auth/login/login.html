@@ -83,7 +83,9 @@
     </div>
     <div class="flex gap-2 text-xs sm:text-sm mt-20 md:mt-10">
       {{ t('auth.noAccount') }}
-      <a routerLink="/user/register" class="text-blue-100"> {{ t('auth.create') }} </a>
+      <a routerLink="/user/register" queryParamsHandling="preserve" class="text-blue-100">
+        {{ t('auth.create') }}
+      </a>
     </div>
     <div class="w-full items-center gap-4 my-10 hidden sm:block">
       <hr class="bg-raisin-130 opacity-10 w-full" />

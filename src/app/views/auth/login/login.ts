@@ -1,7 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common'
 import { Component, signal } from '@angular/core'
 import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms'
-import { RouterLink, Router } from '@angular/router'
+import { ActivatedRoute, RouterLink, Router } from '@angular/router'
 import { Button } from '@app/components/button/button'
 import { Input } from '@app/components/input/input'
 import { IHttpService } from '@app/interfaces/common/IHttpService'
@@ -41,6 +41,7 @@ export class Login {
     private readonly apiService: ApiService,
     private readonly userStore: UserStore,
     private readonly router: Router,
+    private readonly route: ActivatedRoute,
     private readonly zod: Zod,
     public readonly loginFs: FormService<ILoginForm>
   ) {
@@ -66,21 +67,25 @@ export class Login {
           form: this.loginFs.form,
           onSuccess: (response) => {
             this.userStore.setUser(response)
-            this.router.navigate(['/'])
+            this.router.navigateByUrl(this.returnUrl)
           },
           onError: (_, record) => {
             if (
               record &&
-              record.status == HttpStatus.Unauthorized &&
+              record.status == HttpStatus.Forbidden &&
               record.code == HttpErrorCodes.EmailNotVerified
             ) {
               this.router.navigate(['/user/register'], {
-                queryParams: { email: record.email },
+                queryParams: { email: record.email, returnUrl: this.returnUrl },
               })
             }
           },
         })
       },
     })
+  }
+
+  public get returnUrl(): string {
+    return this.route.snapshot.queryParamMap.get('returnUrl') || '/'
   }
 }

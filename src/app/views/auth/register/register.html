@@ -12,28 +12,29 @@
             <svg-icon src="/assets/tnet.svg" />
           </span>
           @if (registrationStage() !== 'Main') {
-          <button
-            class="bottom-1! rounded-full bg-white hover:bg-raisin-10 flex items-center justify-center cursor-pointer size-8 transition-all duration-200 ease-in-out button absolute left-0 sm:-left-10"
-          >
-            <svg
-              routerLink="/user/login"
-              viewBox="0 0 24 24"
-              class="flex items-center justify-center rotate-90 size-10"
+            <button
+              class="bottom-1! rounded-full bg-white hover:bg-raisin-10 flex items-center justify-center cursor-pointer size-8 transition-all duration-200 ease-in-out button absolute left-0 sm:-left-10"
             >
-              <path
-                d="M16.59 8.29492L12 12.8749L7.41 8.29492L6 9.70492L12 15.7049L18 9.70492L16.59 8.29492Z"
-                fill="#1B1D27"
-              />
-            </svg>
-          </button>
+              <svg
+                routerLink="/user/login"
+                queryParamsHandling="preserve"
+                viewBox="0 0 24 24"
+                class="flex items-center justify-center rotate-90 size-10"
+              >
+                <path
+                  d="M16.59 8.29492L12 12.8749L7.41 8.29492L6 9.70492L12 15.7049L18 9.70492L16.59 8.29492Z"
+                  fill="#1B1D27"
+                />
+              </svg>
+            </button>
           }
         </div>
         @if (registrationStage() === 'Main') {
-        <h2 class="md: font-bold text-2xl leading-8 text-center">{{ t("auth.createAccount") }}</h2>
+          <h2 class="md: font-bold text-2xl leading-8 text-center">{{ t('auth.createAccount') }}</h2>
         } @else if (registrationStage() === 'Extra') {
-        <h2 class="md: font-bold text-2xl leading-8 text-center">{{ t("auth.personalInformation") }}</h2>
+          <h2 class="md: font-bold text-2xl leading-8 text-center">{{ t('auth.personalInformation') }}</h2>
         } @else if (registrationStage() === 'Verification') {
-        <h2 class="md: font-bold text-2xl leading-8 text-center">{{ t("auth.emailVerification") }}</h2>
+          <h2 class="md: font-bold text-2xl leading-8 text-center">{{ t('auth.emailVerification') }}</h2>
         }
       </div>
       <form
@@ -44,144 +45,147 @@
       >
         <div class="w-full flex flex-col gap-4">
           @if (registrationStage() === 'Main') {
-          <app-input
-            [label]="t('auth.firstName')"
-            [control]="registerFormMain.getControl('firstname')"
-            [submitted]="registerFormMain.submitted"
-            variant="dynamic"
-          />
-          <app-input
-            [label]="t('auth.lastName')"
-            [control]="registerFormMain.getControl('lastname')"
-            [submitted]="registerFormMain.submitted"
-            variant="dynamic"
-          />
-          <app-input
-            [label]="t('auth.email')"
-            type="email"
-            [control]="registerFormMain.getControl('email')"
-            [submitted]="registerFormMain.submitted"
-            variant="dynamic"
-          />
-          <app-input
-            [label]="t('auth.password')"
-            type="password"
-            [control]="registerFormMain.getControl('password')"
-            [submitted]="registerFormMain.submitted"
-            variant="dynamic"
-          />
-          <app-input
-            [label]="t('auth.passwordConfirm')"
-            type="password"
-            [control]="registerFormMain.getControl('passwordConfirm')"
-            [submitted]="registerFormMain.submitted"
-            variant="dynamic"
-          />
-          @if (passwordVisible()) {
-          <div
-            class="transition-opacity duration-300 ease-in-out"
-            [style.opacity]="passwordNotEmpty() ? 1 : 0"
-          >
-            <app-password-strength [password]="registerFormMain.getControl('password').value" />
-          </div>
-          } } @else if (registrationStage() === "Extra") {
-          <app-segmented
-            [label]="t('auth.gender')"
-            [control]="registerFormExtra.getControl('gender')"
-            [submitted]="registerFormExtra.submitted"
-            [segments]="['Male', 'Female']"
-          />
-          <app-input
-            [label]="t('auth.birthYear')"
-            [control]="registerFormExtra.getControl('birthYear')"
-            [submitted]="registerFormExtra.submitted"
-            variant="dynamic"
-          />
-          <app-input
-            [label]="t('auth.phoneNumber')"
-            [control]="registerFormExtra.getControl('phoneNumber')"
-            [submitted]="registerFormExtra.submitted"
-            variant="dynamic"
-          />
-          <app-checkbox
-            [label]="t('auth.agreeTo')"
-            [clickableLabel]="t('auth.termsAndConditions')"
-            href="https://tnet.ge/en/rules"
-            [submitted]="registerFormExtra.submitted"
-            [control]="registerFormExtra.getControl('termsAndConditions')"
-            [required]="true"
-          />
-          <app-checkbox
-            [label]="t('auth.agreeTo')"
-            [clickableLabel]="t('auth.privacyPolicy')"
-            href="https://tnet.ge/en/usageagreement"
-            [submitted]="registerFormExtra.submitted"
-            [control]="registerFormExtra.getControl('privacyPolicy')"
-            [required]="true"
-          />
-          } @else if (registrationStage() === "Verification") {
-          <app-input
-            [label]="t('auth.gender')"
-            type="email"
-            [control]="registerFormVerification.getControl('email')"
-            [submitted]="registerFormVerification.submitted"
-            [disabled]="true"
-            [trailingContent]="sendEmail"
-            [bottomContent]="bottomText"
-            variant="dynamic"
-          />
-          <app-input
-            [label]="t('auth.oneTimeCode')"
-            [control]="registerFormVerification.getControl('code')"
-            [submitted]="registerFormVerification.submitted"
-            variant="dynamic"
-          />
+            <app-input
+              [label]="t('auth.firstName')"
+              [control]="registerFormMain.getControl('firstname')"
+              [submitted]="registerFormMain.submitted"
+              variant="dynamic"
+            />
+            <app-input
+              [label]="t('auth.lastName')"
+              [control]="registerFormMain.getControl('lastname')"
+              [submitted]="registerFormMain.submitted"
+              variant="dynamic"
+            />
+            <app-input
+              [label]="t('auth.email')"
+              type="email"
+              [control]="registerFormMain.getControl('email')"
+              [submitted]="registerFormMain.submitted"
+              variant="dynamic"
+            />
+            <app-input
+              [label]="t('auth.password')"
+              type="password"
+              [control]="registerFormMain.getControl('password')"
+              [submitted]="registerFormMain.submitted"
+              variant="dynamic"
+            />
+            <app-input
+              [label]="t('auth.passwordConfirm')"
+              type="password"
+              [control]="registerFormMain.getControl('passwordConfirm')"
+              [submitted]="registerFormMain.submitted"
+              variant="dynamic"
+            />
+            @if (passwordVisible()) {
+              <div
+                class="transition-opacity duration-300 ease-in-out"
+                [style.opacity]="passwordNotEmpty() ? 1 : 0"
+              >
+                <app-password-strength [password]="registerFormMain.getControl('password').value" />
+              </div>
+            }
+          } @else if (registrationStage() === 'Extra') {
+            <app-segmented
+              [label]="t('auth.gender')"
+              [control]="registerFormExtra.getControl('gender')"
+              [submitted]="registerFormExtra.submitted"
+              [segments]="['Male', 'Female']"
+            />
+            <app-input
+              [label]="t('auth.birthYear')"
+              [control]="registerFormExtra.getControl('birthYear')"
+              [submitted]="registerFormExtra.submitted"
+              variant="dynamic"
+            />
+            <app-input
+              [label]="t('auth.phoneNumber')"
+              [control]="registerFormExtra.getControl('phoneNumber')"
+              [submitted]="registerFormExtra.submitted"
+              variant="dynamic"
+            />
+            <app-checkbox
+              [label]="t('auth.agreeTo')"
+              [clickableLabel]="t('auth.termsAndConditions')"
+              href="https://tnet.ge/en/rules"
+              [submitted]="registerFormExtra.submitted"
+              [control]="registerFormExtra.getControl('termsAndConditions')"
+              [required]="true"
+            />
+            <app-checkbox
+              [label]="t('auth.agreeTo')"
+              [clickableLabel]="t('auth.privacyPolicy')"
+              href="https://tnet.ge/en/usageagreement"
+              [submitted]="registerFormExtra.submitted"
+              [control]="registerFormExtra.getControl('privacyPolicy')"
+              [required]="true"
+            />
+          } @else if (registrationStage() === 'Verification') {
+            <app-input
+              [label]="t('auth.gender')"
+              type="email"
+              [control]="registerFormVerification.getControl('email')"
+              [submitted]="registerFormVerification.submitted"
+              [disabled]="true"
+              [trailingContent]="sendEmail"
+              [bottomContent]="bottomText"
+              variant="dynamic"
+            />
+            <app-input
+              [label]="t('auth.oneTimeCode')"
+              [control]="registerFormVerification.getControl('code')"
+              [submitted]="registerFormVerification.submitted"
+              variant="dynamic"
+            />
           }
           <app-button [class.mt-4]="registrationStage() !== 'Main'" [title]="t('auth.continue')" />
         </div>
       </form>
     </div>
-    @if(registrationStage() === 'Main') {
-    <div class="flex flex-col gap-6 md:gap-8 w-full">
-      <div
-        class="flex items-center gap-2 sm:gap-5 w-full mt-5 [&>button]:relative [&>button]:flex [&>button]:items-center [&>button]:sm:py-3.5 [&>button]:py-2.75 [&>button]:flex-1 [&>button]:justify-center [&>button]:transition-all [&>button]:duration-200 [&>button]:cursor-pointer [&>button]:border [&>button]:border-transparent [&>button]:bg-raisin-10 [&>button]:rounded-lg [&>button]:h-12 [&>button]:md:h-14 [&>button]:hover:rounded-xl [&>button]:hover:border [&>button]:hover:border-raisin-20 [&>button]:hover:bg-transparent"
-      >
-        <button
-          inject
-          [content]="tooltipLogin"
-          [context]="{text: t('auth.socialSignIn', {media: 'Google'})}"
-          type="button"
+    @if (registrationStage() === 'Main') {
+      <div class="flex flex-col gap-6 md:gap-8 w-full">
+        <div
+          class="flex items-center gap-2 sm:gap-5 w-full mt-5 [&>button]:relative [&>button]:flex [&>button]:items-center [&>button]:sm:py-3.5 [&>button]:py-2.75 [&>button]:flex-1 [&>button]:justify-center [&>button]:transition-all [&>button]:duration-200 [&>button]:cursor-pointer [&>button]:border [&>button]:border-transparent [&>button]:bg-raisin-10 [&>button]:rounded-lg [&>button]:h-12 [&>button]:md:h-14 [&>button]:hover:rounded-xl [&>button]:hover:border [&>button]:hover:border-raisin-20 [&>button]:hover:bg-transparent"
         >
-          <span class="h-5 sm:h-6">
-            <svg-icon src="assets/google.svg" />
-          </span>
-        </button>
-        <button
-          inject
-          [content]="tooltipLogin"
-          [context]="{text: t('auth.socialSignIn', {media: 'Facebook'})}"
-          type="button"
-        >
-          <span class="h-5 sm:h-6">
-            <svg-icon src="assets/facebook.svg" />
-          </span>
-        </button>
-        <button
-          inject
-          [content]="tooltipLogin"
-          [context]="{text: t('auth.socialSignIn', {media: 'Apple'})}"
-          type="button"
-        >
-          <span class="h-5 sm:h-6">
-            <svg-icon src="assets/apple.svg" />
-          </span>
-        </button>
+          <button
+            inject
+            [content]="tooltipLogin"
+            [context]="{ text: t('auth.socialSignIn', { media: 'Google' }) }"
+            type="button"
+          >
+            <span class="h-5 sm:h-6">
+              <svg-icon src="assets/google.svg" />
+            </span>
+          </button>
+          <button
+            inject
+            [content]="tooltipLogin"
+            [context]="{ text: t('auth.socialSignIn', { media: 'Facebook' }) }"
+            type="button"
+          >
+            <span class="h-5 sm:h-6">
+              <svg-icon src="assets/facebook.svg" />
+            </span>
+          </button>
+          <button
+            inject
+            [content]="tooltipLogin"
+            [context]="{ text: t('auth.socialSignIn', { media: 'Apple' }) }"
+            type="button"
+          >
+            <span class="h-5 sm:h-6">
+              <svg-icon src="assets/apple.svg" />
+            </span>
+          </button>
+        </div>
+        <div class="flex gap-1 text-xs sm:text-sm justify-center">
+          <a class="text-blue-100" routerLink="/user/login" queryParamsHandling="preserve">
+            {{ t('auth.signIn') }}
+          </a>
+          {{ t('auth.withExistingAccount') }}
+        </div>
       </div>
-      <div class="flex gap-1 text-xs sm:text-sm justify-center">
-        <a class="text-blue-100" routerLink="/user/login">{{ t('auth.signIn') }}</a>
-        {{ t('auth.withExistingAccount') }}
-      </div>
-    </div>
     }
   </div>
 </div>

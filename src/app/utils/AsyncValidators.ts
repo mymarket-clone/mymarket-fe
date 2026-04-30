@@ -9,11 +9,11 @@ export const userExistsValidator = (translocoService: TranslocoService): AsyncVa
     if (!email) return of(null)
 
     return from(
-      fetch(`${API_URL}user-exists/?email=${encodeURIComponent(email)}`, {
+      fetch(`${API_URL}auth/user-exists/?email=${encodeURIComponent(email)}`, {
         method: 'GET',
       }).then((resp) => resp.status === 204)
     ).pipe(
-      map((exists) => (exists ? { set: translocoService.translate('emailAlreadyUsed') } : null)),
+      map((exists) => (exists ? { set: translocoService.translate('validators.emailAlreadyUsed') } : null)),
       catchError(() => of(null))
     )
   }

@@ -73,31 +73,36 @@ export class Register implements OnInit {
     private readonly zod: Zod
   ) {
     this.registerFormMain.setForm(
-      new FormGroup({
-        firstname: new FormControl('', [
-          this.zod.required(),
-          this.zod.onlyLetters(
-            this.ts.translate('validators.onlyLetters', {
-              field: 'სახელი',
-            })
-          ),
-        ]),
-        lastname: new FormControl('', [
-          this.zod.required(),
-          this.zod.onlyLetters(
-            this.ts.translate('validators.onlyLetters', {
-              field: 'გვარი',
-            })
-          ),
-        ]),
-        email: new FormControl('', {
-          validators: [this.zod.required(), this.zod.email()],
-          asyncValidators: userExistsValidator(this.ts),
-          updateOn: 'blur',
-        }),
-        password: new FormControl('', [this.zod.required(), this.zod.password()]),
-        passwordConfirm: new FormControl('', this.zod.required()),
-      })
+      new FormGroup(
+        {
+          firstname: new FormControl('', [
+            this.zod.required(),
+            this.zod.onlyLetters(
+              this.ts.translate('validators.onlyLetters', {
+                field: 'სახელი',
+              })
+            ),
+          ]),
+          lastname: new FormControl('', [
+            this.zod.required(),
+            this.zod.onlyLetters(
+              this.ts.translate('validators.onlyLetters', {
+                field: 'გვარი',
+              })
+            ),
+          ]),
+          email: new FormControl('', {
+            validators: [this.zod.required(), this.zod.email()],
+            asyncValidators: userExistsValidator(this.ts),
+            updateOn: 'blur',
+          }),
+          password: new FormControl('', [this.zod.required(), this.zod.password()]),
+          passwordConfirm: new FormControl('', this.zod.required()),
+        },
+        {
+          validators: this.zod.match('password', 'passwordConfirm'),
+        }
+      )
     )
 
     this.registerFormExtra.setForm(
@@ -125,7 +130,7 @@ export class Register implements OnInit {
           this.zod.required(),
           this.zod.email(),
         ]),
-        code: new FormControl('', [this.zod.length(4)]),
+        code: new FormControl('', [this.zod.required()]),
       })
     )
   }
@@ -151,7 +156,7 @@ export class Register implements OnInit {
       onSuccess: () => {
         this.registerState = this.authService.request({
           method: HttpMethod.POST,
-          endpoint: 'register-user',
+          endpoint: 'auth/register-user',
           body: {
             ...this.registerFormMain.getValues(),
             ...this.registerFormExtra.getValues(),
@@ -175,15 +180,18 @@ export class Register implements OnInit {
   }
 
   public verifyEmail(): void {
-    this.verifyEmailCodeState = this.authService.request({
-      method: HttpMethod.POST,
-      endpoint: 'verify-email-code',
-      body: this.registerFormVerification.getValues(),
-      form: this.registerFormVerification.form,
-      onSuccess: (response) => {
-        this.userStore.logout()
-        this.userStore.setUser(response)
-        this.router.navigate(['/'])
+    this.registerFormVerification.submit({
+      onSuccess: () => {
+        this.verifyEmailCodeState = this.authService.request({
+          method: HttpMethod.POST,
+          endpoint: 'auth/verify-email-code',
+          body: this.registerFormVerification.getValues(),
+          form: this.registerFormVerification.form,
+          onSuccess: (response) => {
+            this.userStore.setUser(response)
+            this.router.navigateByUrl(this.returnUrl)
+          },
+        })
       },
     })
   }
@@ -201,7 +209,7 @@ export class Register implements OnInit {
 
     this.sendEmailVerificationCodeState = this.authService.request({
       method: HttpMethod.POST,
-      endpoint: 'send-email-verification-code',
+      endpoint: 'auth/send-email-verification-code',
       body: { email: emailControl.value as string },
       onSuccess: () => {
         this.codeSent.set(true)
@@ -209,12 +217,21 @@ export class Register implements OnInit {
 
         setTimeout(() => this.sendCodeActive.set(false), 30000)
       },
-      onError: (err) => console.error(err),
+      onError: (err) => {
+        console.error(err)
+        this.sendCodeActive.set(false)
+        this.codeSendLoading.set(false)
+        this.codeSent.set(false)
+      },
     })
   }
 
   public proceedToStage(stage: RegistrationStage): void {
     this.registrationStage.set(stage)
+  }
+
+  public get returnUrl(): string {
+    return this.actR.snapshot.queryParamMap.get('returnUrl') || '/'
   }
 
   public onSubmit(): void {
