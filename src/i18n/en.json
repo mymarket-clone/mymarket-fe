@@ -214,7 +214,14 @@
     "privatePerson": "Private person",
     "quickBuy": "Quick buy",
     "offerPrice": "Offer a price",
-    "specifications": "Specifications"
+    "specifications": "Specifications",
+    "showPhoneNumber": "Show phone number",
+    "views": "Views",
+    "sendMessage": "Send message",
+    "cancel": "Cancel",
+    "send": "Send",
+    "provideMessage": "Please provide message text",
+    "textForSeller": "Text for the seller"
   },
   "post": {
     "listings": "Listings",
@@ -254,7 +261,7 @@
   "myListing": {
     "title": "Title / ID / SKU",
     "price": "Price",
-    "views": "Viewvs",
+    "views": "Views",
     "promotion": "Promototion",
     "term": "Term",
     "noListing": "You have no listings"

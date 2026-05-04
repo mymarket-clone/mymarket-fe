@@ -24,7 +24,6 @@ export class PostImagesModal extends Swiper {
     private readonly portalService: PortalService
   ) {
     super()
-
     this.post.set(data.post)
   }
 

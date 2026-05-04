@@ -128,7 +128,7 @@
                 <span class="tbc-medium text-xs mr-5 block shrink-0">ID {{ post?.id }}</span>
                 <p class="tbc-medium text-xs mr-5 flex shrink-0 items-center">
                   <svg-icon class="min-w-7 min-h-6" src="assets/views.svg" />
-                  {{ post?.viewsCount }} ნახვა
+                  {{ post?.viewsCount }} {{ t('postDetails.views') }}
                 </p>
                 <span class="font-tbcx-medium text-xs flex shrink-0 items-center">
                   <svg-icon class="min-w-7 min-h-6" src="assets/clock.svg" />
@@ -174,7 +174,9 @@
             <div class="flex flex-col items-start">
               <div class="mb-1 flex items-center rounded-xl bg-gray-40 px-2 py-1">
                 @if (post) {
-                  <svg-icon src="assets/private-person.svg" />
+                  <span class="w-3.5">
+                    <svg-icon src="assets/private-person.svg" />
+                  </span>
                   <span class="tbc-regular text-[10px] block">
                     {{ t('postDetails.privatePerson') }}
                   </span>
@@ -195,7 +197,7 @@
               @if (post) {
                 <a [routerLink]="`/users/${post?.user?.id}`">
                   <span class="tbc-regular text-xs mb-1 block text-gray-160 underline">
-                    {{ post?.user?.postsCount }} განცხადება
+                    {{ post?.user?.postsCount }} {{ t('postDetails.listing') }}
                   </span>
                 </a>
                 <span class="tbc-regular text-xs mb-2 block">
@@ -211,9 +213,11 @@
               <div class="flex w-full md:w-auto">
                 @if (post) {
                   <div
-                    class="relative flex w-full cursor-pointer items-center text-nowrap rounded-lg border border-blue-100 p-3 md:min-w-45.5"
+                    class="relative flex w-full cursor-pointer items-center text-nowrap rounded-lg border border-blue-100 p-3 md:min-w-45.5 md:min-h-12.5"
                   >
-                    <svg-icon src="assets/phone-green.svg" />
+                    <span class="h-3.75 w-4.75">
+                      <svg-icon src="assets/phone-green.svg" />
+                    </span>
                     <span class="tbc-medium text-sm mr-1 block">
                       {{
                         phoneNumberState?.data()
@@ -226,7 +230,7 @@
                         (click)="phoneNumber(post?.user?.id!)"
                         class="tbc-regular text-[10px] text-blue-100"
                       >
-                        Show phone number
+                        {{ t('postDetails.showPhoneNumber') }}
                       </span>
                     } @else if (phoneNumberState?.loading()) {
                       <div class="ml-1 flex w-17.5 justify-center">
@@ -234,9 +238,14 @@
                       </div>
                     }
                   </div>
-                  <div class="ml-2 cursor-pointer rounded-lg border p-4 border-gray-180">
-                    <svg-icon src="assets/chat.svg" />
-                  </div>
+                  @if (postState?.data()?.user?.id !== userStore.getUserId()) {
+                    <div
+                      (click)="openSendMessage()"
+                      class="min-w-12.5 ml-2 cursor-pointer rounded-lg border p-4 border-gray-180"
+                    >
+                      <svg-icon class="min-w-4" src="assets/chat.svg" />
+                    </div>
+                  }
                 } @else if (loading) {
                   <div class="flex w-full md:min-w-45.5 h-12.5 gap-2">
                     <div class="animate-pulse rounded-md bg-gray-195 md:min-w-45.5 h-12.5 w-53.25"></div>

@@ -163,42 +163,6 @@ export class Header {
         route: '/menu/my-listing',
       },
       {
-        label: this.ts.translate('menu.incomingOffers'),
-        route: '/menu/incoming-offers',
-      },
-      {
-        label: this.ts.translate('menu.onlineOrders'),
-        route: '/menu/online-orders',
-      },
-      {
-        label: this.ts.translate('menu.myCards'),
-        route: '/menu/my-cards',
-      },
-      {
-        label: this.ts.translate('menu.myAuction'),
-        route: '/menu/my-auction',
-      },
-      {
-        label: this.ts.translate('menu.myFinances'),
-        route: '/menu/my-finances',
-      },
-      {
-        label: this.ts.translate('menu.myOrders'),
-        route: '/menu/my-orders',
-      },
-      {
-        label: this.ts.translate('menu.sentOffers'),
-        route: '/menu/sent-offers',
-      },
-      {
-        label: this.ts.translate('menu.myAddresses'),
-        route: '/menu/my-addresses',
-      },
-      {
-        label: this.ts.translate('menu.myBankAccounts'),
-        route: '/menu/my-bank-accounts',
-      },
-      {
         label: this.ts.translate('menu.editAccount'),
         route: '/menu/edit-account',
       },
@@ -207,24 +171,12 @@ export class Header {
 
   public navbar = computed((): NavbarItem[] => [
     { label: this.ts.translate('navbar.installments'), key: 'search', iconPath: null },
-    { label: this.ts.translate('navbar.shops'), key: 'shops', iconPath: null },
     {
       label: this.ts.translate('navbar.sale'),
       key: 'sale',
       iconPath: 'assets/discount.svg',
     },
-    {
-      label: this.ts.translate('navbar.giveAway'),
-      key: 'give-away',
-      iconPath: 'assets/gift.svg',
-    },
-    { label: this.ts.translate('navbar.openShop'), key: 'open-shop', iconPath: null },
-    { label: this.ts.translate('navbar.help'), key: 'help', iconPath: null },
-    { label: this.ts.translate('navbar.blog'), key: 'blog', iconPath: null },
-    { label: this.ts.translate('navbar.contact'), key: 'contact', iconPath: null },
     { label: this.ts.translate('navbar.sendMessage'), key: 'send-message', iconPath: null },
-    { label: this.ts.translate('navbar.requestCall'), key: 'reqeust-call', iconPath: null },
-    { label: this.ts.translate('navbar.rate'), key: 'rate', iconPath: null },
     { label: this.ts.translate('navbar.protectPhishing'), key: 'protect-from-phishing', iconPath: null },
     { label: this.ts.translate('navbar.termsAndConditions'), key: 'terms-and-conditions', iconPath: null },
   ])

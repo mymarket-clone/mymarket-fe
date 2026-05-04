@@ -3,10 +3,11 @@ import { CommonModule, NgTemplateOutlet } from '@angular/common'
 import { Component, effect, ElementRef, Injector, signal, viewChild } from '@angular/core'
 import { ActivatedRoute, Router, RouterLink } from '@angular/router'
 import { Swiper } from '@app/components/swiper/swiper'
-import { POST_DATA } from '@app/configs/injector-token.config'
+import { POST_DATA, SEND_MESSAGE_DATA } from '@app/configs/injector-token.config'
 import { IHttpService } from '@app/interfaces/common/IHttpService'
 import { IPostDetails } from '@app/interfaces/response/IPostDetails'
 import { PostImagesModal } from '@app/modals/post-images-modal/post-images-modal'
+import { SendMessageModal } from '@app/modals/send-message-modal/send-message-modal'
 import { ApiService } from '@app/services/http/api.service'
 import { PortalService } from '@app/services/portal.service'
 import { UserStore } from '@app/stores/user.store'
@@ -59,8 +60,8 @@ export class Post extends Swiper {
     private readonly apiService: ApiService,
     private readonly actR: ActivatedRoute,
     private readonly router: Router,
-    private readonly userStore: UserStore,
-    private readonly portalService: PortalService
+    private readonly portalService: PortalService,
+    public readonly userStore: UserStore
   ) {
     super()
     this.postState = this.apiService.request({
@@ -77,19 +78,40 @@ export class Post extends Swiper {
     effect(() => this.syncThumbnailSlider())
   }
 
-  public openImages(): void {
-    const injector = Injector.create({
-      providers: [
-        {
-          provide: POST_DATA,
-          useValue: {
-            post: this.postState?.data(),
+  public openSendMessage(): void {
+    const portal = new ComponentPortal(
+      SendMessageModal,
+      null,
+      Injector.create({
+        providers: [
+          {
+            provide: SEND_MESSAGE_DATA,
+            useValue: {
+              reciever: this.postState?.data()?.user.id,
+              postId: this.postState?.data()?.id,
+            },
           },
-        },
-      ],
-    })
+        ],
+      })
+    )
+    this.portalService.open(portal, undefined, true)
+  }
 
-    const portal = new ComponentPortal(PostImagesModal, null, injector)
+  public openImages(): void {
+    const portal = new ComponentPortal(
+      PostImagesModal,
+      null,
+      Injector.create({
+        providers: [
+          {
+            provide: POST_DATA,
+            useValue: {
+              post: this.postState?.data(),
+            },
+          },
+        ],
+      })
+    )
     this.portalService.open(portal, undefined, true)
   }
 
