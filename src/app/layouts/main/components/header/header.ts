@@ -1,7 +1,7 @@
 import { LayoutService } from '@app/services/layout.service'
 import { Component, computed, effect, signal, TemplateRef, viewChild, ViewContainerRef } from '@angular/core'
 import { SvgIconComponent } from 'angular-svg-icon'
-import { Router, RouterLink } from '@angular/router'
+import { ActivatedRoute, Router, RouterLink } from '@angular/router'
 import { TranslocoDirective, TranslocoPipe, TranslocoService } from '@jsverse/transloco'
 import { UserStore } from '@app/stores/user.store'
 import { InjectElementDirective } from '@app/modules/directives/injectElement.directive'
@@ -25,6 +25,7 @@ export class Header {
   public headerSitesOpen = signal<boolean>(false)
   public profileDropdownOpen = signal<boolean>(false)
   public currentUserState?: IHttpService<UserDetail>
+  public keyword: string = ''
 
   public burgerMenu = viewChild.required<TemplateRef<unknown>>('burgerMenu')
   public allCategories = viewChild.required<TemplateRef<unknown>>('allCategories')
@@ -32,6 +33,7 @@ export class Header {
   public constructor(
     private readonly ts: TranslocoService,
     private readonly router: Router,
+    private readonly actR: ActivatedRoute,
     private readonly apiService: ApiService,
     private readonly vcr: ViewContainerRef,
     private readonly layoutService: LayoutService,
@@ -51,6 +53,18 @@ export class Header {
 
     effect(() => {
       if (this.layoutService.isDesktop()) this.portalService.close()
+    })
+
+    this.actR.queryParams.subscribe((params) => {
+      this.keyword = params['keyword'] ?? ''
+    })
+  }
+
+  public search(value: string): void {
+    this.router.navigate(['/search'], {
+      queryParams: {
+        keyword: value,
+      },
     })
   }
 

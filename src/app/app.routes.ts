@@ -13,6 +13,7 @@ import { Search } from './views/search/search'
 import { Users } from './views/users/users'
 import { MyFavorites } from './views/main/menu/my-favorites/my-favorites'
 import { MyListing } from './views/main/menu/my-listing/my-listing'
+import { EditAccount } from './views/main/menu/edit-account/edit-account'
 
 export const routes: Routes = [
   {
@@ -30,6 +31,8 @@ export const routes: Routes = [
       {
         path: 'menu',
         component: Menu,
+        canActivate: [loggedGuard],
+        data: { requiresAuth: true },
         children: [
           {
             path: '',
@@ -39,20 +42,18 @@ export const routes: Routes = [
           {
             path: 'add-advertisement',
             component: AddAdvertisement,
-            canActivate: [loggedGuard],
-            data: { requiresAuth: true },
           },
           {
             path: 'my-listing',
             component: MyListing,
-            canActivate: [loggedGuard],
-            data: { requiresAuth: true },
           },
           {
             path: 'my-favorites',
             component: MyFavorites,
-            canActivate: [loggedGuard],
-            data: { requiresAuth: true },
+          },
+          {
+            path: 'edit-account',
+            component: EditAccount,
           },
         ],
       },

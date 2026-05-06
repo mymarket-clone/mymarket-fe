@@ -1,0 +1,62 @@
+<div *transloco="let t">
+  <form
+    (submit)="onSubmit()"
+    [formGroup]="fs.form"
+    class="rounded-xl bg-white p-6 md:p-10 mt-6 flex flex-col gap-6"
+  >
+    <h1 class="text-sm tbc-bold leading-5">{{ t('editAccount.main') }}</h1>
+    @if (!currentUserState?.loading()) {
+      <app-input
+        [label]="t('auth.firstName')"
+        [control]="fs.getControl('firstname')"
+        [submitted]="fs.submitted"
+        variant="dynamic"
+        [required]="true"
+      />
+      <app-input
+        [label]="t('auth.lastName')"
+        [control]="fs.getControl('lastname')"
+        [submitted]="fs.submitted"
+        variant="dynamic"
+        [required]="true"
+      />
+      <app-input
+        [disabled]="true"
+        [label]="t('auth.email')"
+        type="email"
+        [control]="fs.getControl('email')"
+        [submitted]="fs.submitted"
+        variant="dynamic"
+        [required]="true"
+      />
+      <app-segmented
+        [control]="fs.getControl('gender')"
+        [submitted]="fs.submitted"
+        [segments]="['Male', 'Female']"
+      />
+      <app-input
+        [label]="t('auth.birthYear')"
+        [control]="fs.getControl('birthYear')"
+        [submitted]="fs.submitted"
+        variant="dynamic"
+        [required]="true"
+      />
+      <app-input
+        [label]="t('auth.phoneNumber')"
+        [control]="fs.getControl('phoneNumber')"
+        [submitted]="fs.submitted"
+        variant="dynamic"
+        [required]="true"
+      />
+    } @else {
+      @for (item of [].constructor(6); track $index) {
+        <div class="animate-pulse rounded-md bg-gray-195 h-14 w-full"></div>
+      }
+    }
+    <app-button
+      [title]="t('post.save')"
+      [disabled]="editProfileState?.loading() || false"
+      iclass="bg-yellow-gradient bg-transparent text-black-20! rounded-xl tbc-bold px-8 text-sm hover:bg-yellow-gradient! leading-5.25! h-auto!"
+    />
+  </form>
+</div>

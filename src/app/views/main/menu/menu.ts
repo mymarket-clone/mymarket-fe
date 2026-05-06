@@ -70,11 +70,6 @@ export class Menu {
           route: '/menu/my-listing',
           iconPath: 'assets/my-listing.svg',
         },
-        {
-          label: this.ts.translate('menu.myMessages'),
-          route: '/menu/my-messages',
-          iconPath: 'assets/my-messages.svg',
-        },
       ],
       [
         {

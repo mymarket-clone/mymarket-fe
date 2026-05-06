@@ -10,6 +10,15 @@ export class Segmented extends BaseInput {
   public segments = input.required<string[]>()
   public static = signal<boolean>(false)
 
+  public ngOnInit(): void {
+    this.control().valueChanges.subscribe((value) => {
+      this.static.set(value === Gender.Female)
+    })
+
+    const value = this.control().value
+    this.static.set(value === Gender.Female)
+  }
+
   public setFirst(): void {
     this.static.set(false)
     this.control().setValue(Gender.Male)

@@ -1,3 +1,5 @@
+import { Gender } from './enums/Gender'
+
 export type User = {
   accessToken: string
   refreshToken: string
@@ -11,5 +13,9 @@ export type UserDetail = {
   lastname: string
   email: string
   emailVerified: boolean
+  firstname: string
   favoritesCount: number
+  number: string
+  genderType: Gender
+  birthYear: number
 }

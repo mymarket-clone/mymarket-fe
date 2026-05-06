@@ -21,13 +21,16 @@
           </span>
           <svg-icon class="ml-2 min-w-2" src="assets/profile-arrow.svg" />
         </div>
-        <div [class]="isSearchVisible() ? 'block' : 'hidden'">
+        <div>
           <form
             autocorrect="off"
             autocomplete="off"
             class="h-10 md:w-70 relative flex border mr-7 border-gray-20 rounded-xl lg:w-[320px]"
+            (submit)="search(searchInput.value); $event.preventDefault()"
           >
             <input
+              #searchInput
+              [value]="keyword"
               type="text"
               [placeholder]="t('common.search')"
               class="h-full w-full border-0 text-[14px] placeholder:text-[14px] placeholder:text-black-20! md:pr-25 pr-9 p-4"
@@ -54,10 +57,7 @@
             <span class="tbc-medium text-xs text-nowrap">{{ t('header.addListing') }}</span>
           </button>
 
-          <div class="mr-4 flex items-center min-w-15.75">
-            <div routerLink="/menu/my-messages" class="header-icon">
-              <svg-icon src="assets/message-s.svg" />
-            </div>
+          <div class="mr-3 flex items-center">
             <div routerLink="/menu/my-favorites" class="relative header-icon ml-1 mr-0.5">
               <svg-icon src="assets/favourite-s.svg" />
               @if (favoritesCount && favoritesCount > 0) {
@@ -89,7 +89,9 @@
                 <div class="animate-pulse rounded-md bg-[#e7e9ef] ml-2 h-4 w-13.5"></div>
               } @else if (user) {
                 <svg-icon src="assets/avatar.svg" class="min-w-6" />
-                <span class="tbc-medium text-sm ml-2 mr-2 block">{{ user?.name }}</span>
+                <span class="tbc-medium text-sm ml-2 mr-2 block">{{
+                  $any(userStore.getUser()?.user).firstname
+                }}</span>
                 <svg-icon
                   class="transition-all min-w-2"
                   [class.rotate-180]="profileDropdownOpen()"

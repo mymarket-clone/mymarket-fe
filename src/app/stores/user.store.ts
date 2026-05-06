@@ -65,7 +65,7 @@ export class UserStore {
 
   public getUserName(): string | null {
     const u = this.user()?.user
-    return u ? `${u.name} ${u.lastname}` : null
+    return u ? `${u.firstname} ${u.lastname}` : null
   }
 
   public logout(): void {

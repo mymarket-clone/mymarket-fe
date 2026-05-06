@@ -265,5 +265,9 @@
     "promotion": "Promototion",
     "term": "Term",
     "noListing": "You have no listings"
+  },
+  "editAccount": {
+    "main": "Main",
+    "password": "Password change"
   }
 }
