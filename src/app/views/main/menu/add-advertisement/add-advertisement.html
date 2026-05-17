@@ -187,59 +187,72 @@
 
       @if (mainCharacteristicsState?.data()?.length) {
         <div class="inline-block w-full">
-          @for (item of mainCharacteristicsState?.data(); track $index) {
-            @switch (item.attributeType) {
-              @case (4) {
-                <select-chip
-                  [required]="item.isRequired"
-                  [control]="mainCharacteristicsForm.getControl(item.attributeId)"
-                  [submitted]="mainCharacteristicsForm.submitted"
-                  [values]="yesNoValues"
-                  [items]="yesNoItems"
-                  [label]="item.attributeName"
-                />
-              }
-              @case (3) {
-                <app-dropdown
-                  [required]="item.isRequired"
-                  [control]="mainCharacteristicsForm.getControl(item.attributeId)"
-                  [submitted]="mainCharacteristicsForm.submitted"
-                  [dataList]="item.options"
-                  [label]="item.attributeName"
-                  [defaultLabel]="t('addPost.select')"
-                  variant="static"
-                  class="dynamic-dropdown inline-block max-w-1/2 w-full odd:pr-3.75 even:pl-3.75"
-                />
-              }
-              @case (2) {
-                <app-input
-                  [required]="item.isRequired"
-                  [control]="mainCharacteristicsForm.getControl(item.attributeId)"
-                  [submitted]="mainCharacteristicsForm.submitted"
-                  [label]="item.attributeName"
-                  [trailingBorderContent]="item.unitName ? unit : undefined"
-                  [trailingBorderContext]="item.unitName ? { $implicit: item.unitName } : undefined"
-                  [maxValue]="100000"
-                  variant="static"
-                  type="number"
-                  class="w-56.25"
-                />
-              }
-              @case (1) {
-                <app-input
-                  [required]="item.isRequired"
-                  [control]="mainCharacteristicsForm.getControl(item.attributeId)"
-                  [submitted]="mainCharacteristicsForm.submitted"
-                  [label]="item.attributeName"
-                  [trailingBorderContent]="item.unitName ? unit : undefined"
-                  [trailingBorderContext]="item.unitName ? { $implicit: item.unitName } : undefined"
-                  variant="static"
-                  type="text"
-                  class="w-56.25"
-                />
+          <!-- DROPDOWN SECTION -->
+          <div class="grid grid-cols-2 gap-x-3.75 gap-y-4">
+            @for (item of mainCharacteristicsState?.data(); track $index) {
+              @switch (item.attributeType) {
+                @case (3) {
+                  <app-dropdown
+                    [required]="item.isRequired"
+                    [control]="mainCharacteristicsForm.getControl(item.attributeId)"
+                    [submitted]="mainCharacteristicsForm.submitted"
+                    [dataList]="item.options"
+                    [label]="item.attributeName"
+                    [defaultLabel]="t('addPost.select')"
+                    variant="static"
+                    class="w-full"
+                  />
+                }
               }
             }
-          }
+          </div>
+
+          <!-- NON-DROPDOWN SECTION -->
+          <div class="mt-4 flex flex-wrap gap-x-3.75 gap-y-4">
+            @for (item of mainCharacteristicsState?.data(); track $index) {
+              @switch (item.attributeType) {
+                @case (4) {
+                  <select-chip
+                    [required]="item.isRequired"
+                    [control]="mainCharacteristicsForm.getControl(item.attributeId)"
+                    [submitted]="mainCharacteristicsForm.submitted"
+                    [values]="yesNoValues"
+                    [items]="yesNoItems"
+                    [label]="item.attributeName"
+                  />
+                }
+
+                @case (2) {
+                  <app-input
+                    [required]="item.isRequired"
+                    [control]="mainCharacteristicsForm.getControl(item.attributeId)"
+                    [submitted]="mainCharacteristicsForm.submitted"
+                    [label]="item.attributeName"
+                    [trailingBorderContent]="item.unitName ? unit : undefined"
+                    [trailingBorderContext]="item.unitName ? { $implicit: item.unitName } : undefined"
+                    [maxValue]="100000"
+                    variant="static"
+                    type="number"
+                    class="w-56.25"
+                  />
+                }
+
+                @case (1) {
+                  <app-input
+                    [required]="item.isRequired"
+                    [control]="mainCharacteristicsForm.getControl(item.attributeId)"
+                    [submitted]="mainCharacteristicsForm.submitted"
+                    [label]="item.attributeName"
+                    [trailingBorderContent]="item.unitName ? unit : undefined"
+                    [trailingBorderContext]="item.unitName ? { $implicit: item.unitName } : undefined"
+                    variant="static"
+                    type="text"
+                    class="w-56.25"
+                  />
+                }
+              }
+            }
+          </div>
         </div>
       }
 
