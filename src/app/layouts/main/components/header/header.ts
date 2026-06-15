@@ -47,6 +47,7 @@ export class Header {
         method: HttpMethod.GET,
         onSuccess: (data) => {
           this.userStore.setFavoritesBase(data.favoritesCount)
+          this.userStore.setBalance(Number(data.balance ?? 0))
         },
       })
     }

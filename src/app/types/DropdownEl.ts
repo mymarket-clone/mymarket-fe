@@ -3,6 +3,7 @@ export type WithName = {
   name: string
   labeledProp?: never
   id?: number
+  originalId?: number
 }
 
 export type WithLabel = {

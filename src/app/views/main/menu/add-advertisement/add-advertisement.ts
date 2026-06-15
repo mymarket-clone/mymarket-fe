@@ -1,5 +1,14 @@
 import { NgTemplateOutlet } from '@angular/common'
-import { Component, OnDestroy, signal, effect, computed } from '@angular/core'
+import {
+  Component,
+  OnDestroy,
+  signal,
+  effect,
+  computed,
+  TemplateRef,
+  viewChild,
+  ViewContainerRef,
+} from '@angular/core'
 import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms'
 import { Router } from '@angular/router'
 import { Button } from '@app/components/button/button'
@@ -12,6 +21,11 @@ import { TextEditor } from '@app/components/text-editor/text-editor'
 import { mapEnumToDropdown } from '@app/helpers/mapEnumToDropdown'
 import { IHttpService } from '@app/interfaces/common/IHttpService'
 import { IAddPostForm } from '@app/interfaces/forms/IAddPostForm'
+import {
+  ListingPriceCalculation,
+  ListingPriceCatalog,
+  ListingServicePrice,
+} from '@app/interfaces/response/IListingPrices'
 import { ICategoryAttributeOptions } from '@app/interfaces/response/ICategoryAttributeOptions'
 import { ICategoryBrand } from '@app/interfaces/response/ICategoryBrand'
 import { ICategoryFlat } from '@app/interfaces/response/ICategoryFlat'
@@ -25,12 +39,15 @@ import { CurrencyType } from '@app/types/enums/CurrencyType'
 import { HttpMethod } from '@app/types/enums/HttpMethod'
 import { PostType } from '@app/types/enums/PostType'
 import { PromoType } from '@app/types/enums/PromoType'
+import { ListingServiceType } from '@app/types/enums/ListingServiceType'
 import { YesNo } from '@app/types/enums/YesNo'
 import { PromoService } from '@app/types/PromoService'
 import { scrollToFirstElement } from '@app/utils/ScrollToFirstElement'
 import { Zod } from '@app/utils/Zod'
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco'
 import { SvgIconComponent } from 'angular-svg-icon'
+import { PortalService } from '@app/services/portal.service'
+import { TemplatePortal } from '@angular/cdk/portal'
 
 type PreviewFile = { file: File; url: string }
 
@@ -59,15 +76,21 @@ export class AddAdvertisement implements OnDestroy {
   public firstInvalidControl = signal<string | null>(null)
   public files = signal<PreviewFile[] | null>(null)
   public category = signal<ICategoryFlat | null>(null)
+  public listingPrice = signal<ListingPriceCalculation>({ totalPrice: 0, totalOriginalPrice: 0 })
+  public insufficientBalance = signal<{ requiredAmount: number; currentBalance: number } | null>(null)
 
   public addPostState?: IHttpService<unknown>
+  public pricingState?: IHttpService<ListingPriceCatalog>
   public mainCharacteristicsState?: IHttpService<ICategoryAttributeOptions[]>
   public brandRequiredState?: IHttpService<ICategoryBrand[]>
+  public insufficientBalanceModal = viewChild<TemplateRef<unknown>>('insufficientBalanceModal')
 
   public constructor(
     private readonly zod: Zod,
     private readonly apiService: ApiService,
     private readonly router: Router,
+    private readonly portalService: PortalService,
+    private readonly vcr: ViewContainerRef,
     public readonly addAd: AddAdvertisementService,
     public readonly adForm: FormService<IAddPostForm>,
     public readonly mainCharacteristicsForm: DynamicFormService,
@@ -160,6 +183,11 @@ export class AddAdvertisement implements OnDestroy {
       })
     )
 
+    this.pricingState = this.apiService.request({
+      method: HttpMethod.GET,
+      endpoint: 'prices',
+    })
+
     effect(() => this.syncColoredDaysToColored())
     effect(() => this.syncColoredToDays())
     effect(() => this.syncAutoRenewalToAutoRenewalOnceIn())
@@ -168,6 +196,7 @@ export class AddAdvertisement implements OnDestroy {
     effect(() => this.dynamicTitleValidators())
     effect(() => this.syncColor())
     effect(() => this.syncPromoTypeToDays())
+    effect(() => this.refreshListingPrice())
     effect(() => (this.addAd.title = this.adForm.getControlSignal('title')() as string))
   }
 
@@ -261,7 +290,18 @@ export class AddAdvertisement implements OnDestroy {
       form: finalForms,
       formData,
       onSuccess: () => this.router.navigate(['/']),
-      onError: () => scrollToFirstElement('.has-error'),
+      onError: (_errors, record) => {
+        if (record?.code === 'InsufficientBalance') {
+          this.insufficientBalance.set({
+            requiredAmount: Number(record.requiredAmount ?? 0),
+            currentBalance: Number(record.currentBalance ?? 0),
+          })
+          this.openInsufficientBalanceModal()
+          return
+        }
+
+        scrollToFirstElement('.has-error')
+      },
     })
   }
 
@@ -276,11 +316,11 @@ export class AddAdvertisement implements OnDestroy {
 
     this.addAd.selectedService = index
 
-    const startPrice = this.promoService?.find((v) => v.type === index)?.price[0]
-    if (!startPrice) return
+    const startPrice = this.promoService?.find((v) => v.type === index)?.price[0] ?? 0
 
     this.totalPrice.update((tp) => [startPrice, tp[1]])
     control.setValue(index)
+    this.adForm.getControl('promoDays').setValue(this.adForm.getControl('promoDays').value ?? 1)
   }
 
   public calculatePrice(
@@ -297,7 +337,7 @@ export class AddAdvertisement implements OnDestroy {
     if (!matched) return null
 
     const finalPricePerDay = matched.id
-    const salePricePerDay = Number((fullList[1] as WithName).id)
+    const salePricePerDay = matched.originalId ?? matched.id
 
     const finalPrice = finalPricePerDay * selectedValue
     const salePrice = salePricePerDay * selectedValue
@@ -397,7 +437,7 @@ export class AddAdvertisement implements OnDestroy {
         type: PromoType.VIP,
         title: 'VIP',
         features: [this.ts.translate('addPost.vipLabel')],
-        price: [2.5],
+        price: [this.firstPrice(ListingServiceType.Vip)],
         iconSrc: 'assets/vip.svg',
         color: 'text-blue-gradient',
         bg: 'rgb(0, 106, 255)',
@@ -406,7 +446,7 @@ export class AddAdvertisement implements OnDestroy {
         type: PromoType.VIP_PLUS,
         title: 'VIP+',
         features: [this.ts.translate('addPost.vipPlusLabel'), this.ts.translate('addPost.vipPlusLabel2')],
-        price: [4, 3.5, 3.15],
+        price: [this.firstPrice(ListingServiceType.VipPlus)],
         iconSrc: 'assets/vip-plus.svg',
         color: 'text-yellow-gradient',
         bg: 'rgb(254, 201, 0)',
@@ -415,7 +455,7 @@ export class AddAdvertisement implements OnDestroy {
         type: PromoType.SUPER_VIP,
         title: 'SUPER VIP',
         features: [this.ts.translate('addPost.vipSuperLabel'), this.ts.translate('addPost.vipSuperLabel2')],
-        price: [9, 8, 7.5],
+        price: [this.firstPrice(ListingServiceType.SuperVip)],
         iconSrc: 'assets/super-vip.svg',
         color: 'text-orange-gradient',
         bg: 'rgb(253, 65, 0)',
@@ -474,54 +514,23 @@ export class AddAdvertisement implements OnDestroy {
   }
 
   public get vipDays(): DropdownEl[] {
-    return [
-      {
-        value: null,
-        labeledProp: this.rangeLabel(1, 30, 2.5),
-      },
-      ...this.days(1, 30, 2.5),
-    ]
+    return this.priceOptions(ListingServiceType.Vip)
   }
 
   public get vipPlusDays(): DropdownEl[] {
-    return [
-      { value: null, labeledProp: this.rangeLabel(1, 4, 4) },
-      ...this.days(1, 4, 4),
-      { value: null, labeledProp: this.rangeLabel(5, 8, 3.5) },
-      ...this.days(5, 8, 3.5),
-      { value: null, labeledProp: this.rangeLabel(9, 16, 3.15) },
-      ...this.days(9, 16, 3.15),
-      { value: null, labeledProp: this.rangeLabel(17, 30, 3) },
-      ...this.days(17, 30, 3),
-    ]
+    return this.priceOptions(ListingServiceType.VipPlus)
   }
 
   public get superVipDays(): DropdownEl[] {
-    return [
-      { value: null, labeledProp: this.rangeLabel(1, 4, 9) },
-      ...this.days(1, 4, 9),
-      { value: null, labeledProp: this.rangeLabel(5, 8, 8) },
-      ...this.days(5, 8, 8),
-      { value: null, labeledProp: this.rangeLabel(9, 16, 7.5) },
-      ...this.days(9, 16, 7.5),
-      { value: null, labeledProp: this.rangeLabel(17, 30, 7.1) },
-      ...this.days(17, 30, 7),
-    ]
+    return this.priceOptions(ListingServiceType.SuperVip)
   }
 
   public get color(): DropdownEl[] {
-    return [
-      { value: null, labeledProp: this.rangeLabel(1, 8, 0.3) },
-      ...this.days(1, 8, 0.3),
-      { value: null, labeledProp: this.rangeLabel(9, 16, 0.27) },
-      ...this.days(9, 16, 0.27),
-      { value: null, labeledProp: this.rangeLabel(17, 30, 0.25) },
-      ...this.days(17, 30, 0.25),
-    ]
+    return this.priceOptions(ListingServiceType.Color)
   }
 
   public get renewal(): DropdownEl[] {
-    return [{ value: null, labeledProp: this.rangeLabel(1, 30, 0.25) }, ...this.days(1, 30, 0.25)]
+    return this.priceOptions(ListingServiceType.AutoRenewal)
   }
 
   public get time(): DropdownEl[] {
@@ -532,35 +541,11 @@ export class AddAdvertisement implements OnDestroy {
   }
 
   public showPriceFinal = computed(() => {
-    const promoDays = Number(this.adForm.getControlSignal('promoDays')())
-    const colorDays = Number(this.adForm.getControlSignal('colorDays')())
-    const renewalDays = Number(this.adForm.getControlSignal('autoRenewalOnceIn')())
-
-    const promo = Number.isFinite(promoDays) ? this.calculatePrice(promoDays, this.promoDaysList()) : null
-    const color = Number.isFinite(colorDays) ? this.calculatePrice(colorDays, this.color) : null
-    const renewal = Number.isFinite(renewalDays) ? this.calculatePrice(renewalDays, this.color) : null
-
-    const promoPrice = promo?.finalPrice ?? 0
-    const colorPrice = color?.finalPrice ?? 0
-    const renewalPrice = renewal?.finalPrice ?? 0
-
-    return promoPrice + colorPrice + renewalPrice
+    return this.listingPrice().totalPrice
   })
 
   public showPriceSale = computed(() => {
-    const promoDays = Number(this.adForm.getControlSignal('promoDays')())
-    const colorDays = Number(this.adForm.getControlSignal('colorDays')())
-    const renewalDays = Number(this.adForm.getControlSignal('autoRenewalOnceIn')())
-
-    const promo = Number.isFinite(promoDays) ? this.calculatePrice(promoDays, this.promoDaysList()) : null
-    const color = Number.isFinite(colorDays) ? this.calculatePrice(colorDays, this.color) : null
-    const renewal = Number.isFinite(renewalDays) ? this.calculatePrice(renewalDays, this.color) : null
-
-    const promoPrice = promo?.salePrice ?? 0
-    const colorPrice = color?.salePrice ?? 0
-    const renewalPrice = renewal?.salePrice ?? 0
-
-    return promoPrice + colorPrice + renewalPrice
+    return this.listingPrice().totalOriginalPrice
   })
 
   public promoDaysList = computed(() => {
@@ -602,19 +587,88 @@ export class AddAdvertisement implements OnDestroy {
     return this.ts.translate('addPost.days.other', { count })
   }
 
-  private days(from: number, to: number, price: number): DropdownEl[] {
+  private days(from: number, to: number, price: number, originalPrice: number): DropdownEl[] {
     return Array.from({ length: to - from + 1 }, (_, i) => {
       const count = from + i
       return {
         value: count,
         name: this.dayLabel(count),
         id: price,
+        originalId: originalPrice,
       }
     })
   }
 
   private rangeLabel(from: number, to: number, price: number): string {
     return this.ts.translate('addPost.dayRange', { from, to, price })
+  }
+
+  private firstPrice(serviceType: ListingServiceType): number {
+    return this.servicePrices(serviceType)[0]?.pricePerDay ?? 0
+  }
+
+  private servicePrices(serviceType: ListingServiceType): ListingServicePrice[] {
+    return (
+      this.pricingState
+        ?.data()
+        ?.prices.filter((price) => price.serviceType === serviceType && price.isActive)
+        .sort((a, b) => a.fromDay - b.fromDay) ?? []
+    )
+  }
+
+  private priceOptions(serviceType: ListingServiceType): DropdownEl[] {
+    return this.servicePrices(serviceType).flatMap((price) => [
+      {
+        value: null,
+        labeledProp: this.rangeLabel(price.fromDay, price.toDay, price.pricePerDay),
+      },
+      ...this.days(
+        price.fromDay,
+        price.toDay,
+        price.pricePerDay,
+        price.originalPricePerDay ?? price.pricePerDay
+      ),
+    ])
+  }
+
+  private refreshListingPrice(): void {
+    const promoType = this.adForm.getControlSignal('promoType')() as PromoType | null
+    const promoDays = this.adForm.getControlSignal('promoDays')() as number | null
+    const isColored = Boolean(this.adForm.getControlSignal('isColored')())
+    const colorDays = this.adForm.getControlSignal('colorDays')() as number | null
+    const autoRenewal = Boolean(this.adForm.getControlSignal('autoRenewal')())
+    const autoRenewalOnceIn = this.adForm.getControlSignal('autoRenewalOnceIn')() as number | null
+
+    const hasServices = promoType != null || isColored || autoRenewal
+    if (!hasServices) {
+      this.listingPrice.set({ totalPrice: 0, totalOriginalPrice: 0 })
+      return
+    }
+
+    this.apiService.request<ListingPriceCalculation, Record<string, unknown>>({
+      method: HttpMethod.POST,
+      endpoint: 'prices/calculate',
+      body: {
+        promoType,
+        promoDays,
+        isColored,
+        colorDays,
+        autoRenewal,
+        autoRenewalOnceIn,
+      },
+      onSuccess: (price) => this.listingPrice.set(price),
+    })
+  }
+
+  private openInsufficientBalanceModal(): void {
+    const modal = this.insufficientBalanceModal()
+    if (!modal) return
+
+    this.portalService.open(new TemplatePortal(modal, this.vcr))
+  }
+
+  public closeInsufficientBalanceModal(): void {
+    this.portalService.close()
   }
 
   private syncColoredToDays(): void {

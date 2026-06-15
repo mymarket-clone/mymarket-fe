@@ -6,6 +6,7 @@ import {
   effect,
   ElementRef,
   input,
+  OnDestroy,
   OnInit,
   Renderer2,
   signal,
@@ -18,6 +19,7 @@ import { BaseInput } from '@app/shared/components/base-input'
 import { DropdownEl, WithName } from '@app/types/DropdownEl'
 import { HttpMethod } from '@app/types/enums/HttpMethod'
 import { SvgIconComponent } from 'angular-svg-icon'
+import { Subscription } from 'rxjs'
 
 @Component({
   selector: 'app-dropdown',
@@ -34,7 +36,7 @@ import { SvgIconComponent } from 'angular-svg-icon'
     `,
   ],
 })
-export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
+export class Dropdown extends BaseInput implements AfterViewInit, OnInit, OnDestroy {
   public dataEndpoint = input<string | undefined>(undefined)
   public dataFilter = input<string | number | boolean | null | undefined>(null)
   public dataList = input<unknown[] | null>(null)
@@ -54,6 +56,9 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
   private dropRootEl = viewChild<ElementRef<HTMLElement>>('dropRootEl')
   private dropMenuEl = viewChild<ElementRef<HTMLElement>>('dropMenuEl')
   private dropEl = viewChild<ElementRef<HTMLInputElement>>('dropEl')
+  private controlValueSubscription?: Subscription
+  private dataFilterInitialized = false
+  private previousDataFilter: string | number | boolean | null | undefined
 
   public dataState?: IHttpService<any>
 
@@ -75,6 +80,8 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
         endpoint: this.dataEndpoint()!,
       })
     }
+
+    this.controlValueSubscription = this.control().valueChanges.subscribe(() => this.syncLabelWithControl())
   }
 
   public ngAfterViewInit(): void {
@@ -90,6 +97,10 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
         this.dropEl()!.nativeElement.value = ''
       }
     })
+  }
+
+  public ngOnDestroy(): void {
+    this.controlValueSubscription?.unsubscribe()
   }
 
   public goDeepInCategory(id: number): void {
@@ -205,7 +216,16 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit {
   }
 
   private resetSelectionOnFilterChange(): void {
-    this.dataFilter()
+    const dataFilter = this.dataFilter()
+
+    if (!this.dataFilterInitialized) {
+      this.dataFilterInitialized = true
+      this.previousDataFilter = dataFilter
+      return
+    }
+
+    if (dataFilter === this.previousDataFilter) return
+    this.previousDataFilter = dataFilter
 
     this.currentLabel.set(undefined)
     this.selectedItemRoute.set(null)

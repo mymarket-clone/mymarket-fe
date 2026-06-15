@@ -18,4 +18,6 @@ export type UserDetail = {
   number: string | null
   genderType: Gender
   birthYear: number
+  isBlocked?: boolean
+  balance: number
 }

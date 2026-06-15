@@ -13,9 +13,9 @@
       <div class="flex justify-between items-center">
         <div class="block">
           <div class="text-xs mb-1 text-gray-50 leading-4.5!">{{ t('menu.balance') }}</div>
-          <div class="text-xl h-7 tbc-bold">0.00</div>
+          <div class="text-xl h-7 tbc-bold">{{ userStore.getBalance().toFixed(2) }}</div>
         </div>
-        <div class="flex items-center text-xs text-gray-50 cursor-pointer">
+        <div (click)="openTopUpModal()" class="flex items-center text-xs text-gray-50 cursor-pointer">
           {{ t('menu.topUp') }}
           <div class="ml-2 min-w-6 min-h-6">
             <span class="tbc-bold flex justify-center items-center">

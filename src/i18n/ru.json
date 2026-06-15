@@ -104,6 +104,15 @@
     "editAccount": "Редактировать профиль",
     "logOut": "Выйти"
   },
+  "balance": {
+    "topUpTitle": "Top up balance",
+    "amount": "Amount",
+    "invalidAmount": "Enter a valid positive amount",
+    "insufficientTitle": "Not enough balance",
+    "insufficientMessage": "Your balance is not enough to create this listing. Top up your balance and try again.",
+    "required": "Required",
+    "current": "Current balance"
+  },
   "addPost": {
     "home": "Главная страница",
     "sell": "Продать",
@@ -214,5 +223,11 @@
     "quickBuy": "Быстрая покупка",
     "offerPrice": "Предложить Цену",
     "specifications": "Характеристики"
+  },
+  "editAccount": {
+    "main": "Основное",
+    "password": "Изменение пароля",
+    "saving": "Сохранение...",
+    "saved": "Изменения сохранены"
   }
 }

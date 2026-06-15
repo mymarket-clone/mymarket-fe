@@ -105,6 +105,15 @@
     "editAccount": "Edit Account",
     "logOut": "Log out"
   },
+  "balance": {
+    "topUpTitle": "Top up balance",
+    "amount": "Amount",
+    "invalidAmount": "Enter a valid positive amount",
+    "insufficientTitle": "Not enough balance",
+    "insufficientMessage": "Your balance is not enough to create this listing. Top up your balance and try again.",
+    "required": "Required",
+    "current": "Current balance"
+  },
   "addPost": {
     "home": "Home",
     "sell": "Sell",
@@ -268,6 +277,8 @@
   },
   "editAccount": {
     "main": "Main",
-    "password": "Password change"
+    "password": "Password change",
+    "saving": "Saving...",
+    "saved": "Changes saved"
   }
 }

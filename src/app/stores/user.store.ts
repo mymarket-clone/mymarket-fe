@@ -51,6 +51,27 @@ export class UserStore {
     })
   }
 
+  public setBalance(balance: number): void {
+    this.user.update((prev) => {
+      if (!prev) return prev
+
+      const next = {
+        ...prev,
+        user: {
+          ...prev.user,
+          balance,
+        },
+      }
+
+      window.localStorage.setItem('user', JSON.stringify(next))
+      return next
+    })
+  }
+
+  public getBalance(): number {
+    return this.user()?.user.balance ?? 0
+  }
+
   public getFavorites(): number {
     return this.user()?.user.favoritesCount ?? 0
   }
@@ -98,6 +119,7 @@ export class UserStore {
         firstname: firstName,
         name: detail.name || firstName,
         lastname: detail.lastname || '',
+        balance: Number(detail.balance ?? 0),
       },
     }
   }

@@ -104,6 +104,15 @@
     "editAccount": "ანგარიშის რედაქტირება",
     "logOut": "გასვლა"
   },
+  "balance": {
+    "topUpTitle": "Top up balance",
+    "amount": "Amount",
+    "invalidAmount": "Enter a valid positive amount",
+    "insufficientTitle": "Not enough balance",
+    "insufficientMessage": "Your balance is not enough to create this listing. Top up your balance and try again.",
+    "required": "Required",
+    "current": "Current balance"
+  },
   "addPost": {
     "home": "მთავარი",
     "sell": "გაყიდვა",
@@ -215,5 +224,11 @@
     "offerPrice": "ფასის შეთავაზება",
     "specifications": "სპეციფიკაციები",
     "views": "ნახვა"
+  },
+  "editAccount": {
+    "main": "მთავარი",
+    "password": "პაროლის შეცვლა",
+    "saving": "ინახება...",
+    "saved": "ცვლილებები შენახულია"
   }
 }

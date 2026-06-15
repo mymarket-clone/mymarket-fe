@@ -6,6 +6,8 @@ export interface IBaseError {
   errors: Record<string, string[]>
   code: string
   email?: string
+  requiredAmount?: number
+  currentBalance?: number
 }
 
 export interface IBaseSuccess<T> {
