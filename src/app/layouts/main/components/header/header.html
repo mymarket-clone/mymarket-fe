@@ -89,9 +89,7 @@
                 <div class="animate-pulse rounded-md bg-[#e7e9ef] ml-2 h-4 w-13.5"></div>
               } @else if (user) {
                 <svg-icon src="assets/avatar.svg" class="min-w-6" />
-                <span class="tbc-medium text-sm ml-2 mr-2 block">{{
-                  $any(userStore.getUser()?.user).firstname
-                }}</span>
+                <span class="tbc-medium text-sm ml-2 mr-2 block">{{ userStore.getFirstName() }}</span>
                 <svg-icon
                   class="transition-all min-w-2"
                   [class.rotate-180]="profileDropdownOpen()"

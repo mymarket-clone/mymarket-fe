@@ -9,6 +9,7 @@ import { ILoginForm } from '@app/interfaces/forms/ILoginForm'
 import { InjectElementDirective } from '@app/modules/directives/injectElement.directive'
 import { FormService } from '@app/services/form.service'
 import { ApiService } from '@app/services/http/api.service'
+import { GoogleAuthService } from '@app/services/google-auth.service'
 import { UserStore } from '@app/stores/user.store'
 import { HttpErrorCodes } from '@app/types/enums/HttpErrorCodes'
 import { HttpMethod } from '@app/types/enums/HttpMethod'
@@ -36,10 +37,13 @@ import { SvgIconComponent } from 'angular-svg-icon'
 export class Login {
   public showSites = signal<boolean>(false)
   public loginState?: IHttpService<User>
+  public googleLoading = signal<boolean>(false)
+  public googleError = signal<string | null>(null)
 
   public constructor(
     private readonly apiService: ApiService,
     private readonly userStore: UserStore,
+    private readonly googleAuthService: GoogleAuthService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly zod: Zod,
@@ -83,6 +87,22 @@ export class Login {
         })
       },
     })
+  }
+
+  public async onGoogleSignIn(): Promise<void> {
+    if (this.googleLoading()) return
+
+    this.googleLoading.set(true)
+    this.googleError.set(null)
+
+    try {
+      await this.googleAuthService.signIn(this.returnUrl)
+      this.router.navigateByUrl(this.returnUrl)
+    } catch (error) {
+      this.googleError.set(error instanceof Error ? error.message : 'Google sign-in failed.')
+    } finally {
+      this.googleLoading.set(false)
+    }
   }
 
   public get returnUrl(): string {

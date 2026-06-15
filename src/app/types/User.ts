@@ -15,7 +15,7 @@ export type UserDetail = {
   emailVerified: boolean
   firstname: string
   favoritesCount: number
-  number: string
+  number: string | null
   genderType: Gender
   birthYear: number
 }

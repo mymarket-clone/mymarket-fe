@@ -3,6 +3,7 @@ import { Auth } from './layouts/auth/auth'
 import { MainLayout } from './layouts/main/main'
 import { loggedGuard } from './modules/guards/logged.guard'
 import { Login } from './views/auth/login/login'
+import { GoogleCallback } from './views/auth/google-callback/google-callback'
 import { PasswordRecovery } from './views/auth/password-recovery/password-recovery'
 import { Register } from './views/auth/register/register'
 import { HomeComponent } from './views/main/home/home'
@@ -74,6 +75,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'login', pathMatch: 'full' },
       { path: 'login', component: Login },
+      { path: 'google-callback', component: GoogleCallback },
       { path: 'register', component: Register },
       { path: 'recover-password', component: PasswordRecovery },
     ],

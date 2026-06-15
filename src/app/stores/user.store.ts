@@ -7,12 +7,16 @@ export class UserStore {
 
   public constructor() {
     const stored = window.localStorage.getItem('user')
-    if (stored) this.user.set(JSON.parse(stored))
+    if (stored) this.user.set(this.normalizeUser(JSON.parse(stored)))
   }
 
   public setUser(user: User | null): void {
-    this.user.set(user)
-    window.localStorage.setItem('user', JSON.stringify(user))
+    const normalizedUser = this.normalizeUser(user)
+
+    this.user.set(normalizedUser)
+
+    if (normalizedUser) window.localStorage.setItem('user', JSON.stringify(normalizedUser))
+    else window.localStorage.removeItem('user')
   }
 
   public getUser(): User | null {
@@ -65,12 +69,36 @@ export class UserStore {
 
   public getUserName(): string | null {
     const u = this.user()?.user
-    return u ? `${u.firstname} ${u.lastname}` : null
+    if (!u) return null
+
+    return [u.firstname || u.name, u.lastname].filter(Boolean).join(' ') || null
+  }
+
+  public getFirstName(): string | null {
+    const u = this.user()?.user
+    return u ? u.firstname || u.name || null : null
   }
 
   public logout(): void {
     window.location.href = '/'
     window.localStorage.removeItem('user')
     this.user.set(null)
+  }
+
+  private normalizeUser(user: User | null): User | null {
+    if (!user?.user) return user
+
+    const detail = user.user
+    const firstName = detail.firstname || detail.name || ''
+
+    return {
+      ...user,
+      user: {
+        ...detail,
+        firstname: firstName,
+        name: detail.name || firstName,
+        lastname: detail.lastname || '',
+      },
+    }
   }
 }

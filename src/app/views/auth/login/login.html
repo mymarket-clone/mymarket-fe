@@ -53,8 +53,10 @@
       <button
         inject
         [content]="tooltipLogin"
-        [context]="{text: t('auth.socialSignIn', {media: 'Google'})}"
+        [context]="{ text: t('auth.socialSignIn', { media: 'Google' }) }"
         type="button"
+        [disabled]="googleLoading()"
+        (click)="onGoogleSignIn()"
       >
         <span class="h-5 sm:h-6">
           <svg-icon src="assets/google.svg" />
@@ -63,7 +65,7 @@
       <button
         inject
         [content]="tooltipLogin"
-        [context]="{text: t('auth.socialSignIn', {media: 'Facebook'})}"
+        [context]="{ text: t('auth.socialSignIn', { media: 'Facebook' }) }"
         type="button"
       >
         <span class="h-5 sm:h-6">
@@ -73,7 +75,7 @@
       <button
         inject
         [content]="tooltipLogin"
-        [context]="{text: t('auth.socialSignIn', {media: 'Apple'})}"
+        [context]="{ text: t('auth.socialSignIn', { media: 'Apple' }) }"
         type="button"
       >
         <span class="h-5 sm:h-6">
@@ -81,6 +83,9 @@
         </span>
       </button>
     </div>
+    @if (googleError()) {
+      <p class="text-red-500 text-xs sm:text-sm mt-4 text-center">{{ googleError() }}</p>
+    }
     <div class="flex gap-2 text-xs sm:text-sm mt-20 md:mt-10">
       {{ t('auth.noAccount') }}
       <a routerLink="/user/register" queryParamsHandling="preserve" class="text-blue-100">
