@@ -621,7 +621,10 @@
     </div>
   </form>
 
-  <div *transloco="let t" class="block xl:hidden bg-white h-10 fixed bottom-18.75 left-0 right-0 w-full mt-2">
+  <div
+    *transloco="let t"
+    class="z-9999 block xl:hidden bg-white h-10 fixed bottom-18.75 left-0 right-0 w-full mt-2"
+  >
     <ul
       class="px-3 gap-3.75 flex flex-row justify-between h-full items-center"
       style="box-shadow: rgba(0, 0, 0, 0.1) 0px -2px 5px"
@@ -684,7 +687,6 @@
     </div>
   </li>
 </ng-template>
-
 <ng-template #currency>
   <app-dropdown
     [required]="true"
@@ -697,7 +699,6 @@
     variant="static"
   />
 </ng-template>
-
 <ng-template #note let-text="text" let-required="required">
   <div class="bg-raisin-80 px-4 py-2 flex rounded-2xl items-center">
     <div class="mr-4 min-h-10 min-w-10">

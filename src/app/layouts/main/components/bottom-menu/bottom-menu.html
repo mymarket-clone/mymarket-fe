@@ -1,0 +1,156 @@
+<nav
+  aria-label="Bottom menu"
+  class="fixed bottom-0 left-0 z-9999 block h-18.75 w-full bg-white drop-shadow-[0_-2px_16px_rgba(0,0,0,0.08)] xl:hidden"
+>
+  <div class="mx-4 flex h-full items-center">
+    <div class="flex w-full justify-between">
+      @for (item of bottomMenu(); track item.title) {
+        @if (item.route) {
+          <a
+            #activeLink="routerLinkActive"
+            [routerLink]="item.route"
+            routerLinkActive
+            [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+            [class.text-black-20]="activeLink.isActive"
+            [class.text-gray-120]="!activeLink.isActive"
+            class="flex cursor-pointer flex-col items-center justify-between"
+          >
+            <ng-container
+              *ngTemplateOutlet="
+                menu;
+                context: {
+                  title: item.title,
+                  icon: item.icon,
+                  iconClass: item.iconClass,
+                  badge: item.badge,
+                  active: activeLink.isActive,
+                }
+              "
+            />
+          </a>
+        } @else {
+          <button
+            (click)="openProfileMenuModal()"
+            type="button"
+            class="flex cursor-pointer flex-col items-center justify-between text-gray-120"
+          >
+            <ng-container
+              *ngTemplateOutlet="
+                menu;
+                context: {
+                  title: item.title,
+                  icon: item.icon,
+                  iconClass: item.iconClass,
+                  badge: item.badge,
+                  active: false,
+                }
+              "
+            />
+          </button>
+        }
+      }
+    </div>
+  </div>
+</nav>
+
+<ng-template
+  #menu
+  let-title="title"
+  let-icon="icon"
+  let-iconClass="iconClass"
+  let-badge="badge"
+  let-active="active"
+>
+  <div class="flex cursor-pointer flex-col items-center justify-between">
+    <div class="relative">
+      @if (badge) {
+        <div
+          class="absolute right-[-4px] top-[-4px] z-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-10 text-center text-[10px] text-white tbc-regular"
+        >
+          <span class="block">{{ badge }}</span>
+        </div>
+      }
+      <svg-icon [class]="iconClass" [src]="icon" />
+    </div>
+    <span [class.tbc-medium]="active" [class.tbc-regular]="!active" class="text-[10px]">{{ title }}</span>
+  </div>
+</ng-template>
+
+<ng-template #profileMenuModal>
+  <div *transloco="let t" class="cdk-portal fixed inset-0 z-9999 overflow-hidden bg-black/40">
+    <div class="flex h-full items-center justify-center p-0 md:p-4">
+      <div
+        class="flex h-full w-full flex-col overflow-y-auto rounded-none bg-white md:h-auto md:max-h-full md:w-100 md:rounded-xl"
+      >
+        <div class="flex min-h-full flex-col p-4 md:p-6">
+          <div class="flex justify-end">
+            <button
+              (click)="closeProfileMenuModal()"
+              type="button"
+              class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-gray-10 hover:bg-gray-90"
+            >
+              <svg-icon src="assets/close-cross.svg" class="block h-6 w-6" />
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <svg-icon src="assets/bottom-menu/profile-large.svg" class="h-12 w-12" />
+              <div class="ml-2">
+                <p class="tbc-bold text-base">{{ userStore.getUserName() || t('auth.signIn') }}</p>
+                @if (userStore.getUserId(); as userId) {
+                  <p class="tbc-medium text-xs text-blue-100">ID: {{ userId }}</p>
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 flex items-center justify-between rounded-lg border border-gray-40 px-4 py-3">
+            <div>
+              <span class="tbc-regular block text-xs text-gray-50">{{ t('menu.balance') }}</span>
+              <span class="tbc-bold block text-xl">{{ userStore.getBalance().toFixed(2) }}</span>
+            </div>
+            <button (click)="openTopUpBalanceModal()" type="button" class="flex cursor-pointer items-center">
+              <span class="tbc-regular mr-2 block text-xs text-gray-50">{{ t('menu.topUp') }}</span>
+              <svg-icon src="assets/add.svg" class="block h-6 w-6" />
+            </button>
+          </div>
+
+          <div class="mt-5 border-b border-gray-180 pb-5">
+            @for (item of profileMenuItems(); track item.label) {
+              <button
+                (click)="handleProfileMenuItem(item)"
+                type="button"
+                class="group/navigation mb-4 flex w-full cursor-pointer items-center justify-between last-of-type:mb-0"
+              >
+                <div class="flex items-center">
+                  <svg-icon [src]="item.icon" class="h-8 w-8" />
+                  <p
+                    class="tbc-regular ml-3 text-sm text-gray-50 transition-colors group-hover/navigation:text-yellow"
+                  >
+                    {{ item.label }}
+                  </p>
+                </div>
+              </button>
+            }
+          </div>
+
+          <div class="mt-auto flex border-t border-gray-180 pt-5">
+            @for (lang of languageService.languages; track lang.code) {
+              <div
+                (click)="switchLang(lang.code)"
+                class="mr-2 rounded-lg border px-2 py-2 cursor-pointer"
+                [class.border-black-20!]="languageService.current === lang.code"
+                [class.bg-gray-165!]="languageService.current === lang.code"
+              >
+                <span class="tbc-regular text-sm block cursor-pointer">
+                  {{ lang.label }}
+                </span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
