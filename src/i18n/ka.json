@@ -40,12 +40,12 @@
     "privacyPolicy": "კონფიდენციალობის პოლიტიკას",
     "withExistingAccount": "არსებულ ანგარიშზე",
     "weak": "სუსტი",
-    "avarage": "საშუალო",
     "good": "კარგი",
     "strong": "ძლიერი",
     "createAccount": "ანგარიშის შექმნა",
     "personalInformation": "პერსონალური ინფორმაცია",
-    "emailVerification": "ელფოსტის ვერიფიკაცია"
+    "emailVerification": "ელფოსტის ვერიფიკაცია",
+    "average": "საშუალო"
   },
   "validators": {
     "emailAlreadyUsed": "როგორც ჩანს, ეს ელფოსტა უკვე რეგისტრირებულია.",
@@ -102,7 +102,8 @@
     "myAddresses": "ჩემი მისამართები",
     "myBankAccounts": "ჩემი საბანკო ანგარიშები",
     "editAccount": "ანგარიშის რედაქტირება",
-    "logOut": "გასვლა"
+    "logOut": "გასვლა",
+    "editAdvertisement": "განცხადების რედაქტირება"
   },
   "balance": {
     "topUpTitle": "Top up balance",
@@ -223,12 +224,61 @@
     "quickBuy": "სწრაფი შეძენა",
     "offerPrice": "ფასის შეთავაზება",
     "specifications": "სპეციფიკაციები",
-    "views": "ნახვა"
+    "views": "ნახვა",
+    "showPhoneNumber": "ტელეფონის ნომრის ჩვენება",
+    "sendMessage": "შეტყობინების გაგზავნა",
+    "cancel": "გაუქმება",
+    "send": "გაგზავნა",
+    "provideMessage": "გთხოვთ, შეიყვანოთ შეტყობინების ტექსტი",
+    "textForSeller": "ტექსტი გამყიდველისთვის"
   },
   "editAccount": {
     "main": "მთავარი",
     "password": "პაროლის შეცვლა",
     "saving": "ინახება...",
     "saved": "ცვლილებები შენახულია"
+  },
+  "post": {
+    "listings": "განცხადებები",
+    "save": "შენახვა",
+    "remove": "წაშლა",
+    "from": "დან",
+    "to": "მდე",
+    "offerPrice": "ფასი შეთანხმებით გარეშე",
+    "discount": "ფასდაკლებით",
+    "price": "ფასი",
+    "location": "მდებარეობა",
+    "condition": "პროდუქტის მდგომარეობა",
+    "postType": "განცხადების ტიპი",
+    "all": "ყველა",
+    "yes": "დიახ",
+    "no": "არა",
+    "forPsn": "შშმპ ადაპტირებული",
+    "sortLabels": {
+      "dateAsc": "თარიღი ზრდადობით",
+      "dateDesc": "თარიღი კლებადობით",
+      "priceAsc": "ფასი ზრდადობით",
+      "priceDesc": "ფასი კლებადობით",
+      "viewsAsc": "ნახვები ზრდადობით",
+      "viewsDesc": "ნახვები კლებადობით",
+      "withDiscount": "ფასდაკლებით"
+    },
+    "selectCategory": "აირჩიეთ კატეგორია მეტი ფილტრის სანახავად",
+    "filter": "ფილტრი",
+    "filters": "ფილტრები",
+    "clear": "გასუფთავება",
+    "viewProduct": "პროდუქტის ნახვა",
+    "view": "ნახვა"
+  },
+  "allCategories": {
+    "categories": "კატეგორიები"
+  },
+  "myListing": {
+    "title": "სათაური / ID / SKU",
+    "price": "ფასი",
+    "views": "ნახვები",
+    "promotion": "პრომოცია",
+    "term": "ვადა",
+    "noListing": "განცხადებები არ გაქვთ"
   }
 }

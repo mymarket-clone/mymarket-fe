@@ -102,7 +102,8 @@
     "myAddresses": "Мои адреса",
     "myBankAccounts": "Мои банковские аккаунты",
     "editAccount": "Редактировать профиль",
-    "logOut": "Выйти"
+    "logOut": "Выйти",
+    "editAdvertisement": "Редактировать объявление"
   },
   "balance": {
     "topUpTitle": "Top up balance",
@@ -222,12 +223,62 @@
     "privatePerson": "Физияеское лицо",
     "quickBuy": "Быстрая покупка",
     "offerPrice": "Предложить Цену",
-    "specifications": "Характеристики"
+    "specifications": "Характеристики",
+    "showPhoneNumber": "Показать номер телефона",
+    "views": "Просмотры",
+    "sendMessage": "Отправить сообщение",
+    "cancel": "Отмена",
+    "send": "Отправить",
+    "provideMessage": "Пожалуйста, введите текст сообщения",
+    "textForSeller": "Текст для продавца"
   },
   "editAccount": {
     "main": "Основное",
     "password": "Изменение пароля",
     "saving": "Сохранение...",
     "saved": "Изменения сохранены"
+  },
+  "post": {
+    "listings": "Объявления",
+    "save": "Сохранить",
+    "remove": "Удалить",
+    "from": "От",
+    "to": "До",
+    "offerPrice": "Без цены договорная",
+    "discount": "Со скидкой",
+    "price": "Цена",
+    "location": "Местоположение",
+    "condition": "Состояние товара",
+    "postType": "Тип объявления",
+    "all": "Все",
+    "yes": "Да",
+    "no": "Нет",
+    "forPsn": "Адаптировано для ЛСП",
+    "sortLabels": {
+      "dateAsc": "Дата по возрастанию",
+      "dateDesc": "Дата по убыванию",
+      "priceAsc": "Цена по возрастанию",
+      "priceDesc": "Цена по убыванию",
+      "viewsAsc": "Просмотры по возрастанию",
+      "viewsDesc": "Просмотры по убыванию",
+      "withDiscount": "Со скидкой"
+    },
+    "selectCategory": "Выберите категорию, чтобы увидеть больше фильтров",
+    "filter": "Фильтр",
+    "filters": "Фильтры",
+    "clear": "Очистить",
+    "viewProduct": "Посмотреть товар",
+    "view": "Посмотреть"
+  },
+  "allCategories": {
+    "categories": "Категории"
+  },
+  "myListing": {
+    "title": "Название / ID / SKU",
+    "price": "Цена",
+    "views": "Просмотры",
+    "promotion": "Продвижение",
+    "term": "Срок",
+    "noListing": "У вас нет объявлений"
   }
 }
