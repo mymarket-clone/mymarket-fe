@@ -158,7 +158,7 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit, OnDest
   public setItem(element: DropdownEl): void {
     const control = this.control()
     this.currentLabel.set(element.name)
-    control?.setValue(element.value ?? (element as any).brandId ?? (element as WithName).id)
+    control?.setValue(this.getItemValue(element))
     this.selecting.set(false)
     this.inputValue.set('')
     this.dropEl()!.nativeElement.value = ''
@@ -207,12 +207,16 @@ export class Dropdown extends BaseInput implements AfterViewInit, OnInit, OnDest
       return
     }
 
-    const match: any = list.find((i: any) => i.value === value)
+    const match: any = list.find((i: any) => this.getItemValue(i) === value)
     if (match) {
       this.currentLabel.set(match.name)
     } else {
       this.currentLabel.set(undefined)
     }
+  }
+
+  private getItemValue(item: DropdownEl | any): number | string | null | undefined {
+    return item.value ?? item.brandId ?? item.id
   }
 
   private resetSelectionOnFilterChange(): void {
